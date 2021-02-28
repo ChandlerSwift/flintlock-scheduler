@@ -19,7 +19,7 @@ class CreateScoutsTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->integer('rank')->default(1);
-            $table->integer('age')->default(10);
+            $table->integer('age')->default(13);
             $table->integer('grade')->nullable();
             $table->integer('years_at_camp')->default(0);
             $table->string('unit');

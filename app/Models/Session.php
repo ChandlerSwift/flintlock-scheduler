@@ -16,4 +16,8 @@ class Session extends Model
     public function sessions() {
         return $this->belongsTo(Program::class);
     }
+
+    public function newSessionTime($program_id){
+        //TODO
+    }
 }

@@ -10,6 +10,7 @@ use App\Models\Program;
 
 
 
+
 class AdminController extends Controller
 {
 
@@ -18,7 +19,6 @@ class AdminController extends Controller
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
         $sheetData = array_slice($sheetData, 3);
-        // TODO: omit empty rows
         foreach($sheetData as $row){
             if ($row['A'] == null) { // Name should never be empty, so this is an empty row. Skip it.
                 continue;
@@ -59,14 +59,40 @@ class AdminController extends Controller
 
     /* plan_week */
     public function plan_week() {
-        $scouts = \App\Models\Scout::order_by_desc('age', 'rank');
+        $scouts = \App\Models\Scout::orderByDesc('age', 'rank')->get();
+        $still_filling = true;
         while($still_filling){
-            foreach($scouts as $scouts) {
-                // Try to insert scout into first preference
-                // if that's full, try second, and so on.
-                // Once we find one that works, mark that preference as satisfied
-                //    and continue on to the next scout
+            foreach($scouts as $scout) {
+
+                //Find the first unsatisfied preference, or skip scout
+                $preference = Preference::where('scout_id', $scout->id)->where('satisfied', false)->firstOr(function(){
+                    echo "continue";
+                    //continue;
+                    //TODO: continue errors. Not in loop? 
+                });
+
+                //Check eligibility for scout. If not eligible, skip preference
+                if($scout->isNotElligible($preference->program_id->min_scout_age)){//Is this how table relationships work??
+                    $preference->satisfied = true;
+                    $preference->save();
+                    $preference = Preference::where('scout_id', $scout->id)->where('satisfied', false)->firstOr(function(){
+                        echo "continue";
+                        //continue
+                        //TODO: continue errors. Not in loop? 
+                    });
+                }
+                
+                //
+                $session = Session::where('program_id', $preference->program_id)->where('full', false)->firstOr(function(){
+                    $session = new Session;
+                    $session->program_id = $preference->program_id;
+                    $session->session_time = newSessionTime($preference->program_id);//TODO: newSessionTime
+                    $session->save();
+                });
+                
+
             }
-        } // TODO: end this somehow.
+            $still_filling = false; //figure out how to do this elegantly
+        } 
     }
 }
