@@ -9,6 +9,8 @@ class Scout extends Model
 {
     use HasFactory;
 
+    protected $guarded = []; // Allow mass filling of all attributes
+
     public function sessions() {
         return $this->belongsToMany(Session::class);
     }

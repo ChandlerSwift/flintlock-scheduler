@@ -12,4 +12,8 @@ class Preference extends Model
     public function scout() {
         return $this->belongsTo(Scout::class);
     }
+
+    public function program() {
+        return $this->hasOne(Program::class);
+    }
 }

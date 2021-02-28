@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +21,5 @@ Route::get('/', function () {
 
 Route::prefix('admin')->group(function () { // TODO: auth
     Route::get('plan_week', [AdminController::class, 'plan_week']);
+    Route::get('import_data', [AdminController::class, 'import_data']);
 });

@@ -13,4 +13,8 @@ class Program extends Model
         return $this->hasMany(Session::class);
     }
 
+    public function preference() {
+        return $this->hasMany(Preference::class);
+    }
+
 }
