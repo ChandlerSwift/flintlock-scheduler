@@ -18,8 +18,8 @@ class CreateSessionsTable extends Migration
             $table->timestamps();
             $table->integer('program_id');
             $table->foreign('program_id')->references('id')->on('programs');
-            $table->dateTime('session_time');
-            $table->boolean('full')->default(false);
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
         });
     }
 

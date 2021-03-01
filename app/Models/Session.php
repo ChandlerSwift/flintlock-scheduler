@@ -17,7 +17,12 @@ class Session extends Model
         return $this->belongsTo(Program::class);
     }
 
-    public function newSessionTime($program_id){
-        //TODO
+    public function getFullAttribute() {
+        return $this->scouts()->count() >= $this->program->max_participants;
     }
+    public function getRunningAttribute() { //$session->running
+        return $this->scouts()->count() > 0;
+    }
+    
+    
 }

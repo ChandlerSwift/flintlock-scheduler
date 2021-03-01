@@ -18,16 +18,5 @@ class Scout extends Model
     public function preferences() {
         return $this->hasMany(Preference::class);
     }
-
-    public function isNotElligible($min_scout_age) {
-        
-        if($min_scout_age > $this->age){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    
-
     
 }
