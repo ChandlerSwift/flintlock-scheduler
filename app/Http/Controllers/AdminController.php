@@ -91,11 +91,19 @@ class AdminController extends Controller
                 // check if scout has conflicts
                 $scout_has_conflict = false;
                 foreach ($scout->sessions as $potentialConflict) {
-                    if ($potentialConflict /* TODO: is actually a conflict */) {
+                    if ($session->start_time == $potentialConflict->start_time || $session->end_time == $potentialConflict->end_time) { //4
+                        $scout_has_conflict = true;
+                    }else if ($session->start_time < $potentialConflict->start_time && $session->end_time > $potentialConflict->start_time) { //1
+                        $scout_has_conflict = true;
+                    }else if ($session->start_time > $potentialConflict->start_time && $session->end_time < $potentialConflict->end_time) {//2
+                        $scout_has_conflict = true;
+                    }else if ($session->start_time < $potentialConflict->end_time && $session->end_time > $potentialConflict->end_time) {//3
+                        $scout_has_conflict = true;
+                    }else if ($session->start_time < $potentialConflict->start_time && $session->end_time > $potentialConflict->end_time) {//5
                         $scout_has_conflict = true;
                     }
                 }
-                if ($scout_has_conflicts) {
+                if ($scout_has_conflict) {
                     continue; // try the next session time
                 }
 
