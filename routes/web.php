@@ -1,10 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ScoutController;
-use App\Http\Controllers\SessionController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -21,10 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('admin')->group(function () { // TODO: auth
-    Route::get('plan_week', [AdminController::class, 'plan_week']);
-    Route::get('import_data', [AdminController::class, 'import_data']);
-});
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-Route::resource('scouts', ScoutController::class);
-Route::resource('sessions', SessionController::class);
+require __DIR__.'/auth.php';
