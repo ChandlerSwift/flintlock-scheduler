@@ -22,7 +22,6 @@ class AdminController extends Controller
             if ($row['A'] == null) { // Name should never be empty, so this is an empty row. Skip it.
                 continue;
             }
-            echo "creating... " . implode(", ", $row);
             $scout = Scout::where('first_name', $row['B'])->where('last_name', $row['C'])->where('unit', $row['J'])->firstOr(function() use ($row) {
                 $scout = new Scout;
                 $scout->first_name = $row['B'];
@@ -45,7 +44,7 @@ class AdminController extends Controller
             preg_match('/(.*) \((\d*)(?:st|nd|rd|th) Pref\)/', $row['A'],  $regex_result);
             $program = Program::where('name', $regex_result[1])->first();
             if ($program == null) {
-                echo "trying to find nonexistent program " . $regex_result[1];
+                throw "trying to find nonexistent program " . $regex_result[1];
             } else {
                 $preference = new Preference;
                 $preference->program_id = $program->id;
@@ -64,7 +63,6 @@ class AdminController extends Controller
         while($still_filling){
             $still_filling = false; 
             foreach($scouts as $scout) {
-                Log::warning("Outer Scheduling for " . $scout->first_name . "...");
                 if ($this->put_scout_in_session($scout)) {
                     $output .= "Added " . $scout->name . " to session\n";
                     $still_filling = true;
@@ -78,27 +76,24 @@ class AdminController extends Controller
      *  Place a scout into the highest choice program that works out
      */
     private function put_scout_in_session(Scout $scout) {
-        Log::warning("Inner Scheduling for " . $scout->first_name . "...");
         $scoutAssignedToSession = false;
         foreach($scout->preferences as $preference){
-            Log::warning("Scheduling for " . $scout->first_name . " on preference " . $preference->program->name);
 
             //If satisfied, skip preference
             if($preference->satisfied) {
-                Log::warning("This scout's preference was already satisfied");
+                Log::debug("This scout's preference was already satisfied");
                 continue;
             }
             
             //Check eligibility for scout. If not eligible, skip preference
             if($scout->age < $preference->program->min_scout_age){
-                Log::warning("This scout's not old enough");
+                Log::debug("This scout's not old enough");
                 continue;
             }
 
             $sessions = Session::where('program_id', $preference->program_id)
                 ->withCount('scouts')->orderByDesc('scouts_count') // Starting with the session that's closest to full
                 ->get()->where('full', false); // Ignore full sessions;
-            Log::warning($sessions);
             foreach ($sessions as $session) {
                 // check if scout has conflicts
                 $scout_has_conflict = false;
@@ -107,15 +102,15 @@ class AdminController extends Controller
                         $scout_has_conflict = true;
                 }
                 if ($scout_has_conflict) {
-                    Log::warning("The scout has a conflict");
+                    Log::debug("The scout has a conflict");
                     continue; // try the next session time
                 }
 
                 // Assign scout to session
                 $session->scouts()->attach($scout->id);
                 $preference->satisfied = true;
+                $preference->save();
                 $scoutAssignedToSession = true;
-                Log::warning("Worked");
                 break;
             }
         }
