@@ -44,7 +44,7 @@ class AdminController extends Controller
             preg_match('/(.*) \((\d*)(?:st|nd|rd|th) Pref\)/', $row['A'],  $regex_result);
             $program = Program::where('name', $regex_result[1])->first();
             if ($program == null) {
-                throw "trying to find nonexistent program " . $regex_result[1];
+                Log::warning("trying to find nonexistent program " . $regex_result[1]);
             } else {
                 $preference = new Preference;
                 $preference->program_id = $program->id;
