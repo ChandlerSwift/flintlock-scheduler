@@ -22,7 +22,10 @@ class PreferenceFactory extends Factory
     public function definition()
     {
         return [
-            //
-        ];
+            'scout_id' => $this->faker->numberBetween(1,10),
+            'program_id' => $this->faker->numberBetween(1,8),
+            'rank' => $this->faker->numberBetween(1,6),
+            'satisfied' => false
+        ]; 
     }
 }

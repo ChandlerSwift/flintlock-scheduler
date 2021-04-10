@@ -14,7 +14,15 @@ class ScoutController extends Controller
      */
     public function index()
     {
-        //
+        $res = "<ul>";
+        foreach(Scout::all() as $scout) {
+            $res .= "<li>" . $scout->first_name . " " . $scout->last_name . "<ul>";
+            foreach ($scout->sessions as $session) {
+                $res .= "<li>" . $session->program->name . "(" . $session->start_time . ")" . "</li>";
+            }
+            $res .= "</ul></li>";
+        }
+        return $res;
     }
 
     /**
