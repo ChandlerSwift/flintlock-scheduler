@@ -14,7 +14,16 @@ class SessionController extends Controller
      */
     public function index()
     {
-        //
+        
+        $res = "<ul>";
+        foreach(Session::all() as $session) {
+            $res .= "<li>" . $session->program->name . "(" . $session->start_time . ")" . "<ul>";
+            foreach ($session->scouts as $scout) {
+                $res .= "<li>" . $scout->first_name . " " . $scout->last_name . "</li>";
+            }
+            $res .= "</ul></li>";
+        }
+        return $res;
     }
 
     /**

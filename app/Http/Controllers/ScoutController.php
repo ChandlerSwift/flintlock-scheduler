@@ -14,7 +14,12 @@ class ScoutController extends Controller
      */
     public function index()
     {
-        //
+        
+        $res = "";
+        foreach(Scout::all() as $scout) {
+            $res .= $scout->first_name . " ";
+        }
+        return $res;
     }
 
     /**

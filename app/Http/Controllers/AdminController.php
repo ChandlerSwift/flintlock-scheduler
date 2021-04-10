@@ -8,6 +8,7 @@ use App\Models\Scout;
 use App\Models\Preference;
 use App\Models\Program;
 use App\Models\Session;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -59,51 +60,54 @@ class AdminController extends Controller
     public function plan_week() {
         $scouts = Scout::orderByDesc('age', 'rank')->get();
         $still_filling = true;
+        $output = "Adding scouts to session...";
         while($still_filling){
             $still_filling = false; 
             foreach($scouts as $scout) {
-                if (put_scout_in_session($scout)) {
+                Log::warning("Outer Scheduling for " . $scout->first_name . "...");
+                if ($this->put_scout_in_session($scout)) {
+                    $output .= "Added " . $scout->name . " to session\n";
                     $still_filling = true;
                 }
             }
         }
+        return $output;
     }
 
     /**
      *  Place a scout into the highest choice program that works out
      */
     private function put_scout_in_session(Scout $scout) {
+        Log::warning("Inner Scheduling for " . $scout->first_name . "...");
+        $scoutAssignedToSession = false;
         foreach($scout->preferences as $preference){
+            Log::warning("Scheduling for " . $scout->first_name . " on preference " . $preference->program->name);
+
             //If satisfied, skip preference
-            if($preference->satisfied == true)
+            if($preference->satisfied) {
+                Log::warning("This scout's preference was already satisfied");
                 continue;
+            }
             
             //Check eligibility for scout. If not eligible, skip preference
             if($scout->age < $preference->program->min_scout_age){
+                Log::warning("This scout's not old enough");
                 continue;
             }
 
-            $sessions = Session::where('program_id', $preference->program)
-                ->where('full', false) // Ignore full sessions
+            $sessions = Session::where('program_id', $preference->program_id)
                 ->withCount('scouts')->orderByDesc('scouts_count') // Starting with the session that's closest to full
-                ->get();
+                ->get()->where('full', false); // Ignore full sessions;
+            Log::warning($sessions);
             foreach ($sessions as $session) {
                 // check if scout has conflicts
                 $scout_has_conflict = false;
                 foreach ($scout->sessions as $potentialConflict) {
-                    if ($session->start_time == $potentialConflict->start_time || $session->end_time == $potentialConflict->end_time) { //4
+                    if ($potentialConflict->overlaps($session))
                         $scout_has_conflict = true;
-                    }else if ($session->start_time < $potentialConflict->start_time && $session->end_time > $potentialConflict->start_time) { //1
-                        $scout_has_conflict = true;
-                    }else if ($session->start_time > $potentialConflict->start_time && $session->end_time < $potentialConflict->end_time) {//2
-                        $scout_has_conflict = true;
-                    }else if ($session->start_time < $potentialConflict->end_time && $session->end_time > $potentialConflict->end_time) {//3
-                        $scout_has_conflict = true;
-                    }else if ($session->start_time < $potentialConflict->start_time && $session->end_time > $potentialConflict->end_time) {//5
-                        $scout_has_conflict = true;
-                    }
                 }
                 if ($scout_has_conflict) {
+                    Log::warning("The scout has a conflict");
                     continue; // try the next session time
                 }
 
@@ -111,6 +115,7 @@ class AdminController extends Controller
                 $session->scouts()->attach($scout->id);
                 $preference->satisfied = true;
                 $scoutAssignedToSession = true;
+                Log::warning("Worked");
                 break;
             }
         }
