@@ -54,7 +54,7 @@ class ScoutController extends Controller
      */
     public function show(Scout $scout)
     {
-        //
+        return view('scouts.show', ['scout' => $scout]);
     }
 
     /**

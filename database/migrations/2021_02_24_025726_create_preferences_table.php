@@ -23,8 +23,6 @@ class CreatePreferencesTable extends Migration
             $table->foreign('program_id')->references('id')->on('programs');
 
             $table->integer('rank')->default('10');
-
-            $table->boolean('satisfied')->default(false);
         });
     }
 
