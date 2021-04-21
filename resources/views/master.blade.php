@@ -19,7 +19,7 @@
 
     @foreach($programs as $program)
     <tr>
-        <td>{{ $program->name }}</td>
+        <td style="vertical-align: top;" >{{ $program->name }}</td>
         @foreach($program->sessions->sortBy('start_time') as $session)
             <td style="vertical-align: top;">
                 @if($session->running)
