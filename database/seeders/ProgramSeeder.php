@@ -62,20 +62,13 @@ class ProgramSeeder extends Seeder
         ],  [
             'id'=> 7,
             'name'=> 'Bike Trek',
-            'max_participants'=> 12,
-            'min_scout_age'=> 13,
-            'created_at'    => Carbon::now(),
-            'updated_at'    => Carbon::now()
-        ],  [
-            'id'=> 8,
-            'name'=> 'Bike Outpost',
             'max_participants'=> 10,
             'min_scout_age'=> 12,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
         ]
         ,  [
-            'id'=> 9,
+            'id'=> 8,
             'name'=> 'ATV Safety Training',
             'max_participants'=> 6,
             'min_scout_age'=> 14,
@@ -84,13 +77,35 @@ class ProgramSeeder extends Seeder
         ]
         
         ,[
-            'id'=> 10,
+            'id'=> 9,
             'name'=> 'River Kayak Trek',
             'max_participants'=> 8,
             'min_scout_age'=> 13,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
         ]
+        ,  [
+            'id'=> 10,
+            'name'=> 'Mountain Bike Outpost',
+            'max_participants'=> 12,
+            'min_scout_age'=> 13,
+            'created_at'    => Carbon::now(),
+            'updated_at'    => Carbon::now()
+        ],  [
+            'id'=> 11,
+            'name'=> 'Older Scout Adventure Blast',
+            'max_participants'=> 12,
+            'min_scout_age'=> 13,
+            'created_at'    => Carbon::now(),
+            'updated_at'    => Carbon::now()
+        ],  [
+            'id'=> 12,
+            'name'=> 'Water Sports Outpost',
+            'max_participants'=> 12,
+            'min_scout_age'=> 13,
+            'created_at'    => Carbon::now(),
+            'updated_at'    => Carbon::now()
+        ],
         ]);
     }
 }

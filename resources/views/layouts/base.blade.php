@@ -11,7 +11,16 @@
         text-decoration: none;
         color: black;
     }
+    @media screen {
+        div.status {
+            padding: 20px;
+            background-color: #FFFF88;
+        }
+    }
     @media print {
+        div.status {
+            display: none;
+        }
         a {
             text-decoration: none;
             color: black;
@@ -20,6 +29,9 @@
     </style>
 </head>
 <body>
-    
+    @if(session('status'))
+    <div class="status">{{ session('status') }}</div>
+    @endif
+    @yield('content')
 </body>
 </html>

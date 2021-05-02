@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Log;
 class AdminController extends Controller
 {
 
-    public function import_data() {
+    public function import_data(Request $request) {
+
+        //Artisan::call('migrate', ['--seed' => true]);
         $inputFileName = '/home/isaac/importData.xlsx'; // TODO
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
@@ -69,10 +71,12 @@ class AdminController extends Controller
                 }
             }
         }
+        $request->session()->flash('status', 'Import data was successful!');
+        return back();
     }
 
     /* plan_week */
-    public function plan_week() {
+    public function plan_week(Request $request) {
         $scouts = Scout::orderByDesc('age', 'rank')->get();
         $still_filling = true;
         echo "Adding scouts to session...";
@@ -86,6 +90,8 @@ class AdminController extends Controller
                 }
             }
         }
+        $request->session()->flash('status', 'Plan week was successful!');
+        return back();
     }
 
     /**
@@ -117,7 +123,7 @@ class AdminController extends Controller
                 foreach ($scout->sessions as $potentialConflict) {
                     Log::debug("About to check for overlaps...");
                     if ($potentialConflict->overlaps($session)) {
-                        $scout_has_conflict = true;
+                        $scout_has_conflict = true; 
                         $conflict = $potentialConflict;
                     }
                 }
@@ -142,4 +148,27 @@ class AdminController extends Controller
             $scout->sessions()->detach();
         }
     }
+
+    public function dropSessions($session, $scout){
+        $session->scouts()->detatch($scout->id);
+        //confirmation message
+    }
+
+    public function addSessions(){
+
+    }
+
+    public function dropAndAddSession(){
+
+    }
+
+    public function getStats(Request $request) {
+        $p = Preference::all();
+        return view('stats')
+            ->with('subcamps', $p->groupBy(function($item, $key) {
+                return $item->scout->subcamp;
+            }))
+            ;
+    }
+
 }

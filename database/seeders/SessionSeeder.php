@@ -50,7 +50,7 @@ class SessionSeeder extends Seeder
                     array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2]);
                 }
             //Morning
-            }elseif (in_array($program->id, [8])) {
+            }elseif (in_array($program->id, [10, 11, 12])) {
                 foreach([0,1,2,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
                     $date = new Carbon; // same as ::now()
                     $date->week = $week;
@@ -60,11 +60,11 @@ class SessionSeeder extends Seeder
                     $date2 = new Carbon; // same as ::now()
                     $date2->week = $week;
                     $date2->day = ($date2->day + $dayOfWeek);
-                    $date2->setTime(11, 30, 0); // 5PM
+                    $date2->setTime(11, 30, 0); // 11:30PM
                     array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2]);
                 }
             //ATV
-            }elseif (in_array($program->id, [9])) { 
+            }elseif (in_array($program->id, [8])) { 
                 foreach([0,1,2,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
                     $date = new Carbon; // same as ::now()
                     $date->week = $week;
@@ -79,7 +79,7 @@ class SessionSeeder extends Seeder
                 }
             }
             //Kayak
-            elseif (in_array($program->id, [10])) { 
+            elseif (in_array($program->id, [9])) { 
                 foreach([0,1,2,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
                     $date = new Carbon; // same as ::now()
                     $date->week = $week;

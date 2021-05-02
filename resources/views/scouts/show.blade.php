@@ -1,5 +1,5 @@
 @extends('layouts.base')
-<h1>{{ $scout->first_name }} {{ $scout->last_name }} {{ $scout->unit }} {{ $scout->site }}</h1>
+<h1>{{ $scout->first_name }} {{ $scout->last_name }}, {{ $scout->unit }}, {{ $scout->site }}</h1>
 
 <ul>
 @foreach($scout->sessions->sortBy('start_time') as $session)

@@ -27,9 +27,14 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
+
+
 Route::prefix('admin')->group(function () { // TODO: auth
+    Route::get('/', function () {return view('admin');});   
     Route::get('plan_week', [AdminController::class, 'plan_week']);
     Route::get('import_data', [AdminController::class, 'import_data']);
+    Route::get('stats', [AdminController::class, 'getStats']);
+    Route::get('seed', [AdminController::class, 'seedDatabase']);
 });
 
 Route::resource('scouts', ScoutController::class);

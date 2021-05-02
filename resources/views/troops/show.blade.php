@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-<h1>Troop {{ $troop }}</h1>
+<h1>Troop {{ $troop }} ({{ $scouts->first()->site }})</h1>
 @foreach($scouts as $scout)
 <h3><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a></h3>
 
