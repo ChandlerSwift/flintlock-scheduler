@@ -2,11 +2,27 @@
 <style>
     table {
         border-collapse: collapse;
-    }
-    table th, table td {
         border: solid 1px;
+        margin: auto;
+    }
+    table th{
+        background-color: #333;
+        border: solid 1px;
+        color: white;
+        
+    }
+    table td{
+        border: solid 1px;
+        border-color: #c9c9c9;
+        padding: 5px;
+    }
+    form {
+        
     }
 </style>
+@section('content')
+
+    
 <table>
     <tr>
         <th></th>{{-- offset --}}
@@ -19,7 +35,7 @@
 
     @foreach($programs as $program)
     <tr>
-        <td style="vertical-align: top;" >{{ $program->name }}</td>
+        <td style="vertical-align: top;font-weight: bold;" >{{ $program->name }}</td>
         @foreach($program->sessions->sortBy('start_time') as $session)
             <td style="vertical-align: top;">
                 @if($session->running)
@@ -44,3 +60,4 @@
     <tr>
     @endforeach
 </table>
+@endsection

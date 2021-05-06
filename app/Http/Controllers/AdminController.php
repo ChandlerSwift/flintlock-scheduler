@@ -23,6 +23,9 @@ class AdminController extends Controller
             if ($row['C'] == null) { // Name should never be empty, so this is an empty row. Skip it.
                 continue;
             }
+            if ($row['C'] == 'First Name') { // Don't count the first line
+                continue;
+            }
 
             if (Scout::where('first_name', $row['C'])->where('last_name', $row['D'])->where('unit', $row['E'])->first()) {
                 throw new \Exception("duplicate scout found: " . $row['C'] . " " . $row['D'] . ", troop " . $row['E']);
@@ -90,6 +93,31 @@ class AdminController extends Controller
                 }
             }
         }
+
+        /*
+        for timeslot in thursday_afternoon, thursday_evening, friday_afternoon {
+            max_scouts_placed = 0;
+            for subcamp in Voyageur, TC, Buckskin {
+                timeslot->sessions->subcamp = subcamp;
+                scouts_placed = 0;
+                while($still_filling){
+                    $still_filling = false;
+                    foreach($scouts as $scout) {
+                        if ($this->put_scout_in_session($scout)) {
+                            scouts_placed += 1;
+                            $still_filling = true;
+                        }
+                    }
+                }
+                reset_timeslot(timeslot)
+                if scouts_placed > max_scouts_placed {
+                    max_scouts_placed = scouts_placed;
+                    best_subcamp = subcamp
+                }
+            }
+            // then set subcamp = best_subcamp and really schedule
+        }
+        */
         $request->session()->flash('status', 'Plan week was successful!');
         return back();
     }
@@ -117,6 +145,8 @@ class AdminController extends Controller
                 ->withCount('scouts')->orderByDesc('scouts_count') // Starting with the session that's closest to full
                 ->get()->where('full', false); // Ignore full sessions;
             foreach ($sessions as $session) {
+                // if scout is from a different subcamp than the session
+                //     continue;
                 // check if scout has conflicts
                 $scout_has_conflict = false;
                 $conflict = null;
@@ -170,5 +200,7 @@ class AdminController extends Controller
             }))
             ;
     }
+
+    
 
 }

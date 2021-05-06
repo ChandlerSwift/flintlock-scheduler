@@ -63,7 +63,7 @@ class ProgramSeeder extends Seeder
             'id'=> 7,
             'name'=> 'Bike Trek',
             'max_participants'=> 10,
-            'min_scout_age'=> 12,
+            'min_scout_age'=> 13,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
         ]

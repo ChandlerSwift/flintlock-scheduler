@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ScoutController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\ProgramController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +41,7 @@ Route::prefix('admin')->group(function () { // TODO: auth
 
 Route::resource('scouts', ScoutController::class);
 Route::resource('sessions', SessionController::class);
+Route::resource('programs', ProgramController::class);
 
 Route::get('master', function() {
     return view('master')->with('programs', \App\Models\Program::all());
@@ -51,3 +54,14 @@ Route::get('troops', function() {
 Route::get('troops/{id}', function($id) {
     return view('troops.show')->with('troop', $id)->with('scouts', \App\Models\Scout::where('unit', $id)->get());
 });
+Route::get('print', function() {
+    return view('print')->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'))->with('scouts');
+});
+Route::get('search', function() {
+    return view('search');
+});
+Route::get('requests', function() {
+    return view('requests');
+});
+
+Route::get('/search/', 'ScoutController@search')->name('search');
