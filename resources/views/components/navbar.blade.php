@@ -3,6 +3,7 @@ div.nav {
     overflow: hidden;
     background-color: #333;
     margin-bottom:30px;
+    
 }
 div.nav div.title, div.nav a{
     float: left;
@@ -29,14 +30,13 @@ form {
     margin: auto;
 }
 input[type=text] {
-    border: none;
-    border-bottom: 2px solid white;
+    border: 2px solid white;
     float:right;
-    margin: auto;
-    padding: 5px 10px;
+    padding: 8px 20px;
     color: white;
     background-color: #333;
     box-sizing: border-box;
+    width:15%;
 }
 
 

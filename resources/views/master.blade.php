@@ -39,7 +39,13 @@
         @foreach($program->sessions->sortBy('start_time') as $session)
             <td style="vertical-align: top;">
                 @if($session->running)
+                    @if($session->full)
+                        <div style="color:#0d85bd">
+                            {{ $session->start_time->format('l, g:i A') }}
+                        </div>
+                    @else
                     {{ $session->start_time->format('l, g:i A') }}
+                    @endif
                     <ul>
                     @foreach($session->scouts as $scout)
                         <li><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>,

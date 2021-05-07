@@ -10,9 +10,7 @@ use Carbon\Carbon;
 
 class SessionSeeder extends Seeder
 {
-                                // Monday      Tuesday      Wednesday   Thurs    Fri
-    private $subcamp_afternoons = ["Buckskin", "Voyageur", "Ten Chiefs", "any", "any"];
-    private $subcamp_evenings =   ["Ten Chiefs", "Buckskin", "Voyageur", "any"];
+   
 
     /**
      * Run the database seeds.
@@ -21,6 +19,10 @@ class SessionSeeder extends Seeder
      */
     public function run($week = 27) //week 1 = 27
     {
+                                // Monday      Tuesday      Wednesday   Thurs    Fri
+        $subcamp_afternoons = ["Buckskin", "Voyageur", "Ten Chiefs", "any", "any"];
+        $subcamp_evenings =   ["Ten Chiefs", "Buckskin", "Voyageur", "any"]; 
+
         DB::table('sessions')->delete();
         foreach (Program::all() as $program) {
             $timeSlots = [];
@@ -50,10 +52,10 @@ class SessionSeeder extends Seeder
                     $date2->week = $week;
                     $date2->day = (Carbon::MONDAY + $dayOfWeek);
                     $date2->setTime(17, 0, 0); // 5PM
-                    array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2, 'subcamp' => $subcamp_afternoons[$dayOfWeek]]);
+                    array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2 , 'subcamp' => $subcamp_afternoons[$dayOfWeek]]);
                 }
             //Morning
-            }elseif (in_array($program->id, [10, 11, 12])) {
+            /* }elseif (in_array($program->id, [10, 11, 12])) {
                 foreach([0,1,2,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
                     $date = new Carbon; // same as ::now()
                     $date->week = $week;
@@ -64,8 +66,8 @@ class SessionSeeder extends Seeder
                     $date2->week = $week;
                     $date2->day = (Carbon::MONDAY + $dayOfWeek);
                     $date2->setTime(11, 30, 0); // 11:30PM
-                    array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2]);
-                }
+                    array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2, 'subcamp' => $subcamp_afternoons[$dayOfWeek]]);
+                } */
             //ATV
             }elseif (in_array($program->id, [8])) { 
                 foreach([0,1,2,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
@@ -78,7 +80,7 @@ class SessionSeeder extends Seeder
                     $date2->week = $week;
                     $date2->day = (Carbon::MONDAY + $dayOfWeek);
                     $date2->setTime(21, 0, 0); // 9PM
-                    array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2]);
+                    array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2, 'subcamp' => $subcamp_afternoons[$dayOfWeek]]);
                 }
             }
             //Kayak
@@ -93,9 +95,9 @@ class SessionSeeder extends Seeder
                     $date2->week = $week;
                     $date2->day = (Carbon::MONDAY + $dayOfWeek);
                     $date2->setTime(21, 0, 0); // 9PM
-                    array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2]);
+                    array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2, 'subcamp' => $subcamp_afternoons[$dayOfWeek]]);
                 }
-            }
+            }   
 
             // [startTime1, endTime1, startTime2, endTime2, startTime3, endTime3, ...]
             foreach ($timeSlots as $timeSlot) { // this is a startTime

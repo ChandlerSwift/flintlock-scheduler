@@ -145,9 +145,10 @@ class AdminController extends Controller
                 ->withCount('scouts')->orderByDesc('scouts_count') // Starting with the session that's closest to full
                 ->get()->where('full', false); // Ignore full sessions;
             foreach ($sessions as $session) {
-                // if scout is from a different subcamp than the session
-                //     continue;
-                // check if scout has conflicts
+                
+                if ($scout->subcamp != $session->subcamp)//Ignore different subcamp slots
+                    continue;
+
                 $scout_has_conflict = false;
                 $conflict = null;
                 foreach ($scout->sessions as $potentialConflict) {

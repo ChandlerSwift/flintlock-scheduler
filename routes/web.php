@@ -55,7 +55,7 @@ Route::get('troops/{id}', function($id) {
     return view('troops.show')->with('troop', $id)->with('scouts', \App\Models\Scout::where('unit', $id)->get());
 });
 Route::get('print', function() {
-    return view('print')->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'))->with('scouts');
+    return view('print')->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'));
 });
 Route::get('search', function() {
     return view('search');
