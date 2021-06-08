@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 class AdminController extends Controller
 {
 
-    public function import_data(Request $request) {
+    public function import_data() {
 
         //Artisan::call('migrate', ['--seed' => true]);
         $inputFileName = '/home/isaac/importData.xlsx'; // TODO
@@ -74,12 +74,12 @@ class AdminController extends Controller
                 }
             }
         }
-        $request->session()->flash('status', 'Import data was successful!');
+        //$request->session()->flash('status', 'Import data was successful!');
         return back();
     }
 
     /* plan_week */
-    public function plan_week(Request $request) {
+    public function plan_week() {//Request $request
         $scouts = Scout::orderByDesc('age', 'rank')->get();
         $still_filling = true;
         echo "Adding scouts to session...";
@@ -94,12 +94,89 @@ class AdminController extends Controller
             }
         }
 
-        /*
-        for timeslot in thursday_afternoon, thursday_evening, friday_afternoon {
-            max_scouts_placed = 0;
-            for subcamp in Voyageur, TC, Buckskin {
-                timeslot->sessions->subcamp = subcamp;
-                scouts_placed = 0;
+        $testSubcamps = ['Buckskin', 'Ten Chiefs', 'Voyageur'];
+        $afternoonA;
+        $afternoonB;
+        $eveningFirst;
+        $maxa = 0;  
+        $maxb = 0;
+        $maxe = 0;
+        foreach ($testSubcamps as $testSubcamp) {
+            
+            $counta = 0;
+            $counte = 0;
+            $preferences = Preference::where('$scout->subcamp', $testSubcamp);
+            
+            foreach($preferences as $preference){
+                dd($preference);
+                if($preference->satisfied)
+                    continue;
+                if($preference->program->id == 1 || $preference->program->id == 3 || $preference->program->id == 3)
+                    $counte += 1;
+                if($preference->program->id == 4 
+                || $preference->program->id == 5 
+                || $preference->program->id == 6 
+                || $preference->program->id == 7 
+                || $preference->program->id == 8
+                || $preference->program->id == 9){
+                    $counta += 1;
+                }
+            }
+            if($counta > $maxa && $counta > $maxb){
+                $maxb = $maxa;
+                $maxa = $counta;
+                $afternoonB = $afternoonA;
+                $afternoonA = $testSubcamp;
+                echo "Replaced A slot...";
+            }elseif($counta > $maxb){
+                $maxb = $counta;
+                $afternoonB = $testSubcamp;
+                echo "Replaced B slot...";
+            }
+            if($counte > $maxe){
+                $maxe = $counte;
+                $eveningFirst = $testSubcamp;
+                echo "Replaced E slot...";
+            }
+        }
+        foreach (Session::where('subcamp', 'anyE') as $session){
+                $session->subcamp = $eveningFirst;
+                $session->save();
+                echo "E...";
+        }
+        foreach (Session::where('subcamp', 'anyA') as $session){
+            $session->subcamp = $afternoonA;
+            $session->save();
+            echo "A...";
+        }
+        foreach (Session::where('subcamp', 'anyB') as $session){
+            $session->subcamp = $afternoonB;
+            $session->save();
+            echo "B...";
+        }
+
+        $this->clearSessions();
+
+        $scouts = Scout::orderByDesc('age', 'rank')->get();
+        $still_filling = true;
+        echo "Adding scouts to session...";
+        $i=0;
+        while($still_filling){
+            echo $i++;
+            $still_filling = false;
+            foreach($scouts as $scout) {
+                if ($this->put_scout_in_session($scout)) {
+                    $still_filling = true;
+                }
+            }
+        }
+
+         /* foreach ($session->where('subcamp', 'any') as $session) {
+            $max_scouts_placed = 0;
+            
+            foreach ($testSubcamps as $testSubcamp) {
+                timeslot->sessions->subcamp = $testSubcamp;
+                $scouts_placed = 0;
                 while($still_filling){
                     $still_filling = false;
                     foreach($scouts as $scout) {
@@ -110,15 +187,15 @@ class AdminController extends Controller
                     }
                 }
                 reset_timeslot(timeslot)
-                if scouts_placed > max_scouts_placed {
-                    max_scouts_placed = scouts_placed;
-                    best_subcamp = subcamp
+                if ($scouts_placed > $max_scouts_placed) {
+                    $max_scouts_placed = $scouts_placed;
+                    $bestSubcamp = $testSubcamp;
                 }
-            }
+            } 
             // then set subcamp = best_subcamp and really schedule
-        }
-        */
-        $request->session()->flash('status', 'Plan week was successful!');
+        } */
+        
+        //$request->session()->flash('status', 'Plan week was successful!');
         return back();
     }
 
@@ -185,13 +262,7 @@ class AdminController extends Controller
         //confirmation message
     }
 
-    public function addSessions(){
-
-    }
-
-    public function dropAndAddSession(){
-
-    }
+    
 
     public function getStats(Request $request) {
         $p = Preference::all();
