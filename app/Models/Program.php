@@ -17,4 +17,8 @@ class Program extends Model
         return $this->hasMany(Preference::class);
     }
 
+    public function changeRequests() {
+        return $this->hasMany(ChangeRequest::class);
+    }
+
 }

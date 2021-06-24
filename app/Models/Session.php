@@ -35,6 +35,9 @@ class Session extends Model
     public function getRunningAttribute() { //$session->running
         return $this->scouts()->count() > 0;
     }
+    public function changeRequests() {
+        return $this->belongsToMany(ChangeRequest::class);
+    }
 
     public function overlaps(Session $other) {
         Log::debug("Checking for overlap...");

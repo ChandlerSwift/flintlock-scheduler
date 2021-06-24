@@ -62,8 +62,25 @@
     .button:hover{
         box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
     } 
+    table {
+        border-collapse: collapse;
+        border: solid 1px;
+        margin: auto;
+    }
+    table th{
+            background-color: #333;
+            border: solid 1px;
+            color: white;
+            
+    }
+    table td{
+            border: solid 1px;
+            border-color: #c9c9c9;
+            padding: 5px;
+    }
     
     </style>
+    @yield('head')
 </head>
 <body>
     @include('components.navbar')

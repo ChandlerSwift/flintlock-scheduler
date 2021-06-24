@@ -41,13 +41,13 @@
                 @if($session->running)
                     @if($session->full)
                         <div style="color:#0d85bd">
-                            {{ $session->start_time->format('l, g:i A') }}
+                            {{ $session->start_time->format('l, g:i A') }}, &nbsp{{ $session->subcamp }}
                         </div>
                     @else
-                    {{ $session->start_time->format('l, g:i A') }}
+                    {{ $session->start_time->format('l, g:i A') }}, &nbsp{{ $session->subcamp }}
                     @endif
                     <ul>
-                    @foreach($session->scouts as $scout)
+                    @foreach($session->scouts->sortBy('troop') as $scout)
                         <li><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>,
                             <a href="/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></li>
                     @endforeach

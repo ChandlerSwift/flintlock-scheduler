@@ -45,14 +45,20 @@ input[type=text] {
 <div class="nav">
     <!-- <div class="img"> <img src="{{ asset('/mpsclogonegative.png') }}" height= 33px;> </div> -->
     <div class="title">{{ config('app.name') }}</div>
-    <a href="/master">Master</a>
+    <a href="/">Master</a>
     <a href="/requests">Requests</a>
     <a href="/print">Print</a>
-    {{-- @if($auth->user->admin) --}}
     <a href="/programs/">Programs</a>
+    @if(Auth::user()->admin)
     <a href="/admin/">Admin</a>
-    {{-- @endif --}}
-    <form  action="{{ route('search') }}" method="GET">
+    @endif
+
+
+    <form id="logout-form" style="display:none;" method="POST" action="{{ route('logout') }}">@csrf</form>
+    <a href="route('logout')" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
+
+
+    <form action="{{ route('search') }}" method="GET">
         <input type="text" name="search" placeholder="Search" required/>
     </form>
 </div>

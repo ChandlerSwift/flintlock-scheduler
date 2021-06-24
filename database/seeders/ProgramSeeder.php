@@ -84,14 +84,14 @@ class ProgramSeeder extends Seeder
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
         ]
-        /* ,  [
+         ,  [
             'id'=> 10,
-            'name'=> 'Mountain Bike Outpost',
+            'name'=> 'Water Skiing',
             'max_participants'=> 12,
             'min_scout_age'=> 13,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
-        ],  [
+        ]/*,  [
             'id'=> 11,
             'name'=> 'Older Scout Adventure Blast',
             'max_participants'=> 12,

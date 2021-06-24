@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ScoutController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\ChangeRequestController;
 
 
 /*
@@ -19,49 +20,42 @@ use App\Http\Controllers\ProgramController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
-
 require __DIR__.'/auth.php';
 
+Route::middleware(['auth'])->group(function(){
 
+    Route::get('/', function () {
+        return view('master')->with('programs', \App\Models\Program::all());
+    });
 
-Route::prefix('admin')->group(function () { // TODO: auth
-    Route::get('/', function () {return view('admin');});   
-    Route::get('plan_week', [AdminController::class, 'plan_week']);
-    Route::get('import_data', [AdminController::class, 'import_data']);
-    Route::get('stats', [AdminController::class, 'getStats']);
-    Route::get('seed', [AdminController::class, 'seedDatabase']);
-});
+    Route::prefix('admin')->middleware(['admin'])->group(function () {
+        Route::get('/', function () { return view('admin'); });
+        Route::get('plan_week', [AdminController::class, 'plan_week']);
+        Route::get('import_data', [AdminController::class, 'import_data']);
+        Route::get('stats', [AdminController::class, 'getStats']);
+        Route::get('seed', [AdminController::class, 'seedDatabase']);
+        // TODO: users
+    });
 
-Route::resource('scouts', ScoutController::class);
-Route::resource('sessions', SessionController::class);
-Route::resource('programs', ProgramController::class);
+    Route::resource('scouts', ScoutController::class);
+    Route::resource('sessions', SessionController::class);
+    Route::resource('programs', ProgramController::class);
+    Route::resource('requests', ChangeRequestController::class);
 
-Route::get('master', function() {
-    return view('master')->with('programs', \App\Models\Program::all());
-});
+    Route::get('troops', function() {
+        return view('troops.index')->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'));
+    });
 
-Route::get('troops', function() {
-    return view('troops.index')->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'));
-});
+    Route::get('troops/{id}', function($id) {
+        return view('troops.show')->with('troop', $id)->with('scouts', \App\Models\Scout::where('unit', $id)->get());
+    });
+    Route::get('print', function() {
+        return view('print')->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'))->with('scouts', \App\Models\Scout::all());
+    });
+    Route::get('search', function() {
+        return view('search');
+    });
 
-Route::get('troops/{id}', function($id) {
-    return view('troops.show')->with('troop', $id)->with('scouts', \App\Models\Scout::where('unit', $id)->get());
-});
-Route::get('print', function() {
-    return view('print')->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'));
-});
-Route::get('search', function() {
-    return view('search');
-});
-Route::get('requests', function() {
-    return view('requests');
-});
+    Route::get('/search/', 'App\Http\Controllers\ScoutController@search')->name('search');
 
-Route::get('/search/', 'ScoutController@search')->name('search');
+});

@@ -28,7 +28,7 @@ class AdminController extends Controller
             }
 
             if (Scout::where('first_name', $row['C'])->where('last_name', $row['D'])->where('unit', $row['E'])->first()) {
-                throw new \Exception("duplicate scout found: " . $row['C'] . " " . $row['D'] . ", troop " . $row['E']);
+                continue;
             }
             $scout = new Scout;
             $scout->first_name = $row['C'];
@@ -52,10 +52,18 @@ class AdminController extends Controller
                     Log::warning("Unknown rank for scout " . $row['C'] . " " . $row['D'] . ", troop " . $row['E'] . " (setting to Scout)");
             if ($row['H'] != null)
                 $scout->age = $row['H'];
+            if ($row['E'] != null)
             $scout->unit = $row['E'];
-            $scout->subcamp = $row['A'];
-            $scout->site = $row['J'];
-            $scout->gender = $row['F'];
+            else
+                $scout->unit = '0000';
+            if ($row['A'] != null)
+                $scout->subcamp = $row['A'];
+            if ($row['J'] != null)
+                $scout->site = $row['J'];
+            if ($row['F'] != null)
+                $scout->gender = $row['F'];
+            else
+                $scout->gender = '0';
             $scout->save();
             
             $row_indices = ["K", "L", "M", "N", "O", "P", "Q"];
@@ -83,7 +91,7 @@ class AdminController extends Controller
         $scouts = Scout::orderByDesc('age', 'rank')->get();
         $still_filling = true;
         echo "Adding scouts to session...";
-        $i=0;
+        $i=0; 
         while($still_filling){
             echo $i++;
             $still_filling = false;
@@ -95,8 +103,8 @@ class AdminController extends Controller
         }
 
         $testSubcamps = ['Buckskin', 'Ten Chiefs', 'Voyageur'];
-        $afternoonA;
-        $afternoonB;
+        $afternoonA = 'Blank';
+        $afternoonB = 'Blank';
         $eveningFirst;
         $maxa = 0;  
         $maxb = 0;
@@ -105,10 +113,14 @@ class AdminController extends Controller
             
             $counta = 0;
             $counte = 0;
-            $preferences = Preference::where('$scout->subcamp', $testSubcamp);
+            $preferences = Preference::whereHas('scout', function($q) use($testSubcamp){
+
+                $q->where('subcamp', '=', $testSubcamp);
             
-            foreach($preferences as $preference){
-                dd($preference);
+            })->get();
+            
+            foreach ($preferences as $preference){
+                
                 if($preference->satisfied)
                     continue;
                 if($preference->program->id == 1 || $preference->program->id == 3 || $preference->program->id == 3)
@@ -127,29 +139,32 @@ class AdminController extends Controller
                 $maxa = $counta;
                 $afternoonB = $afternoonA;
                 $afternoonA = $testSubcamp;
-                echo "Replaced A slot...";
+                echo "Replaced A slot..." . $afternoonA . "...";
             }elseif($counta > $maxb){
                 $maxb = $counta;
                 $afternoonB = $testSubcamp;
-                echo "Replaced B slot...";
+                echo "Replaced B slot..." . $afternoonB . "...";
             }
             if($counte > $maxe){
                 $maxe = $counte;
                 $eveningFirst = $testSubcamp;
-                echo "Replaced E slot...";
+                echo "Replaced E slot..." . $eveningFirst . "...";
             }
         }
-        foreach (Session::where('subcamp', 'anyE') as $session){
+        $eSessions = Session::where('subcamp', 'anyE')->get();
+        foreach ($eSessions as $session){
                 $session->subcamp = $eveningFirst;
                 $session->save();
                 echo "E...";
         }
-        foreach (Session::where('subcamp', 'anyA') as $session){
+        $aSessions = Session::where('subcamp', 'anyA')->get();;
+        foreach ($aSessions as $session){
             $session->subcamp = $afternoonA;
             $session->save();
             echo "A...";
         }
-        foreach (Session::where('subcamp', 'anyB') as $session){
+        $bSessions = Session::where('subcamp', 'anyB')->get();;
+        foreach ($bSessions as $session){
             $session->subcamp = $afternoonB;
             $session->save();
             echo "B...";
