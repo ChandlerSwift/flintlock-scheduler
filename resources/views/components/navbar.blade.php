@@ -45,17 +45,17 @@ input[type=text] {
 <div class="nav">
     <!-- <div class="img"> <img src="{{ asset('/mpsclogonegative.png') }}" height= 33px;> </div> -->
     <div class="title">{{ config('app.name') }}</div>
-    <a href="/">Master</a>
-    <a href="/requests">Requests</a>
-    <a href="/print">Print</a>
-    <a href="/programs/">Programs</a>
+    <a href="/flintlock/">Master</a>
+    <a href="/flintlock/requests">Requests</a>
+    <a href="/flintlock/print">Print</a>
+    <a href="/flintlock/programs/">Programs</a>
     @if(Auth::user()->admin)
-    <a href="/admin/">Admin</a>
+    <a href="/flintlock/admin/">Admin</a>
     @endif
 
 
     <form id="logout-form" style="display:none;" method="POST" action="{{ route('logout') }}">@csrf</form>
-    <a href="route('logout')" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
+    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
 
 
     <form action="{{ route('search') }}" method="GET">
