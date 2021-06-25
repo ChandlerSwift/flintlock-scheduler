@@ -12,15 +12,7 @@ div.troopHeader{
 </div>
 {{$troopHasScouts = false}}
 @foreach($troops as $troop)
-    @foreach ($scouts->where('unit', $troop) as $scout)
-        @if($scout->sessions->first() == null)
-            @continue
-        @else
-            {{$troopHasScouts = true}}
-        @endif
-    @endforeach
-
-    @if ($troopHasScouts)
+    
         <div class="troopHeader">
             <h1>
                 <img src="{{ asset('/mpsclogo.jpeg') }}" height="100px" style='vertical-align:middle;' >
@@ -41,7 +33,5 @@ div.troopHeader{
                 @endif
             @endforeach
         <div class="pagebreak"> </div>
-    @else
-    @endif
 @endforeach
 @endsection 
