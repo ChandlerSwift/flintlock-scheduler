@@ -10,7 +10,7 @@
 
         <ul>
         @foreach($session->scouts as $scout)
-            <li><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }} ({{ $scout->gender }}) {{ $scout->troop }}, {{ $scout->site }} {{ $scout->troop }}</a></li>
+            <li><a href="/flintlock/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }} ({{ $scout->gender }}) {{ $scout->troop }}, {{ $scout->site }} {{ $scout->troop }}</a></li>
         @endforeach
         </ul>
     @endif

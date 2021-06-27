@@ -4,7 +4,7 @@
 @section('content')
 <div class="list">
     @foreach($programs as $program)
-    <a href="/programs/{{$program->id}}">{{ $program->name }}</a><br>
+    <a href="/flintlock/programs/{{$program->id}}">{{ $program->name }}</a><br>
     @endforeach
 </div>
 @endsection

@@ -13,7 +13,7 @@ div.requestTable{
 div.requestform{
     background-color: #333;
     margin:auto;
-    width: 90%;
+    width: 95%;
     
 }
 form{
@@ -37,7 +37,7 @@ input.notes{
     font-size: 16px;
     box-sizing: border-box;
     padding: 12px 20px;
-    width: 20%;
+    width: 15%;
 }
 table {
         width:100%;
@@ -81,6 +81,14 @@ table {
             @foreach($programs as $program)
                 <option value="{{ $program->id }}">{{ $program->name }}</option>
             @endforeach
+        </select>
+        <select  class="requestform" id="session" name="session">
+            <option value="session" selected disabled hidden>Session</option>  
+            <option value="mon">Monday</option>
+            <option value="tues">Tuesday</option>
+            <option value="wed">Wednesday</option>
+            <option value="thurs">Thursday</option>
+            <option value="fri">Friday</option>
         </select>
     <input class="notes" id="notes" name="notes"placeholder="Notes">
     <button class="button" onclick="">Submit Request</button>
@@ -171,13 +179,18 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @endif
                 <td>{{ $changeRequest->action }}</td>
                 <td>{{ $changeRequest->notes }}</td>
-                <td>
-                    <a style="color: blue;" 
-                    href="/requests" 
-                    onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                    APPROVE
-                    </a>
-                </td>
+
+                @if(Auth::user()->admin)
+                    <td>
+                        <a style="color: blue;" 
+                        href="/requests" 
+                        onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                        APPROVE
+                        </a>
+                    </td>
+                @else
+                <td>Pending</td>
+                @endif
             </tr>
         @endforeach
         @foreach ($changeRequests->where('status', 'approved') as $changeRequest)

@@ -48,8 +48,8 @@
                     @endif
                     <ul>
                     @foreach($session->scouts->sortBy('troop') as $scout)
-                        <li><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>,
-                            <a href="/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></li>
+                        <li><a href="/flintlock/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>,
+                            <a href="/flintlock/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></li>
                     @endforeach
                     </ul>
                 @else
