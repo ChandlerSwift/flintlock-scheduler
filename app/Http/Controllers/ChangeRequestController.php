@@ -10,6 +10,9 @@ use App\Models\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use App\Providers\RouteServiceProvider;
+
 
 class ChangeRequestController extends Controller
 {
@@ -53,7 +56,7 @@ class ChangeRequestController extends Controller
         $cr->save();
 
         $request->session()->flash('status', 'Request submitted!');
-        return back();
+        return  redirect()->intended('/flintlock/requests');;
     }
 
     /**
@@ -128,7 +131,7 @@ class ChangeRequestController extends Controller
         $sessions = Session::where('program_id', $changeRequest->program->id)->get();
         foreach($sessions as $session){
             //$scout = 
-            if ($session->scout->id == $changeRequest->scout->id){
+            //if ($session->scout->id == $changeRequest->scout->id){
                 $session->scouts()->detatch($changeRequest->scout->id);
                 $changeRequest->session = $session;
                 $changeRequest->status = "scheduled";
@@ -138,7 +141,7 @@ class ChangeRequestController extends Controller
             /* if($session->scout->id == $changeRequest->scout->id){
                 $session->scouts()->detatch
             } */
-            }
+            //}
         }
         
     }
