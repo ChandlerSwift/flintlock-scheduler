@@ -90,16 +90,14 @@ class ChangeRequestController extends Controller
                 $sessionCount = 38;
             else if ($request['program'] == 10)
                 $sessionCount = 43;
-                
-
 
             $dayProgram = $sessionCount + $day;
-        $cr->session_id = $dayProgram;
+            $cr->session_id = $dayProgram;
         }
         $cr->save();
 
         $request->session()->flash('status', 'Request submitted!');
-        return  redirect()->intended('/flintlock/requests');;
+        return  redirect('/flintlock/requests');
     }
 
     /**
@@ -192,59 +190,5 @@ class ChangeRequestController extends Controller
     }
 
 
-    /* public function fillAddRequest ($scout, $program, $changeRequest) {
-        
-
-        $scoutAssignedToSession = false;
-        
-        //Check eligibility for scout. If not eligible, skip preference
-        if($scout->age < $program->min_scout_age){
-            Log::debug($scout->first_name . " " . $scout->last_name . " is not old enough (need " . $preference->program->min_scout_age . ", got " . $scout->age . ")");
-            
-        }else{
-
-            $sessions = Session::where('program_id', $program->id)
-                ->withCount('scouts')->orderByDesc('scouts_count') // Starting with the session that's closest to full
-                ->get()->where('full', false); // Ignore full sessions;
-            foreach ($sessions as $session) {
-                echo "Trying Sessions now   ";
-                if ($scout->subcamp != $session->subcamp){//Ignore different subcamp slots
-                    echo "Wrong Subcamp... " . $scout->subcamp . "  vs  " . $session->subcamp . "    ";
-                    continue;
-                }
-                $scout_has_conflict = false;
-                $conflict = null;
-                foreach ($scout->sessions as $potentialConflict) {
-                    Log::debug("About to check for overlaps...");
-                    echo "   yeah    ";
-                    if ($potentialConflict->overlaps($session)) {
-                        $scout_has_conflict = true; 
-                        $conflict = $potentialConflict;
-                    }
-                }
-                if ($scout_has_conflict) {
-                    Log::debug("The scout has a conflict (" . $conflict->program->name . ")");
-                    echo "The scout has a conflict (" . $conflict->program->name . ")";
-                    continue; // try the next session time
-                }
-
-                // Assign scout to session
-                echo "Attaching Scout   ";
-                $session->scouts()->attach($scout->id);
-                $scout->refresh(); // Invalidate the cache
-                $scoutAssignedToSession = true;
-                $changeRequest->status = "scheduled";
-                $changeRequest->save();
-                //$request->session()->flash('status', 'Request submitted!');
-                break;
-            }    
-        }
-
-        if ($scoutAssignedToSession){
-           
-        }else{
-
-        }
-         
-    }*/
+   
 }
