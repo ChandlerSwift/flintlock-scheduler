@@ -16,7 +16,7 @@ class AdminController extends Controller
     public function import_data() {
 
         //Artisan::call('migrate', ['--seed' => true]);
-        $inputFileName = 'importData.xlsx'; // TODO
+        $inputFileName = '/home/isaac/importData.xlsx'; // TODO
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
         foreach($sheetData as $row){

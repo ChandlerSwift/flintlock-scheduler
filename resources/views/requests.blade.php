@@ -211,7 +211,17 @@ document.getElementById("troop").addEventListener("change", function(e){
                 <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
                 <td>{{ $changeRequest->action }}</td>
                 <td>{{ $changeRequest->notes }}</td>
+
+                @if(Auth::user()->admin)
                 <td>Approved</td>
+                @else<td>
+                        <a style="color: blue;" 
+                        href="/requests" 
+                        onclick="return confirm('Confirm {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                        Confirm
+                        </a>
+                    </td>
+                @endif
             </tr>
         @endforeach
     </table>
@@ -259,10 +269,15 @@ document.getElementById("troop").addEventListener("change", function(e){
     <br>
     <br>
     <br>
+    If the session date does not matter, leave it blank when requesting and Flintlock will fill in whatever is available.
+    <br>
+    <br>
     <h4> Status Meanings:</h4>
     <p> Pending - Waiting on Flintlock Approval (Someone may have to drop to make this request happen)<br>
         Approved/CONFIRM? - Waiting on Subcamp PD to confirm the scheduled timeslot<br>
         Confirmed (In the archived table) - Subcamp has confirmed and Scout is scheduled
+        
+        
     </p>
 </div>
 @endsection
