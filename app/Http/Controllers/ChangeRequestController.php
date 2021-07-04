@@ -53,6 +53,49 @@ class ChangeRequestController extends Controller
         $cr->program_id = $request['program'];
         $cr->notes = $request['notes'];
         $cr->status = "pending";
+        
+        
+        $day = 5;
+        $sessionCount = 0;
+        $dayProgram = 0;
+        if ($request['session'] == 'mon')
+            $day = 0; 
+        else if ($request['session'] == 'tues')
+            $day = 1;
+        else if ($request['session'] == 'wed')
+            $day = 2;
+        else if ($request['session'] == 'thur')
+            $day = 3;
+        else if ($request['session'] == 'fri')
+            $day = 4;
+
+        if ($day < 5 ){
+            if ($request['program'] == 1)
+                $sessionCount = 1;
+            else if ($request['program'] == 2)
+                $sessionCount = 5;
+            else if ($request['program'] == 3)
+                $sessionCount = 9;
+            else if ($request['program'] == 4)
+                $sessionCount = 13;
+            else if ($request['program'] == 5)
+                $sessionCount = 18;
+            else if ($request['program'] == 6)
+                $sessionCount = 23;
+            else if ($request['program'] == 7)
+                $sessionCount = 28;
+            else if ($request['program'] == 8)
+                $sessionCount = 33;
+            else if ($request['program'] == 9)
+                $sessionCount = 38;
+            else if ($request['program'] == 10)
+                $sessionCount = 43;
+                
+
+
+            $dayProgram = $sessionCount + $day;
+        $cr->session_id = $dayProgram;
+        }
         $cr->save();
 
         $request->session()->flash('status', 'Request submitted!');
@@ -119,30 +162,24 @@ class ChangeRequestController extends Controller
         $changeRequest->save();
     
         if($changeRequest->action == 'Drop')
-            $this->dropRequest($changeRequest->id);
+            $this->dropRequest($changeRequest);
         elseif($changeRequest->action == 'Add')
-            $this->addRequest();
+            $this->addRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
     } 
 
 
 
-    public function dropRequest($id){
-        $changeRequest = ChangeRequest::where('id', $id)->first();
-        $sessions = Session::where('program_id', $changeRequest->program->id)->get();
-        foreach($sessions as $session){
-            //$scout = 
-            //if ($session->scout->id == $changeRequest->scout->id){
-                $session->scouts()->detatch($changeRequest->scout->id);
-                $changeRequest->session = $session;
-                $changeRequest->status = "scheduled";
-                $changeRequest->save();
-                $this->addRequest();
+    public function dropRequest($changeRequest){
+        
+        $changeRequest->session->scouts()->detatch($changeRequest->scout->id);
+        $changeRequest->status = "archived";
+        $changeRequest->save();
 
             /* if($session->scout->id == $changeRequest->scout->id){
                 $session->scouts()->detatch
             } */
             //}
-        }
+        
         
     }
 
@@ -150,11 +187,8 @@ class ChangeRequestController extends Controller
 
         $session->scouts()->attach($scout->id);
         $scout->refresh(); // Invalidate the cache
-        $scoutAssignedToSession = true;
-        $changeRequest->status = "scheduled";
+        $changeRequest->status = "archived";
         $changeRequest->save();
-            
-        
     }
 
 
