@@ -47,7 +47,7 @@ table {
 
 @section('content')
 <div class="requestform">
-    <form action="/requests" method="POST">
+    <form action="/flintlock/requests" method="POST">
         @csrf
         <select  class="requestform" id="addDrop" name="addDrop">
             <option value="addDrop" selected disabled hidden>Add or Drop</option>  
@@ -159,20 +159,31 @@ document.getElementById("troop").addEventListener("change", function(e){
                 <td>{{ $changeRequest->notes }}</td>
 
                 @if(Auth::user()->admin)
-                    <td>
+                     <td>
                         <a style="color: blue;" 
-                        href="/requests" 
+                        href="/requests"> 
+                        <form method="POST" target="/flintlock/requests/{{ $changeRequest->id }}/approve">
+                        @csrf
+                        <button
                         onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                        APPROVE / 
+                        APPROVE 
+                        </form>
                         </a>
                         <a style="color: blue;" 
-                        href="/requests" 
+                        href="/requests" >
+                        <form method="POST" target="/flintlock/requests/{{ $changeRequest->id }}">
+                        <!-- https://laravel.com/docs/8.x/routing#form-method-spoofing -->
+                        @method('DELETE')
+                        @csrf
+                        <button
                         onclick="return confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                        DELETE
+                         DELETE
                         </a>
-                    </td>
-                @else
-                <td>Pending</td>
+                       </button>
+                        </form>
+                     </td>
+                 @else
+                 <td>Pending</td>
                 @endif
             </tr>
         @endforeach

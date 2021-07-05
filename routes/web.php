@@ -56,6 +56,8 @@ Route::middleware(['auth'])->group(function(){
         return view('search');
     });
 
+    Route::post('requests/{request}/approve', [ChangeRequestController::class, 'approveRequest']);
+
     Route::get('/search/', 'App\Http\Controllers\ScoutController@search')->name('search');
 
 });

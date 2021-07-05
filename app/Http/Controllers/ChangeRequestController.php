@@ -97,7 +97,7 @@ class ChangeRequestController extends Controller
         $cr->save();
 
         $request->session()->flash('status', 'Request submitted!');
-        return  redirect('/flintlock/requests');
+        return back();
     }
 
     /**
@@ -142,12 +142,12 @@ class ChangeRequestController extends Controller
      */
     public function destroy(ChangeRequest $request)
     {
-        //
+        $request->delete();
+        return back();
     }
 
 
-    public function approveRequest($id){
-        $changeRequest = ChangeRequest::where('id', $id)->first();
+    public function approveRequest(ChangeRequest $changerequest){
         $changeRequest->status = "approved";
         $changeRequest->save();
 
