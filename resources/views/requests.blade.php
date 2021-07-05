@@ -112,7 +112,7 @@ document.getElementById("troop").addEventListener("change", function(e){
         document.querySelectorAll("select#scout > option").forEach(function(o){
             o.hidden = o.dataset['troop'] != e.target.value;
         });
-    } // else it's the "Choose Troop" option
+    } // else it's the "Choose Troop"
 });
 </script>
 <div class="requestTable">
@@ -128,28 +128,6 @@ document.getElementById("troop").addEventListener("change", function(e){
             <th>Notes</th>
             <th>Status</th>
         </tr>
-        @foreach ($changeRequests->where('status', 'scheduled') as $changeRequest)
-            <tr>
-                <td>{{ $changeRequest->updated_at->format('l, g:i A')}}</td>
-                <td>{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</td>
-                <td>{{ $changeRequest->scout->unit }}</td>
-                <td>{{ $changeRequest->program->name }}</td>
-                @if ($changeRequest->session != null)
-                    <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
-                @else
-                    <td></td>
-                @endif
-                <td>{{ $changeRequest->action }}</td>
-                <td>{{ $changeRequest->notes }}</td>
-                <td>
-                <a style="color: blue;" 
-                    href="/requests" 
-                    onclick="return confirm('CONFIRM {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                    CONFIRM
-                    </a>
-                </td>
-            </tr>
-        @endforeach
         @foreach ($changeRequests->where('status', 'pending') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
@@ -185,7 +163,12 @@ document.getElementById("troop").addEventListener("change", function(e){
                         <a style="color: blue;" 
                         href="/requests" 
                         onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                        APPROVE
+                        APPROVE / 
+                        </a>
+                        <a style="color: blue;" 
+                        href="/requests" 
+                        onclick="return confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                        DELETE
                         </a>
                     </td>
                 @else
