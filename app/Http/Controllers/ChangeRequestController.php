@@ -152,7 +152,7 @@ class ChangeRequestController extends Controller
         $changeRequest->status = "approved";
         $changeRequest->save();
 
-        
+        return back();
     }
 
     public function confirmRequest($id){
@@ -164,6 +164,8 @@ class ChangeRequestController extends Controller
             $this->dropRequest($changeRequest);
         elseif($changeRequest->action == 'Add')
             $this->addRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
+        
+        return back();
     } 
 
 

@@ -203,11 +203,13 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @if(Auth::user()->admin)
                 <td>Approved</td>
                 @else<td>
-                        <a style="color: blue;" 
-                        href="/requests" 
-                        onclick="return confirm('Confirm {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                        Confirm
-                        </a>
+                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/confirm">
+                            @csrf
+                            <button type="submit"
+                            onclick="return confirm('CONFIRM {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                            Confirm
+                            </button>
+                        </form>
                     </td>
                 @endif
             </tr>
