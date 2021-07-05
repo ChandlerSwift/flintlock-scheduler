@@ -147,7 +147,8 @@ class ChangeRequestController extends Controller
     }
 
 
-    public function approveRequest(ChangeRequest $changerequest){
+    public function approveRequest($id){
+        $changeRequest = ChangeRequest::where('id', $id)->first();
         $changeRequest->status = "approved";
         $changeRequest->save();
 
