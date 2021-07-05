@@ -160,26 +160,20 @@ document.getElementById("troop").addEventListener("change", function(e){
 
                 @if(Auth::user()->admin)
                      <td>
-                        <a style="color: blue;" 
-                        href="/requests"> 
-                        <form method="POST" target="/flintlock/requests/{{ $changeRequest->id }}/approve">
-                        @csrf
-                        <button
-                        onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                        APPROVE 
+                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve">
+                            @csrf
+                            <button type="submit"
+                            onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                            APPROVE 
+                            </button>
                         </form>
-                        </a>
-                        <a style="color: blue;" 
-                        href="/requests" >
-                        <form method="POST" target="/flintlock/requests/{{ $changeRequest->id }}">
-                        <!-- https://laravel.com/docs/8.x/routing#form-method-spoofing -->
-                        @method('DELETE')
-                        @csrf
-                        <button
-                        onclick="return confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                         DELETE
-                        </a>
-                       </button>
+                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}">
+                            @method('DELETE')
+                            @csrf
+                            <button type="submit"
+                            onclick="return confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                            DELETE
+                            </button>
                         </form>
                      </td>
                  @else
