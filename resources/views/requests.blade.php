@@ -196,7 +196,18 @@ document.getElementById("troop").addEventListener("change", function(e){
 
                 @endif</td>
                 <td>{{ $changeRequest->program->name }}</td>
-                <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
+                @if ($changeRequest->session != null)
+                    <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
+                @else
+                <td>
+                        <select id="session" name="session">
+                            <option value="test" selected disabled hidden>Choose Session</option>  
+                            @foreach($changeRequest->program->sessions as $session)
+                                <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                @endif
                 <td>{{ $changeRequest->action }}</td>
                 <td>{{ $changeRequest->notes }}</td>
 
