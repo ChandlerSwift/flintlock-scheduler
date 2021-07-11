@@ -87,7 +87,7 @@ class ProgramSeeder extends Seeder
          ,  [
             'id'=> 10,
             'name'=> 'Water Skiing',
-            'max_participants'=> 12,
+            'max_participants'=> 6,
             'min_scout_age'=> 13,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()

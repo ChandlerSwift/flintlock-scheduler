@@ -64,7 +64,7 @@ class ChangeRequestController extends Controller
             $day = 1;
         else if ($request['session'] == 'wed')
             $day = 2;
-        else if ($request['session'] == 'thur')
+        else if ($request['session'] == 'thurs')
             $day = 3;
         else if ($request['session'] == 'fri')
             $day = 4;

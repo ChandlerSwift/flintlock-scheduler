@@ -41,6 +41,7 @@ class UserSeeder extends Seeder
         $tenChiefs->email = "tenchiefs@manypoint.org";
         $tenChiefs->password = Hash::make("MPSC1946");
         $tenChiefs->admin = false;
+        $tenChiefs->save();
 
         $administration = new User;
         $administration->name = "Admin";
