@@ -115,6 +115,8 @@ document.getElementById("troop").addEventListener("change", function(e){
     } // else it's the "Choose Troop"
 });
 </script>
+<br><br>
+<p> Yo, Don't confirm drop requests, It deletes the request and does not update the schedule. I know what the issue is, I'm busy until dinner. Should be fixed for tomorrow. Call if you've got questions.</p>
 <div class="requestTable">
     <h3>Active Requests</h3>
     <table>

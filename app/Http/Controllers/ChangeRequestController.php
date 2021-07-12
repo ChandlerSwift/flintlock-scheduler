@@ -175,14 +175,7 @@ class ChangeRequestController extends Controller
         $session->scouts()->detatch($scout->id);
         $scout->refresh(); // Invalidate the cache
         $changeRequest->status = "archived";
-        $changeRequest->save();
-
-            /* if($session->scout->id == $changeRequest->scout->id){
-                $session->scouts()->detatch
-            } */
-            //}
-        
-        
+        $changeRequest->save();    
     }
 
     public function addRequest($changeRequest, $scout, $session) {
