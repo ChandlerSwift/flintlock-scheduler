@@ -133,11 +133,11 @@ document.getElementById("troop").addEventListener("change", function(e){
                 <td>{{ $changeRequest->created_at->format('l')}}</td>
                 <td>{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</td>
                 <td>{{ $changeRequest->scout->unit }}
-                @if ( $scouts->where('unit' ,$troop)->first()->subcamp  == 'Buckskin')
+                @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
-                @elseif ( $scouts->where('unit' ,$troop)->first()->subcamp  == 'Ten Chiefs')
+                @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
                     (TC)
-                @elseif ( $scouts->where('unit' ,$troop)->first()->subcamp  == 'Voyageur')
+                @elseif (  $changeRequest->scout->subcamp  == 'Voyageur')
                     (V)
                 @else
 
