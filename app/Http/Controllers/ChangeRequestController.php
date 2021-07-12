@@ -161,7 +161,7 @@ class ChangeRequestController extends Controller
         $changeRequest->save();
     
         if($changeRequest->action == 'Drop')
-            $this->dropRequest($changeRequest);
+            $this->dropRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
         elseif($changeRequest->action == 'Add')
             $this->addRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
         
@@ -170,9 +170,10 @@ class ChangeRequestController extends Controller
 
 
 
-    public function dropRequest($changeRequest){
+    public function dropRequest($changeRequest, $scout, $session){
         
-        $changeRequest->session->scouts()->detatch($changeRequest->scout->id);
+        $session->scouts()->detatch($scout->id);
+        $scout->refresh(); // Invalidate the cache
         $changeRequest->status = "archived";
         $changeRequest->save();
 
