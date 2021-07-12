@@ -38,7 +38,12 @@
         div.donotprint {
             display: none;
         }
-        .pagebreak { page-break-before: always; } 
+        .pagebreak { page-break-before: always; 
+        } 
+        footer {
+            display: none;
+        }
+
     }
     div.list{
         font-size: 20px;
@@ -77,13 +82,6 @@
             border: solid 1px;
             border-color: #c9c9c9;
             padding: 5px;
-    }
-    footer {
-        position: static;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        text-align: center;
     }
     
     </style>
