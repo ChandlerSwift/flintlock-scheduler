@@ -130,7 +130,7 @@ document.getElementById("troop").addEventListener("change", function(e){
         </tr>
         @foreach ($changeRequests->where('status', 'pending') as $changeRequest)
             <tr>
-                <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
+                <td>{{ $changeRequest->created_at->format('l')}}</td>
                 <td>{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</td>
                 <td>{{ $changeRequest->scout->unit }}
                 @if ( $scouts->where('unit' ,$troop)->first()->subcamp  == 'Buckskin')
@@ -183,7 +183,7 @@ document.getElementById("troop").addEventListener("change", function(e){
         @endforeach
         @foreach ($changeRequests->where('status', 'approved') as $changeRequest)
             <tr>
-                <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
+                <td>{{ $changeRequest->created_at->format('l')}}</td>
                 <td>{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</td>
                 <td>{{ $changeRequest->scout->unit }}
                 @if ( $scouts->where('unit' ,$troop)->first()->subcamp  == 'Buckskin')
@@ -242,7 +242,7 @@ document.getElementById("troop").addEventListener("change", function(e){
         </tr>
         @foreach ($changeRequests->where('status', 'archived') as $changeRequest)
             <tr>
-                <td>{{ $changeRequest->updated_at->format('l, g:i A')}}</td>
+                <td>{{ $changeRequest->updated_at->format('l')}}</td>
                 <td>{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</td>
                 <td>{{ $changeRequest->scout->unit }}
                 @if ( $scouts->where('unit' ,$troop)->first()->subcamp  == 'Buckskin')

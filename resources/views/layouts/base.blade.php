@@ -78,6 +78,13 @@
             border-color: #c9c9c9;
             padding: 5px;
     }
+    footer {
+        position: static;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+    }
     
     </style>
     @yield('head')
@@ -88,5 +95,10 @@
     <div class="status">{{ session('status') }}</div>
     @endif
     @yield('content')
+    <footer>
+        <p>
+            &copy Isaac Swift 2021
+        </p>
+    </footer>
 </body>
 </html>
