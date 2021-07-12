@@ -123,6 +123,7 @@ document.getElementById("troop").addEventListener("change", function(e){
         <tr>
             <th>Updated At</th>
             <th>Scout</th>
+            <th>Age</th>
             <th>Troop</th>
             <th>Program</th>
             <th>Session</th>
@@ -134,6 +135,7 @@ document.getElementById("troop").addEventListener("change", function(e){
             <tr>
                 <td>{{ $changeRequest->created_at->format('l')}}</td>
                 <td>{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</td>
+                <td>{{ $changeRequest->scout->age }}</td>
                 <td>{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
@@ -187,6 +189,7 @@ document.getElementById("troop").addEventListener("change", function(e){
             <tr>
                 <td>{{ $changeRequest->created_at->format('l')}}</td>
                 <td>{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</td>
+                <td>{{ $changeRequest->scout->age }}</td>
                 <td>{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
