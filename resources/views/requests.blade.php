@@ -238,6 +238,7 @@ document.getElementById("troop").addEventListener("change", function(e){
         <tr>
             <th>Confirmed At</th>
             <th>Scout</th>
+            <th>Age</th>
             <th>Troop</th>
             <th>Program</th>
             <th>Session</th>
@@ -249,7 +250,9 @@ document.getElementById("troop").addEventListener("change", function(e){
             <tr>
                 <td>{{ $changeRequest->updated_at->format('l')}}</td>
                 <td>{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</td>
-                <td>
+
+                <td>{{ $changeRequest->scout->age }}</td>
+                <td>{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
                 @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
