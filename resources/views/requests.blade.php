@@ -273,6 +273,33 @@ document.getElementById("troop").addEventListener("change", function(e){
                 <td>Archived</td>
             </tr>
         @endforeach
+        @foreach ($changeRequests->where('status', 'confirmed') as $changeRequest)
+            <tr>
+                <td>{{ $changeRequest->updated_at->format('l')}}</td>
+                <td>{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</td>
+
+                <td>{{ $changeRequest->scout->age }}</td>
+                <td>{{ $changeRequest->scout->unit }}
+                @if ( $changeRequest->scout->subcamp  == 'Buckskin')
+                    (B)
+                @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
+                    (TC)
+                @elseif (  $changeRequest->scout->subcamp  == 'Voyageur')
+                    (V)
+                @else
+
+                @endif</td>
+                <td>{{ $changeRequest->program->name }}</td>
+                @if ($changeRequest->session != null)
+                    <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
+                @else
+                    <td></td>
+                @endif
+                <td>{{ $changeRequest->action }}</td>
+                <td>{{ $changeRequest->notes }}</td>
+                <td>Archived</td>
+            </tr>
+        @endforeach
     </table>
     <br>
     <br>
