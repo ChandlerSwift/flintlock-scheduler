@@ -116,7 +116,7 @@ document.getElementById("troop").addEventListener("change", function(e){
 });
 </script>
 <br><br>
-<p> Yo, Don't confirm drop requests, It deletes the request and does not update the schedule. I know what the issue is, I'm busy until dinner. Should be fixed for tomorrow. Call if you've got questions.</p>
+<p> Oi, confirm your drops. They won't change the master, but they will appear in the archived Table. I'm working on it updating the master/rosters.</p>
 <div class="requestTable">
     <h3>Active Requests</h3>
     <table>
