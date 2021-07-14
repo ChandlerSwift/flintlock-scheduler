@@ -134,9 +134,9 @@ document.getElementById("troop").addEventListener("change", function(e){
         @foreach ($changeRequests->where('status', 'pending') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->created_at->format('l')}}</td>
-                <td><a href="/flintlock/scouts/{{$scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
+                <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
-                <td><a href="/flintlock/troops/{{$troop}}">{{ $changeRequest->scout->unit }}
+                <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
                 @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
@@ -188,9 +188,9 @@ document.getElementById("troop").addEventListener("change", function(e){
         @foreach ($changeRequests->where('status', 'approved') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->created_at->format('l')}}</td>
-                <td><a href="/flintlock/scouts/{{$scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
+                <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
-                <td><a href="/flintlock/troops/{{$troop}}">{{ $changeRequest->scout->unit }}
+                <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
                 @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
@@ -249,10 +249,9 @@ document.getElementById("troop").addEventListener("change", function(e){
         @foreach ($changeRequests->where('status', 'archived') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->updated_at->format('l')}}</td>
-                <td><a href="/flintlock/scouts/{{$scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
-
+                <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
-                <td><a href="/flintlock/troops/{{$troop}}">{{ $changeRequest->scout->unit }}
+                <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
                 @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
