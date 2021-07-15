@@ -27,7 +27,14 @@ div.troopHeader{
                 <h3>{{ $scout->first_name }} {{ $scout->last_name }}</h3>
                 <ul>
                 @foreach($scout->sessions->sortBy('start_time') as $session)
-                    <li>{{ $session->program->name }} ({{ $session->start_time->format('l') }})</li>
+                    <li>{{ $session->program->name }} 
+                        @if ($session->program->id == 1)
+                            Overnight 
+                        @elseif ($session->program->id == 2)
+                            Overnight
+                        @else
+                        @endif
+                        ({{ $session->start_time->format('l') }})</li>
                 @endforeach
                 </ul>
                 @endif
