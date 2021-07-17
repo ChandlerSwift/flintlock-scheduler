@@ -116,7 +116,7 @@ document.getElementById("troop").addEventListener("change", function(e){
 });
 </script>
 <br><br>
-<p> Oi, confirm your drops. They won't change the master, but they will appear in the archived Table. I'm working on it updating the master/rosters.</p>
+<p></p>
 <div class="requestTable">
     <h3>Active Requests</h3>
     <table>

@@ -75,17 +75,8 @@ class ProgramSeeder extends Seeder
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
         ]
-        
-        ,[
-            'id'=> 9,
-            'name'=> 'River Kayak Trek',
-            'max_participants'=> 8,
-            'min_scout_age'=> 13,
-            'created_at'    => Carbon::now(),
-            'updated_at'    => Carbon::now()
-        ]
          ,  [
-            'id'=> 10,
+            'id'=> 9,
             'name'=> 'Water Skiing',
             'max_participants'=> 6,
             'min_scout_age'=> 13,
