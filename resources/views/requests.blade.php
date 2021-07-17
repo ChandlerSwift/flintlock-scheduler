@@ -42,6 +42,10 @@ input.notes{
 table {
         width:100%;
 }
+div.notice{
+    color: red;
+    text-align: center;
+}
 </style>
 @endsection
 
@@ -116,12 +120,14 @@ document.getElementById("troop").addEventListener("change", function(e){
 });
 </script>
 <br><br>
-<p></p>
+<div class="notice">
+    <p>Yo, there's now a waitlist table. If we can't get a request in right away, we'll put it in the waitlist so you know we've seen it. Also, I know the times are wacky. Working on it. Have a great week 4!</p>
+</div>
 <div class="requestTable">
     <h3>Active Requests</h3>
     <table>
         <tr>
-            <th>Updated At</th>
+            <th>Created At</th>
             <th>Scout</th>
             <th>Age</th>
             <th>Troop</th>
@@ -133,7 +139,130 @@ document.getElementById("troop").addEventListener("change", function(e){
         </tr>
         @foreach ($changeRequests->where('status', 'pending') as $changeRequest)
             <tr>
-                <td>{{ $changeRequest->created_at->format('l')}}</td>
+                <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
+                <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
+                <td>{{ $changeRequest->scout->age }}</td>
+                <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+                @if ( $changeRequest->scout->subcamp  == 'Buckskin')
+                    (B)
+                @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
+                    (TC)
+                @elseif (  $changeRequest->scout->subcamp  == 'Voyageur')
+                    (V)
+                @else
+
+                @endif</a></td>
+                <td>{{ $changeRequest->program->name }}</td>
+                @if ($changeRequest->session != null)
+                    <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
+                @else
+                <td>
+                        <select id="session" name="session">
+                            <option value="test" selected disabled hidden>Choose Session</option>  
+                            @foreach($changeRequest->program->sessions as $session)
+                                <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                @endif
+                <td>{{ $changeRequest->action }}</td>
+                <td>{{ $changeRequest->notes }}</td>
+
+                @if(Auth::user()->admin)
+                     <td>
+                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve">
+                            @csrf
+                            <button type="submit"
+                            onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                            APPROVE 
+                            </button>
+                        </form>
+                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}">
+                            @method('DELETE')
+                            @csrf
+                            <button type="submit"
+                            onclick="return confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                            DELETE
+                            </button>
+                        </form>
+                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/waitlist">
+                            @csrf
+                            <button type="submit"
+                            onclick="return confirm('WAITLIST {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                            WAITLIST
+                            </button>
+                        </form>
+                     </td>
+                 @else
+                 <td>Pending</td>
+                @endif
+            </tr>
+        @endforeach
+        @foreach ($changeRequests->where('status', 'approved') as $changeRequest)
+            <tr>
+                <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
+                <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
+                <td>{{ $changeRequest->scout->age }}</td>
+                <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+                @if ( $changeRequest->scout->subcamp  == 'Buckskin')
+                    (B)
+                @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
+                    (TC)
+                @elseif (  $changeRequest->scout->subcamp  == 'Voyageur')
+                    (V)
+                @else
+
+                @endif</a></td>
+                <td>{{ $changeRequest->program->name }}</td>
+                @if ($changeRequest->session != null)
+                    <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
+                @else
+                <td>
+                        <select id="session" name="session">
+                            <option value="test" selected disabled hidden>Choose Session</option>  
+                            @foreach($changeRequest->program->sessions as $session)
+                                <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                @endif
+                <td>{{ $changeRequest->action }}</td>
+                <td>{{ $changeRequest->notes }}</td>
+
+                @if(Auth::user()->admin)
+                <td>Approved</td>
+                @else<td>
+                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/confirm">
+                            @csrf
+                            <button type="submit"
+                            onclick="return confirm('CONFIRM {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                            Confirm
+                            </button>
+                        </form>
+                    </td>
+                @endif
+            </tr>
+        @endforeach
+    </table>
+</div>
+
+<div class="requestTable">
+    <h3>Waitlist</h3>
+    <table>
+        <tr>
+            <th>Created At</th>
+            <th>Scout</th>
+            <th>Age</th>
+            <th>Troop</th>
+            <th>Program</th>
+            <th>Session</th>
+            <th>Action</th>
+            <th>Notes</th>
+            <th>Status</th>
+        </tr>
+        @foreach ($changeRequests->where('status', 'waitlist') as $changeRequest)
+            <tr>
+                <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
                 <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
                 <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
@@ -185,53 +314,10 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @endif
             </tr>
         @endforeach
-        @foreach ($changeRequests->where('status', 'approved') as $changeRequest)
-            <tr>
-                <td>{{ $changeRequest->created_at->format('l')}}</td>
-                <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
-                <td>{{ $changeRequest->scout->age }}</td>
-                <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
-                @if ( $changeRequest->scout->subcamp  == 'Buckskin')
-                    (B)
-                @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
-                    (TC)
-                @elseif (  $changeRequest->scout->subcamp  == 'Voyageur')
-                    (V)
-                @else
-
-                @endif</a></td>
-                <td>{{ $changeRequest->program->name }}</td>
-                @if ($changeRequest->session != null)
-                    <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
-                @else
-                <td>
-                        <select id="session" name="session">
-                            <option value="test" selected disabled hidden>Choose Session</option>  
-                            @foreach($changeRequest->program->sessions as $session)
-                                <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                @endif
-                <td>{{ $changeRequest->action }}</td>
-                <td>{{ $changeRequest->notes }}</td>
-
-                @if(Auth::user()->admin)
-                <td>Approved</td>
-                @else<td>
-                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/confirm">
-                            @csrf
-                            <button type="submit"
-                            onclick="return confirm('CONFIRM {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                            Confirm
-                            </button>
-                        </form>
-                    </td>
-                @endif
-            </tr>
-        @endforeach
     </table>
 </div>
+
+
 <div class="requestTable">
     <h3>Archived Requests</h3>
     <table>
@@ -248,7 +334,7 @@ document.getElementById("troop").addEventListener("change", function(e){
         </tr>
         @foreach ($changeRequests->where('status', 'archived') as $changeRequest)
             <tr>
-                <td>{{ $changeRequest->updated_at->format('l')}}</td>
+                <td>{{ $changeRequest->updated_at->format('l, g:i A')}}</td>
                 <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
                 <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}

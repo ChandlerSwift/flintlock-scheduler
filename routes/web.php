@@ -58,6 +58,7 @@ Route::middleware(['auth'])->group(function(){
 
     Route::post('requests/{request}/approve', [ChangeRequestController::class, 'approveRequest']);
     Route::post('requests/{request}/confirm', [ChangeRequestController::class, 'confirmRequest']);
+    Route::post('requests/{request}/waitlist', [ChangeRequestController::class, 'waitRequest']);
 
     Route::get('/search/', 'App\Http\Controllers\ScoutController@search')->name('search');
 

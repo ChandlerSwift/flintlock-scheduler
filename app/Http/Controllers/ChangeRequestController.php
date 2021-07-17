@@ -155,6 +155,14 @@ class ChangeRequestController extends Controller
         return back();
     }
 
+    public function waitRequest($id){
+        $changeRequest = ChangeRequest::where('id', $id)->first();
+        $changeRequest->status = "waitlist";
+        $changeRequest->save();
+
+        return back();
+    }
+
     public function confirmRequest($id){
         $changeRequest = ChangeRequest::where('id', $id)->first();
         $changeRequest->status = "confirmed";
