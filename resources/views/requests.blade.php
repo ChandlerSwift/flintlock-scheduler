@@ -139,6 +139,10 @@ document.getElementById("troop").addEventListener("change", function(e){
         </tr>
         @foreach ($changeRequests->where('status', 'pending') as $changeRequest)
             <tr>
+                @if(Auth::user()->admin)
+                <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve">
+                @csrf
+                @endif
                 <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
                 <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
@@ -157,8 +161,8 @@ document.getElementById("troop").addEventListener("change", function(e){
                     <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
                 @else
                 <td>
-                        <select id="session" name="session">
-                            <option value="test" selected disabled hidden>Choose Session</option>  
+                        <select id="session" name="session" required>
+                            <option selected disabled hidden>Choose Session</option>
                             @foreach($changeRequest->program->sessions as $session)
                                 <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
                             @endforeach
@@ -169,14 +173,12 @@ document.getElementById("troop").addEventListener("change", function(e){
                 <td>{{ $changeRequest->notes }}</td>
 
                 @if(Auth::user()->admin)
-                     <td>
-                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve">
-                            @csrf
-                            <button type="submit"
-                            onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                            APPROVE 
-                            </button>
-                        </form>
+                    <td>
+                        <!-- for the form defined on the whole row; this includes the session select dropdown -->
+                        <button type="submit"
+                        onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                        APPROVE
+                        </button>
                         <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}">
                             @method('DELETE')
                             @csrf
@@ -192,9 +194,12 @@ document.getElementById("troop").addEventListener("change", function(e){
                             WAITLIST
                             </button>
                         </form>
-                     </td>
-                 @else
-                 <td>Pending</td>
+                    </td>
+                @else
+                    <td>Pending</td>
+                @endif
+                @if(Auth::user()->admin)
+                </form>
                 @endif
             </tr>
         @endforeach
