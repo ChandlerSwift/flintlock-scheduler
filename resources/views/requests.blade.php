@@ -179,27 +179,25 @@ document.getElementById("troop").addEventListener("change", function(e){
                         onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
                         APPROVE
                         </button>
-                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}">
-                            @method('DELETE')
-                            @csrf
-                            <button type="submit"
-                            onclick="return confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                            DELETE
-                            </button>
-                        </form>
-                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/waitlist">
-                            @csrf
-                            <button type="submit"
-                            onclick="return confirm('WAITLIST {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                            WAITLIST
-                            </button>
-                        </form>
+                        <button type="button"
+                        onclick="if (confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('deleteRequest{{ $changeRequest->id }}form').submit();" >
+                        DELETE
+                        </button>
+                        <button type="button"
+                        onclick="if (confirm('WAITLIST {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('waitlistRequest{{ $changeRequest->id }}form').submit();" >
+                        WAITLIST
+                        </button>
                     </td>
+                </form>
+                <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}" id="deleteRequest{{ $changeRequest->id }}form">
+                    @method('DELETE')
+                    @csrf
+                </form>
+                <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/waitlist" id="waitlistRequest{{ $changeRequest->id }}form">
+                    @csrf
+                </form>
                 @else
                     <td>Pending</td>
-                @endif
-                @if(Auth::user()->admin)
-                </form>
                 @endif
             </tr>
         @endforeach
