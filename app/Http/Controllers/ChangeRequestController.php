@@ -180,7 +180,7 @@ class ChangeRequestController extends Controller
 
     public function dropRequest($changeRequest, $scout, $session){
         
-        $session->scouts()->detatch($scout->id);
+        $session->scouts()->detach($scout->id);
         $scout->refresh(); // Invalidate the cache
         $changeRequest->status = "archived";
         $changeRequest->save();    
