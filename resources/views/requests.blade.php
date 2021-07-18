@@ -139,10 +139,6 @@ document.getElementById("troop").addEventListener("change", function(e){
         </tr>
         @foreach ($changeRequests->where('status', 'pending') as $changeRequest)
             <tr>
-                @if(Auth::user()->admin)
-                <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve">
-                @csrf
-                @endif
                 <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
                 <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
@@ -161,13 +157,21 @@ document.getElementById("troop").addEventListener("change", function(e){
                     <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
                 @else
                 <td>
+                    @if(Auth::user()->admin)
+                    <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve">
+                    @csrf
                         <select id="session" name="session" required>
                             <option selected disabled hidden>Choose Session</option>
                             @foreach($changeRequest->program->sessions as $session)
                                 <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
                             @endforeach
                         </select>
-                    </td>
+                    @else
+                    SESSION NOT SELECTED
+                    @endif
+                        
+                    
+                </td>
                 @endif
                 <td>{{ $changeRequest->action }}</td>
                 <td>{{ $changeRequest->notes }}</td>
