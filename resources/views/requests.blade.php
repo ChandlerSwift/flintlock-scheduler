@@ -158,7 +158,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @else
                 <td>
                     @if(Auth::user()->admin)
-                    <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve">
+                    <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
                     @csrf
                         <select id="session" name="session" required>
                             <option selected disabled hidden>Choose Session</option>
@@ -166,8 +166,9 @@ document.getElementById("troop").addEventListener("change", function(e){
                                 <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
                             @endforeach
                         </select>
+                    </form>
                     @else
-                    SESSION NOT SELECTED
+                    Not Selected
                     @endif
                         
                     
@@ -179,8 +180,8 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @if(Auth::user()->admin)
                     <td>
                         <!-- for the form defined on the whole row; this includes the session select dropdown -->
-                        <button type="submit"
-                        onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                        <button type="button"
+                        onclick="if (confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('approveRequest{{ $changeRequest->id }}form').submit();" >
                         APPROVE
                         </button>
                         <button type="button"
