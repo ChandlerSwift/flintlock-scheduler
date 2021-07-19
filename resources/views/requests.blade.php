@@ -194,6 +194,9 @@ document.getElementById("troop").addEventListener("change", function(e){
                         </button>
                     </td>
                 </form>
+                <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
+                    @csrf
+                </form>
                 <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}" id="deleteRequest{{ $changeRequest->id }}form">
                     @method('DELETE')
                     @csrf
