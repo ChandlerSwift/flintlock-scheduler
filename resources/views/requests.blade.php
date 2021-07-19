@@ -181,15 +181,15 @@ document.getElementById("troop").addEventListener("change", function(e){
                     <td>
                         <!-- for the form defined on the whole row; this includes the session select dropdown -->
                         <button type="button"
-                        onclick="if (confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('approveRequest{{ $changeRequest->id }}form').submit();" >
+                        onclick="if ('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?') document.getElementById('approveRequest{{ $changeRequest->id }}form').submit();" >
                         APPROVE
                         </button>
                         <button type="button"
-                        onclick="if (confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('deleteRequest{{ $changeRequest->id }}form').submit();" >
+                        onclick="if ('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?') document.getElementById('deleteRequest{{ $changeRequest->id }}form').submit();" >
                         DELETE
                         </button>
                         <button type="button"
-                        onclick="if (confirm('WAITLIST {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('waitlistRequest{{ $changeRequest->id }}form').submit();" >
+                        onclick="if ('WAITLIST {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?') document.getElementById('waitlistRequest{{ $changeRequest->id }}form').submit();" >
                         WAITLIST
                         </button>
                     </td>
