@@ -100,6 +100,7 @@ class ScoutController extends Controller
             ->where('first_name', 'LIKE', "%{$search}%")
             ->orWhere('last_name', 'LIKE', "%{$search}%")
             ->orWhere('unit', 'LIKE', "%{$search}%")
+            ->orWhere('site', 'LIKE', "%{$search}%")
             ->get();
     
         // Return the search view with the resluts compacted
