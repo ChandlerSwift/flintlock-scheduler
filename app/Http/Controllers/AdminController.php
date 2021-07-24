@@ -159,15 +159,27 @@ class AdminController extends Controller
         }
         $aSessions = Session::where('subcamp', 'anyA')->get();;
         foreach ($aSessions as $session){
-            $session->subcamp = $afternoonA;
-            $session->save();
-            echo "A...";
+            if ($afternoonB == $eveningFirst){
+                $session->subcamp = $afternoonA;
+                $session->save();
+                echo "A...";
+            }else{
+                $session->subcamp = $afternoonB;
+                $session->save();
+                echo "B...";
+            }
         }
         $bSessions = Session::where('subcamp', 'anyB')->get();;
         foreach ($bSessions as $session){
-            $session->subcamp = $afternoonB;
-            $session->save();
-            echo "B...";
+            if ($afternoonB == $eveningFirst){
+                $session->subcamp = $afternoonB;
+                $session->save();
+                echo "A...";
+            }else{
+                $session->subcamp = $afternoonA;
+                $session->save();
+                echo "B...";
+            }
         }
 
         $this->clearSessions();

@@ -41,7 +41,7 @@ class SessionSeeder extends Seeder
                     array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2, 'subcamp' => $subcamp_evenings[$dayOfWeek]]);
                 }
             //Afternoon
-            } elseif (in_array($program->id, [4,5,6,7])) {
+            } elseif (in_array($program->id, [4,5,6,8])) {
                 foreach([0,1,2,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
                     $date = new Carbon; // same as ::now()
                     $date->week = $week;
@@ -69,8 +69,8 @@ class SessionSeeder extends Seeder
                     array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2, 'subcamp' => $subcamp_afternoons[$dayOfWeek]]);
                 } */
             //ATV
-            }elseif (in_array($program->id, [8])) { 
-                foreach([0,1,2,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
+            }elseif (in_array($program->id, [7])) { 
+                foreach([0,0,0,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
                     $date = new Carbon; // same as ::now()
                     $date->week = $week;
                     $date->day = (Carbon::FRIDAY + $dayOfWeek);
@@ -83,7 +83,7 @@ class SessionSeeder extends Seeder
                     array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2, 'subcamp' => $subcamp_afternoons[$dayOfWeek]]);
                 }
             }
-            //Water Ski
+            /* //Water Ski
             elseif (in_array($program->id, [9])) { 
                 foreach([0,1,2,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
                     $date = new Carbon; // same as ::now()
@@ -97,7 +97,7 @@ class SessionSeeder extends Seeder
                     $date2->setTime(21, 0, 0); // 9PM
                     array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2, 'subcamp' => $subcamp_afternoons[$dayOfWeek]]);
                 }
-            }   
+            }    */
 
             // [startTime1, endTime1, startTime2, endTime2, startTime3, endTime3, ...]
             foreach ($timeSlots as $timeSlot) { // this is a startTime
