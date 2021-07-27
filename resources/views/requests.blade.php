@@ -121,7 +121,7 @@ document.getElementById("troop").addEventListener("change", function(e){
 </script>
 <br><br>
 <div class="notice">
-    <p>Yo, there's now a waitlist table. If we can't get a request in right away, we'll put it in the waitlist so you know we've seen it.  Have a great week 4!</p>
+    <p>Have a great week 5!</p>
 </div>
 <div class="requestTable">
     <h3>Active Requests</h3>
