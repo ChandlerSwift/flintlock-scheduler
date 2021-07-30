@@ -62,4 +62,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/search/', 'App\Http\Controllers\ScoutController@search')->name('search');
 
+    Route::get('pi', function () {
+        return view('pi')->with('programs', \App\Models\Program::all());
+    });
+
 });
