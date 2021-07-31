@@ -121,7 +121,7 @@ document.getElementById("troop").addEventListener("change", function(e){
 </script>
 <br><br>
 <div class="notice">
-    <p>Have a great week 5!</p>
+    <p>Ya'll know the drill. Do the things, do them right, and it'll be okay.</p>
 </div>
 <div class="requestTable">
     <h3>Active Requests</h3>
