@@ -1,9 +1,9 @@
-<meta http-equiv="refresh" content="69">
+<meta http-equiv="refresh" content="1000">
 <style>
     * {
         font-family: sans-serif;
         text-decoration: none;
-        font-size: 14px;
+        font-size: 11px;
     }
     table {
         border-collapse: collapse;
@@ -73,16 +73,22 @@
                 <table id="small">
                     <tr id="small">
                         <th id="small">
-                            <b>{{ $session->start_time->format('l') }} - {{ $session->subcamp }}</b>
+                            <b>{{ $session->start_time->format('l') }}
+                            @if ( $session->subcamp  == 'Buckskin')
+                                (B)
+                            @elseif ( $session->subcamp  == 'Ten Chiefs')
+                                (TC)
+                            @elseif (  $session->subcamp  == 'Voyageur')
+                                (V)
+                            @else
+
+                            @endif
+                            </b>
                         </th>
-                        <th>
-                        </th>
-                        <th>
-                        </th>
-                        <th>
-                        </th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
-                        
                     @foreach($session->scouts->sortBy('troop') as $scout)
                             <tr id="small">
                                 <td id="small">{{ $scout->first_name }} {{ $scout->last_name }}</td>
