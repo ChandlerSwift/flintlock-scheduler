@@ -74,7 +74,7 @@ class ProgramSeeder extends Seeder
             'min_scout_age'=> 14,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
-        ]/*
+        ]
          ,  [
             'id'=> 9,
             'name'=> 'Water Skiing',
@@ -82,7 +82,7 @@ class ProgramSeeder extends Seeder
             'min_scout_age'=> 13,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
-        ],  [
+        ], /*[
             'id'=> 11,
             'name'=> 'Older Scout Adventure Blast',
             'max_participants'=> 12,

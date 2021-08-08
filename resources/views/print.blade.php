@@ -1,9 +1,11 @@
 @extends('layouts.base')
 <title>Print</title>
 <style>
+
 div.troopHeader{
     vertical-align:middle;
     display:inline;
+    font-size: 12px;
 }
 </style>
 @section('content')
