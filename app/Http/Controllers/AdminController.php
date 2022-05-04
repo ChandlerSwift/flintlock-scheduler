@@ -33,25 +33,28 @@ class AdminController extends Controller
             $scout = new Scout;
             $scout->first_name = $row['C'];
             $scout->last_name = $row['D'];
-            if ($row['G'] != null)
-                if ($row['G'] == 'Scout')
+            if ($row['I'] != null)
+                if ($row['I'] == 'Scout')
                     $scout->rank = 0;
-                else if ($row['G'] == 'Tenderfoot')
+                else if ($row['I'] == 'Tenderfoot')
                     $scout->rank = 1;
-                else if ($row['G'] == 'Second Class')
+                else if ($row['I'] == 'Second Class')
                     $scout->rank = 0;
-                else if ($row['G'] == 'First Class')
+                else if ($row['I'] == 'First Class')
                     $scout->rank = 2;
-                else if ($row['G'] == 'Star')
+                else if ($row['I'] == 'Star')
                     $scout->rank = 3;
-                else if ($row['G'] == 'Life')
+                else if ($row['I'] == 'Life')
                     $scout->rank = 4;
-                else if ($row['G'] == 'Eagle')
+                    
+                else if ($row['I'] == 'Eagle')
                     $scout->rank = 5;
                 else
                     Log::warning("Unknown rank for scout " . $row['C'] . " " . $row['D'] . ", troop " . $row['E'] . " (setting to Scout)");
             if ($row['H'] != null)
-                $scout->age = $row['H'];
+                $scout->age = $row['G'];
+            else   
+                $scout->age = '10';
             if ($row['E'] != null)
             $scout->unit = $row['E'];
             else
@@ -102,7 +105,7 @@ class AdminController extends Controller
             }
         }
 
-        $testSubcamps = ['Buckskin', 'Ten Chiefs', 'Voyageur'];
+        /* $testSubcamps = ['Buckskin', 'Ten Chiefs', 'Voyageur'];
         $afternoonA = 'Blank';
         $afternoonB = 'Blank';
         $eveningFirst;
@@ -196,7 +199,7 @@ class AdminController extends Controller
                     $still_filling = true;
                 }
             }
-        }
+        } */
 
          /* foreach ($session->where('subcamp', 'any') as $session) {
             $max_scouts_placed = 0;
@@ -250,9 +253,9 @@ class AdminController extends Controller
                 ->get()->where('full', false); // Ignore full sessions;
             foreach ($sessions as $session) {
                 
-                if ($scout->subcamp != $session->subcamp)//Ignore different subcamp slots
+                /* if ($scout->subcamp != $session->subcamp)//Ignore different subcamp slots
                     continue;
-
+ */
                 $scout_has_conflict = false;
                 $conflict = null;
                 foreach ($scout->sessions as $potentialConflict) {

@@ -93,10 +93,5 @@
     <div class="status">{{ session('status') }}</div>
     @endif
     @yield('content')
-    <footer>
-        <p>
-            &copy Isaac Swift 2021
-        </p>
-    </footer>
 </body>
 </html>

@@ -20,7 +20,6 @@ class CreateSessionsTable extends Migration
             $table->foreign('program_id')->references('id')->on('programs');
             $table->dateTime('start_time');
             $table->dateTime('end_time');
-            $table->text('subcamp');
         });
     }
 

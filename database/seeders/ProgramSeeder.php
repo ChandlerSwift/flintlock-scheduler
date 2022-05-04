@@ -82,21 +82,28 @@ class ProgramSeeder extends Seeder
             'min_scout_age'=> 13,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
-        ], /*[
+        ], [
+            'id'=> 10,
+            'name'=> 'Mountain Bike Outpost',
+            'max_participants'=> 10,
+            'min_scout_age'=> 13,
+            'created_at'    => Carbon::now(),
+            'updated_at'    => Carbon::now()
+        ],  [
             'id'=> 11,
             'name'=> 'Older Scout Adventure Blast',
             'max_participants'=> 12,
             'min_scout_age'=> 13,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
-        ],  [
+        ], [
             'id'=> 12,
             'name'=> 'Water Sports Outpost',
-            'max_participants'=> 12,
+            'max_participants'=> 24,
             'min_scout_age'=> 13,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
-        ], */
+        ], 
         ]);
     }
 }
