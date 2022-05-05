@@ -1,8 +1,6 @@
-FROM php:8.0-apache
+FROM php:8.1-apache
 
 WORKDIR /app
-
-COPY . .
 
 ENV APACHE_DOCUMENT_ROOT /app/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf && \
@@ -11,16 +9,20 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 	sed -ri -e 's!StartServers.*!StartServers 1!' /etc/apache2/mods-enabled/mpm_prefork.conf && \
 	sed -ri -e 's!MinSpareServers.*!MinSpareServers 1!' /etc/apache2/mods-enabled/mpm_prefork.conf && \
 	sed -ri -e 's!MaxSpareServers.*!MaxSpareServers 1!' /etc/apache2/mods-enabled/mpm_prefork.conf && \
-	apt-get update && apt-get install -y unzip libpng-dev libjpeg-dev zlib1g-dev && \
+	apt-get update && apt-get install -y unzip libpng-dev libjpeg-dev libzip-dev && \
 	docker-php-ext-configure gd --with-jpeg && \
 	docker-php-ext-install gd && \
+	docker-php-ext-install zip && \
 	curl -s https://getcomposer.org/installer | php 1> /dev/null && \
 	mv composer.phar /bin/composer && \
-	composer install && \
-	a2enmod rewrite && \
+	a2enmod rewrite
+
+COPY . .
+
+RUN composer install && \
+	php artisan migrate && \
 	usermod -u 1000 www-data && \
 	groupmod -g 1000 www-data && \
-	php artisan migrate && \
 	chown -R www-data:www-data storage
 
 ENTRYPOINT composer install && php artisan key:generate && apache2-foreground
