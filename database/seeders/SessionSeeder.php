@@ -78,7 +78,22 @@ class SessionSeeder extends Seeder
                     array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2]);
                 }
             }
-            
+             //Evening Program
+            elseif (in_array($program->id, [10])) { 
+                foreach([0,1,2,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
+                    $date = new Carbon; // same as ::now()
+                    $date->week = $week;
+                    $date->day = (Carbon::FRIDAY + $dayOfWeek);
+                    $date->setTime(19, 0, 0);//7PM
+                    
+                    $date2 = new Carbon; // same as ::now()
+                    $date2->week = $week;
+                    $date2->day = (Carbon::FRIDAY + $dayOfWeek);
+                    $date2->setTime(21, 0, 0); // 9PM
+                    array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2]);
+                }
+            }    
+
             // [startTime1, endTime1, startTime2, endTime2, startTime3, endTime3, ...]
             foreach ($timeSlots as $timeSlot) { // this is a startTime
                 // $time = new Carbon($timeSlot);
