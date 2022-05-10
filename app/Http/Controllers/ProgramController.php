@@ -14,7 +14,7 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        //
+        return view('programs.index')->with('programs', Program::all());
     }
 
     /**
@@ -46,7 +46,7 @@ class ProgramController extends Controller
      */
     public function show(Program $program)
     {
-        //
+        return view('programs.show')->with('program', $program);
     }
 
     /**

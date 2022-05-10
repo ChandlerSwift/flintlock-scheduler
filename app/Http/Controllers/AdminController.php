@@ -14,62 +14,219 @@ class AdminController extends Controller
 {
 
     public function import_data() {
-        $inputFileName = '/home/isaac/importData.xlsx'; // TODO
+
+        //Artisan::call('migrate', ['--seed' => true]);
+        $inputFileName = '/home/Isaac/importData.xlsx'; // TODO
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-        $sheetData = array_slice($sheetData, 3);
         foreach($sheetData as $row){
-            if ($row['A'] == null) { // Name should never be empty, so this is an empty row. Skip it.
+            if ($row['C'] == null) { // Name should never be empty, so this is an empty row. Skip it.
                 continue;
             }
-            $scout = Scout::where('first_name', $row['B'])->where('last_name', $row['C'])->where('unit', $row['J'])->firstOr(function() use ($row) {
-                $scout = new Scout;
-                $scout->first_name = $row['B'];
-                $scout->last_name = $row['C'];
-                if ($row['D'] != null)
-                    $scout->rank = $row['D'];
-                if ($row['F'] != null)
-                    $scout->age = $row['F'];
-                if ($row['G'] != null)
-                    $scout->grade = $row['G'];
-                if ($row['H'] != null)
-                    $scout->years_at_camp = $row['H'];
-                $scout->unit = $row['J'];
-                $scout->site = $row['K'];
-                $scout->save();
-                return $scout;
-            });
+            if ($row['C'] == 'First Name') { // Don't count the first line
+                continue;
+            }
+
+            if (Scout::where('first_name', $row['C'])->where('last_name', $row['D'])->where('unit', $row['E'])->first()) {
+                continue;
+            }
+            $scout = new Scout;
+            $scout->first_name = $row['C'];
+            $scout->last_name = $row['D'];
+            if ($row['I'] != null)
+                if ($row['I'] == 'Scout')
+                    $scout->rank = 0;
+                else if ($row['I'] == 'Tenderfoot')
+                    $scout->rank = 1;
+                else if ($row['I'] == 'Second Class')
+                    $scout->rank = 0;
+                else if ($row['I'] == 'First Class')
+                    $scout->rank = 2;
+                else if ($row['I'] == 'Star')
+                    $scout->rank = 3;
+                else if ($row['I'] == 'Life')
+                    $scout->rank = 4;
+                    
+                else if ($row['I'] == 'Eagle')
+                    $scout->rank = 5;
+                else
+                    Log::warning("Unknown rank for scout " . $row['C'] . " " . $row['D'] . ", troop " . $row['E'] . " (setting to Scout)");
+            if ($row['H'] != null)
+                $scout->age = $row['G'];
+            else   
+                $scout->age = '10';
+            if ($row['E'] != null)
+            $scout->unit = $row['E'];
+            else
+                $scout->unit = '0000';
+            if ($row['A'] != null)
+                $scout->subcamp = $row['A'];
+            if ($row['J'] != null)
+                $scout->site = $row['J'];
+            if ($row['F'] != null)
+                $scout->gender = $row['F'];
+            else
+                $scout->gender = '0';
+            $scout->save();
             
-            //create preference
-            preg_match('/(.*) \((\d*)(?:st|nd|rd|th) Pref\)/', $row['A'],  $regex_result);
-            $program = Program::where('name', $regex_result[1])->first();
-            if ($program == null) {
-                Log::warning("trying to find nonexistent program " . $regex_result[1]);
-            } else {
-                $preference = new Preference;
-                $preference->program_id = $program->id;
-                $preference->rank = $regex_result[2];
-                $preference->scout_id = $scout->id;
-                $preference->save();
+            $row_indices = ["K", "L", "M", "N", "O", "P", "Q"];
+            for ($i = 0; $i < 7; $i++) {
+                if ($row[$row_indices[$i]] != "") {
+                    $program = Program::where('name', $row[$row_indices[$i]])->first();//TODO change program values
+                    if ($program == null) {
+                        Log::warning("trying to find nonexistent program " . $row[$row_indices[$i]]);
+                    } else {
+                        $preference = new Preference;
+                        $preference->program_id = $program->id;
+                        $preference->rank = $i + 1;
+                        $preference->scout_id = $scout->id;
+                        $preference->save();
+                    }
+                }
             }
         }
+        //$request->session()->flash('status', 'Import data was successful!');
+        return back();
     }
 
     /* plan_week */
-    public function plan_week() {
+    public function plan_week() {//Request $request
         $scouts = Scout::orderByDesc('age', 'rank')->get();
         $still_filling = true;
-        $output = "Adding scouts to session...";
+        echo "Adding scouts to session...";
+        $i=0; 
         while($still_filling){
-            $still_filling = false; 
+            echo $i++;
+            $still_filling = false;
             foreach($scouts as $scout) {
                 if ($this->put_scout_in_session($scout)) {
-                    $output .= "Added " . $scout->name . " to session\n";
                     $still_filling = true;
                 }
             }
         }
-        return $output;
+
+        /* $testSubcamps = ['Buckskin', 'Ten Chiefs', 'Voyageur'];
+        $afternoonA = 'Blank';
+        $afternoonB = 'Blank';
+        $eveningFirst;
+        $maxa = 0;  
+        $maxb = 0;
+        $maxe = 0;
+        foreach ($testSubcamps as $testSubcamp) {
+            
+            $counta = 0;
+            $counte = 0;
+            $preferences = Preference::whereHas('scout', function($q) use($testSubcamp){
+
+                $q->where('subcamp', '=', $testSubcamp);
+            
+            })->get();
+            
+            foreach ($preferences as $preference){
+                
+                if($preference->satisfied)
+                    continue;
+                if($preference->program->id == 1 || $preference->program->id == 3 || $preference->program->id == 3)
+                    $counte += 1;
+                if($preference->program->id == 4 
+                || $preference->program->id == 5 
+                || $preference->program->id == 6 
+                || $preference->program->id == 7 
+                || $preference->program->id == 8
+                || $preference->program->id == 9){
+                    $counta += 1;
+                }
+            }
+            if($counta > $maxa && $counta > $maxb){
+                $maxb = $maxa;
+                $maxa = $counta;
+                $afternoonB = $afternoonA;
+                $afternoonA = $testSubcamp;
+                echo "Replaced A slot..." . $afternoonA . "...";
+            }elseif($counta > $maxb){
+                $maxb = $counta;
+                $afternoonB = $testSubcamp;
+                echo "Replaced B slot..." . $afternoonB . "...";
+            }
+            if($counte > $maxe){
+                $maxe = $counte;
+                $eveningFirst = $testSubcamp;
+                echo "Replaced E slot..." . $eveningFirst . "...";
+            }
+        }
+        $eSessions = Session::where('subcamp', 'anyE')->get();
+        foreach ($eSessions as $session){
+                $session->subcamp = $eveningFirst;
+                $session->save();
+                echo "E...";
+        }
+        $aSessions = Session::where('subcamp', 'anyA')->get();;
+        foreach ($aSessions as $session){
+            if ($afternoonB == $eveningFirst){
+                $session->subcamp = $afternoonA;
+                $session->save();
+                echo "A...";
+            }else{
+                $session->subcamp = $afternoonB;
+                $session->save();
+                echo "B...";
+            }
+        }
+        $bSessions = Session::where('subcamp', 'anyB')->get();;
+        foreach ($bSessions as $session){
+            if ($afternoonB == $eveningFirst){
+                $session->subcamp = $afternoonB;
+                $session->save();
+                echo "A...";
+            }else{
+                $session->subcamp = $afternoonA;
+                $session->save();
+                echo "B...";
+            }
+        }
+
+        $this->clearSessions();
+
+        $scouts = Scout::orderByDesc('age', 'rank')->get();
+        $still_filling = true;
+        echo "Adding scouts to session...";
+        $i=0;
+        while($still_filling){
+            echo $i++;
+            $still_filling = false;
+            foreach($scouts as $scout) {
+                if ($this->put_scout_in_session($scout)) {
+                    $still_filling = true;
+                }
+            }
+        } */
+
+         /* foreach ($session->where('subcamp', 'any') as $session) {
+            $max_scouts_placed = 0;
+            
+            foreach ($testSubcamps as $testSubcamp) {
+                timeslot->sessions->subcamp = $testSubcamp;
+                $scouts_placed = 0;
+                while($still_filling){
+                    $still_filling = false;
+                    foreach($scouts as $scout) {
+                        if ($this->put_scout_in_session($scout)) {
+                            scouts_placed += 1;
+                            $still_filling = true;
+                        }
+                    }
+                }
+                reset_timeslot(timeslot)
+                if ($scouts_placed > $max_scouts_placed) {
+                    $max_scouts_placed = $scouts_placed;
+                    $bestSubcamp = $testSubcamp;
+                }
+            } 
+            // then set subcamp = best_subcamp and really schedule
+        } */
+        
+        //$request->session()->flash('status', 'Plan week was successful!');
+        return back();
     }
 
     /**
@@ -84,10 +241,10 @@ class AdminController extends Controller
                 Log::debug("This scout's preference was already satisfied");
                 continue;
             }
-            
+
             //Check eligibility for scout. If not eligible, skip preference
             if($scout->age < $preference->program->min_scout_age){
-                Log::debug("This scout's not old enough");
+                Log::debug($scout->first_name . " " . $scout->last_name . " is not old enough (need " . $preference->program->min_scout_age . ", got " . $scout->age . ")");
                 continue;
             }
 
@@ -95,21 +252,27 @@ class AdminController extends Controller
                 ->withCount('scouts')->orderByDesc('scouts_count') // Starting with the session that's closest to full
                 ->get()->where('full', false); // Ignore full sessions;
             foreach ($sessions as $session) {
-                // check if scout has conflicts
+                
+                /* if ($scout->subcamp != $session->subcamp)//Ignore different subcamp slots
+                    continue;
+ */
                 $scout_has_conflict = false;
+                $conflict = null;
                 foreach ($scout->sessions as $potentialConflict) {
-                    if ($potentialConflict->overlaps($session))
-                        $scout_has_conflict = true;
+                    Log::debug("About to check for overlaps...");
+                    if ($potentialConflict->overlaps($session)) {
+                        $scout_has_conflict = true; 
+                        $conflict = $potentialConflict;
+                    }
                 }
                 if ($scout_has_conflict) {
-                    Log::debug("The scout has a conflict");
+                    Log::debug("The scout has a conflict (" . $conflict->program->name . ")");
                     continue; // try the next session time
                 }
 
                 // Assign scout to session
                 $session->scouts()->attach($scout->id);
-                $preference->satisfied = true;
-                $preference->save();
+                $scout->refresh(); // Invalidate the cache
                 $scoutAssignedToSession = true;
                 break;
             }
@@ -117,4 +280,29 @@ class AdminController extends Controller
 
         return $scoutAssignedToSession; // Did we change anything for this scout?
     }
+
+    public function clearSessions() {
+        foreach(\App\Models\Scout::all() as $scout) {
+            $scout->sessions()->detach();
+        }
+    }
+
+    public function dropSessions($session, $scout){
+        $session->scouts()->detatch($scout->id);
+        //confirmation message
+    }
+
+    
+
+    public function getStats(Request $request) {
+        $p = Preference::all();
+        return view('stats')
+            ->with('subcamps', $p->groupBy(function($item, $key) {
+                return $item->scout->subcamp;
+            }))
+            ;
+    }
+
+    
+
 }
