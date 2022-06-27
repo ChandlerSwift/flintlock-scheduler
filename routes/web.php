@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('import_data', [AdminController::class, 'import_data']);
         Route::get('stats', [AdminController::class, 'getStats']);
         Route::get('seed', [AdminController::class, 'seedDatabase']);
+        Route::get('add_scout', [ScoutController::class, 'create']);
+        Route::post('add_scout', [ScoutController::class, 'store']);
         // TODO: users
     });
 

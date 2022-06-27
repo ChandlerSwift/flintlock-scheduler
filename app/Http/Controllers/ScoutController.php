@@ -32,7 +32,7 @@ class ScoutController extends Controller
      */
     public function create()
     {
-        //
+        return view('scouts.create');
     }
 
     /**
@@ -43,7 +43,8 @@ class ScoutController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $scout = Scout::create($request->all());
+        $scout->save();
     }
 
     /**

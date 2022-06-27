@@ -25,11 +25,11 @@ div.img {
     display: block;
     padding: 5px 10px;
 }
-form {
+div.nav form {
     padding: 5px 10px;
     margin: auto;
 }
-input[type=text] {
+div.nav input[type=text] {
     border: 2px solid white;
     float:right;
     padding: 8px 20px;
@@ -38,7 +38,6 @@ input[type=text] {
     box-sizing: border-box;
     width:15%;
 }
-
 
 </style>
 
