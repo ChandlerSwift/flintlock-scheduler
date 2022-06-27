@@ -33,26 +33,26 @@ class AdminController extends Controller
             $scout = new Scout;
             $scout->first_name = $row['C'];
             $scout->last_name = $row['D'];
-            if ($row['I'] != null)
-                if ($row['I'] == 'Scout')
+            if ($row['G'] != null)
+                if ($row['G'] == 'Scout')
                     $scout->rank = 0;
-                else if ($row['I'] == 'Tenderfoot')
+                else if ($row['G'] == 'Tenderfoot')
                     $scout->rank = 1;
-                else if ($row['I'] == 'Second Class')
+                else if ($row['G'] == 'Second Class')
                     $scout->rank = 0;
-                else if ($row['I'] == 'First Class')
+                else if ($row['G'] == 'First Class')
                     $scout->rank = 2;
-                else if ($row['I'] == 'Star')
+                else if ($row['G'] == 'Star')
                     $scout->rank = 3;
-                else if ($row['I'] == 'Life')
+                else if ($row['G'] == 'Life')
                     $scout->rank = 4;
                     
-                else if ($row['I'] == 'Eagle')
+                else if ($row['G'] == 'Eagle')
                     $scout->rank = 5;
                 else
                     Log::warning("Unknown rank for scout " . $row['C'] . " " . $row['D'] . ", troop " . $row['E'] . " (setting to Scout)");
             if ($row['H'] != null)
-                $scout->age = $row['G'];
+                $scout->age = $row['H'];
             else   
                 $scout->age = '10';
             if ($row['E'] != null)
