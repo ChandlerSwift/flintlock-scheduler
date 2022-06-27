@@ -45,6 +45,7 @@ class ScoutController extends Controller
     {
         $scout = Scout::create($request->all());
         $scout->save();
+        return back()->with('message', "Scout saved successfully.");
     }
 
     /**
