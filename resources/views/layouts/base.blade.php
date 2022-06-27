@@ -83,12 +83,23 @@
             border-color: #c9c9c9;
             padding: 5px;
     }
+
+    div.notification {
+        margin: 1em;
+        padding: 1em 2em;
+        background-color: #ff8;
+    }
     
     </style>
     @yield('head')
 </head>
 <body>
     @include('components.navbar')
+    @if(session('message'))
+    <div class="notification">
+        {{ session('message') }}
+    </div>
+    @endif
     @if(session('status'))
     <div class="status">{{ session('status') }}</div>
     @endif
