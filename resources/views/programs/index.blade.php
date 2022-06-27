@@ -5,7 +5,7 @@
 
     @foreach($programs as $program)
     <h1>
-        <a href="/flintlock/programs/{{$program->id}}">{{ $program->name }}</a><br>
+        <a href="/programs/{{$program->id}}">{{ $program->name }}</a><br>
     </h1>
     @foreach($program->sessions as $session)
         @if($session->scouts->first() == null)
@@ -15,7 +15,7 @@
 
             <ul>
             @foreach($session->scouts as $scout)
-                <li><a href="/flintlock/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }} ({{ $scout->gender }}), {{ $scout->site }}, {{ $scout->unit }}</a></li>
+                <li><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }} ({{ $scout->gender }}), {{ $scout->site }}, {{ $scout->unit }}</a></li>
             @endforeach
             </ul>
         @endif

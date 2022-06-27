@@ -81,8 +81,8 @@
                     </tr>
                     @foreach($session->scouts->sortBy('troop') as $scout)
                             <tr id="small">
-                                <td id="small"><a href="/flintlock/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a></td>
-                                <td id="small"><a href="/flintlock/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
+                                <td id="small"><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a></td>
+                                <td id="small"><a href="/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
                                 <td id="small">{{ $scout->gender }}</td>
                                 <td id="small">{{ $scout->age }}</td>
                                 <td id="small">{{ $scout->subcamp }}</td>
@@ -142,8 +142,8 @@
                     @endif
                     <ul>
                     @foreach($session->scouts->sortBy('troop') as $scout)
-                        <li><a href="/flintlock/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>,
-                            <a href="/flintlock/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></li>
+                        <li><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>,
+                            <a href="/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></li>
                     @endforeach
                     </ul>
                 @else

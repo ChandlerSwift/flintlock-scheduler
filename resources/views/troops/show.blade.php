@@ -5,7 +5,7 @@
     @if($scout->sessions->first() == null)
         @continue
     @else
-    <h3><a href="/flintlock/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a></h3>
+    <h3><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a></h3>
 
     <ul>
     

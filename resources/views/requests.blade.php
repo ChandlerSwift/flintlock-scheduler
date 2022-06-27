@@ -51,7 +51,7 @@ div.notice{
 
 @section('content')
 <div class="requestform">
-    <form action="/flintlock/requests" method="POST">
+    <form action="/requests" method="POST">
         @csrf
         <select  class="requestform" id="addDrop" name="addDrop">
             <option value="addDrop" selected disabled hidden>Add or Drop</option>  
@@ -86,7 +86,7 @@ div.notice{
                 <option value="{{ $program->id }}">{{ $program->name }}</option>
             @endforeach
         </select>
-        <select  class="requestform" id="session" name="session">
+        <select class="requestform" id="session" name="session">
             <option value="session" selected disabled hidden>Session</option>  
             <option value="mon">Monday</option>
             <option value="tues">Tuesday</option>
@@ -140,9 +140,9 @@ document.getElementById("troop").addEventListener("change", function(e){
         @foreach ($changeRequests->where('status', 'pending') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
-                <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
+                <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
-                <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+                <td><a href="/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
                 @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
@@ -158,7 +158,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @else
                 <td>
                     @if(Auth::user()->admin)
-                    <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
+                    <form method="POST" action="/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
                     @csrf
                         <select id="session" name="session" required>
                             <option selected disabled hidden>Choose Session</option>
@@ -194,14 +194,14 @@ document.getElementById("troop").addEventListener("change", function(e){
                         </button>
                     </td>
                 </form>
-                <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
+                <form method="POST" action="/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
                     @csrf
                 </form>
-                <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}" id="deleteRequest{{ $changeRequest->id }}form">
+                <form method="POST" action="/requests/{{ $changeRequest->id }}" id="deleteRequest{{ $changeRequest->id }}form">
                     @method('DELETE')
                     @csrf
                 </form>
-                <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/waitlist" id="waitlistRequest{{ $changeRequest->id }}form">
+                <form method="POST" action="/requests/{{ $changeRequest->id }}/waitlist" id="waitlistRequest{{ $changeRequest->id }}form">
                     @csrf
                 </form>
                 @else
@@ -212,9 +212,9 @@ document.getElementById("troop").addEventListener("change", function(e){
         @foreach ($changeRequests->where('status', 'approved') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
-                <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
+                <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
-                <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+                <td><a href="/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
                 @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
@@ -243,7 +243,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @if(Auth::user()->admin)
                 <td>Approved</td>
                 @else<td>
-                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/confirm">
+                        <form method="POST" action="/requests/{{ $changeRequest->id }}/confirm">
                             @csrf
                             <button type="submit"
                             onclick="return confirm('CONFIRM {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
@@ -274,9 +274,9 @@ document.getElementById("troop").addEventListener("change", function(e){
         @foreach ($changeRequests->where('status', 'waitlist') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
-                <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
+                <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
-                <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+                <td><a href="/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
                 @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
@@ -304,14 +304,14 @@ document.getElementById("troop").addEventListener("change", function(e){
 
                 @if(Auth::user()->admin)
                      <td>
-                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}/approve">
+                        <form method="POST" action="/requests/{{ $changeRequest->id }}/approve">
                             @csrf
                             <button type="submit"
                             onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
                             APPROVE 
                             </button>
                         </form>
-                        <form method="POST" action="/flintlock/requests/{{ $changeRequest->id }}">
+                        <form method="POST" action="/requests/{{ $changeRequest->id }}">
                             @method('DELETE')
                             @csrf
                             <button type="submit"
@@ -346,9 +346,9 @@ document.getElementById("troop").addEventListener("change", function(e){
         @foreach ($changeRequests->where('status', 'archived') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->updated_at->format('l, g:i A')}}</td>
-                <td><a href="/flintlock/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
+                <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
-                <td><a href="/flintlock/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+                <td><a href="/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp  == 'Buckskin')
                     (B)
                 @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
