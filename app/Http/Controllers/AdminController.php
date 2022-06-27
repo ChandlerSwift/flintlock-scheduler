@@ -39,16 +39,15 @@ class AdminController extends Controller
                 else if ($row['G'] == 'Tenderfoot')
                     $scout->rank = 1;
                 else if ($row['G'] == 'Second Class')
-                    $scout->rank = 0;
-                else if ($row['G'] == 'First Class')
                     $scout->rank = 2;
-                else if ($row['G'] == 'Star')
+                else if ($row['G'] == 'First Class')
                     $scout->rank = 3;
-                else if ($row['G'] == 'Life')
+                else if ($row['G'] == 'Star')
                     $scout->rank = 4;
-                    
-                else if ($row['G'] == 'Eagle')
+                else if ($row['G'] == 'Life')
                     $scout->rank = 5;
+                else if ($row['G'] == 'Eagle')
+                    $scout->rank = 6;
                 else
                     Log::warning("Unknown rank for scout " . $row['C'] . " " . $row['D'] . ", troop " . $row['E'] . " (setting to Scout)");
             if ($row['H'] != null)
@@ -292,7 +291,7 @@ class AdminController extends Controller
         //confirmation message
     }
 
-    
+
 
     public function getStats(Request $request) {
         $p = Preference::all();
@@ -302,7 +301,5 @@ class AdminController extends Controller
             }))
             ;
     }
-
-    
 
 }
