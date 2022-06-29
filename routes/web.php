@@ -58,7 +58,10 @@ Route::middleware(['auth'])->group(function(){
         return view('search');
     });
 
-    Route::post('requests/{changeRequest}/approve', [ChangeRequestController::class, 'approveRequest']);
+    Route::middleware(['admin'])->group(function(){
+        Route::post('requests/{changeRequest}/approve', [ChangeRequestController::class, 'approveRequest']);
+        Route::post('requests/{changeRequest}/unapprove', [ChangeRequestController::class, 'unapproveRequest']);
+    });
     Route::post('requests/{request}/confirm', [ChangeRequestController::class, 'confirmRequest']);
     Route::post('requests/{request}/waitlist', [ChangeRequestController::class, 'waitRequest']);
 

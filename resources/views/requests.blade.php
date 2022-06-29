@@ -204,22 +204,21 @@ document.getElementById("troop").addEventListener("change", function(e){
                 <td>{{ $changeRequest->notes }}</td>
 
                 @if(Auth::user()->admin)
-                    <td>
-                        <!-- for the form defined on the whole row; this includes the session select dropdown -->
-                        <button type="button"
-                        onclick="if ('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?') document.getElementById('approveRequest{{ $changeRequest->id }}form').submit();" >
-                        APPROVE
-                        </button>
-                        <button type="button"
-                        onclick="if ('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?') document.getElementById('deleteRequest{{ $changeRequest->id }}form').submit();" >
-                        DELETE
-                        </button>
-                        <button type="button"
-                        onclick="if ('WAITLIST {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?') document.getElementById('waitlistRequest{{ $changeRequest->id }}form').submit();" >
-                        WAITLIST
-                        </button>
-                    </td>
-                </form>
+                <td>
+                    <!-- for the form defined on the whole row; this includes the session select dropdown -->
+                    <button type="button"
+                    onclick="if (confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('approveRequest{{ $changeRequest->id }}form').submit();" >
+                    APPROVE
+                    </button>
+                    <button type="button"
+                    onclick="if (confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('deleteRequest{{ $changeRequest->id }}form').submit();" >
+                    DELETE
+                    </button>
+                    <button type="button"
+                    onclick="if (confirm('WAITLIST {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('waitlistRequest{{ $changeRequest->id }}form').submit();" >
+                    WAITLIST
+                    </button>
+                </td>
                 <form method="POST" action="/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
                     @csrf
                 </form>
@@ -283,7 +282,15 @@ document.getElementById("troop").addEventListener("change", function(e){
                 <td>{{ $changeRequest->notes }}</td>
 
                 @if(Auth::user()->admin)
-                <td>Approved</td>
+                <td>
+                    <button type="button"
+                        onclick="if (confirm('UNAPPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('unapproveRequest{{ $changeRequest->id }}form').submit();" >
+                        Unapprove
+                        </button>
+                    <form method="POST" action="/requests/{{ $changeRequest->id }}/unapprove" id="unapproveRequest{{ $changeRequest->id }}form">
+                        @csrf
+                    </form>
+                </td>
                 @elseif(Auth::user()->name != $changeRequest->scout->subcamp)
                 <td>
                     <form method="POST" action="/requests/{{ $changeRequest->id }}/confirm">

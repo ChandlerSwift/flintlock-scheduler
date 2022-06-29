@@ -113,8 +113,16 @@ class ChangeRequestController extends Controller
         if ($changeRequest->session == null) {
             if ($request['session'] == "")
                 return abort(400);
+            $changeRequest->notes += "\n\nFlexible on session";
             $changeRequest->session_id = $request['session'];
         }
+        $changeRequest->save();
+
+        return back();
+    }
+
+    public function unapproveRequest(Request $request, ChangeRequest $changeRequest) {
+        $changeRequest->status = "pending";
         $changeRequest->save();
 
         return back();
@@ -142,7 +150,7 @@ class ChangeRequestController extends Controller
             $this->addRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
         
         return back();
-    } 
+    }
 
     public function dropRequest($changeRequest, $scout, $session){
         $session->scouts()->detach($scout->id);
