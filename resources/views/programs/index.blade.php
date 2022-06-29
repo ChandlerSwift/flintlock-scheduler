@@ -15,7 +15,7 @@
 
             <ul>
             @foreach($session->scouts as $scout)
-                <li><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }} ({{ $scout->gender }}), {{ $scout->site }}, {{ $scout->unit }}</a></li>
+                <li><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }} ({{ $scout->gender }}, {{ $scout->age }}), {{ $scout->site }}, {{ $scout->unit }}</a></li>
             @endforeach
             </ul>
         @endif
