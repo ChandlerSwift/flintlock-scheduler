@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Auth;
 
 
 class ChangeRequestController extends Controller
@@ -129,6 +130,9 @@ class ChangeRequestController extends Controller
 
     public function confirmRequest($id){
         $changeRequest = ChangeRequest::where('id', $id)->first();
+        if (Auth::user()->name != $changeRequest->scout->subcamp) {
+            return abort(403);
+        }
         $changeRequest->status = "confirmed";
         $changeRequest->save();
 

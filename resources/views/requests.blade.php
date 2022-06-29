@@ -1,6 +1,5 @@
 @extends('layouts.base')
 
-
 @section('head')
 <title>Requests</title>
 <style>
@@ -273,15 +272,18 @@ document.getElementById("troop").addEventListener("change", function(e){
 
                 @if(Auth::user()->admin)
                 <td>Approved</td>
-                @else<td>
-                        <form method="POST" action="/requests/{{ $changeRequest->id }}/confirm">
-                            @csrf
-                            <button type="submit"
-                            onclick="return confirm('CONFIRM {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                            Confirm
-                            </button>
-                        </form>
-                    </td>
+                @elseif(Auth::user()->name != $changeRequest->scout->subcamp)
+                <td>
+                    <form method="POST" action="/requests/{{ $changeRequest->id }}/confirm">
+                        @csrf
+                        <button type="submit"
+                        onclick="return confirm('CONFIRM {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
+                        Confirm
+                        </button>
+                    </form>
+                </td>
+                @else
+                <td></td>
                 @endif
             </tr>
         @endforeach
