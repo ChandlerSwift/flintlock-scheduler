@@ -107,10 +107,11 @@ class ChangeRequestController extends Controller
         return back();
     }
 
-
-    public function approveRequest($id){
-        $changeRequest = ChangeRequest::where('id', $id)->first();
+    public function approveRequest(Request $request, ChangeRequest $changeRequest){
         $changeRequest->status = "approved";
+        if ($changeRequest->session == null) {
+            $changeRequest->session_id = $request['session'];
+        }
         $changeRequest->save();
 
         return back();
@@ -128,7 +129,7 @@ class ChangeRequestController extends Controller
         $changeRequest = ChangeRequest::where('id', $id)->first();
         $changeRequest->status = "confirmed";
         $changeRequest->save();
-    
+
         if($changeRequest->action == 'Drop')
             $this->dropRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
         elseif($changeRequest->action == 'Add')
@@ -137,10 +138,7 @@ class ChangeRequestController extends Controller
         return back();
     } 
 
-
-
     public function dropRequest($changeRequest, $scout, $session){
-        
         $session->scouts()->detach($scout->id);
         $scout->refresh(); // Invalidate the cache
         $changeRequest->status = "archived";
@@ -148,13 +146,10 @@ class ChangeRequestController extends Controller
     }
 
     public function addRequest($changeRequest, $scout, $session) {
-
         $session->scouts()->attach($scout->id);
         $scout->refresh(); // Invalidate the cache
         $changeRequest->status = "archived";
         $changeRequest->save();
     }
 
-
-   
 }

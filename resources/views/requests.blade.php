@@ -39,12 +39,27 @@ input.notes{
     padding: 12px 20px;
     width: 15%;
 }
-table {
-        width:100%;
-}
 div.notice{
     color: red;
     text-align: center;
+}
+
+table {
+    width:100%;
+    border-collapse: collapse;
+    border: solid 1px;
+    margin: auto;
+}
+table th{
+        background-color: #333;
+        border: solid 1px;
+        color: white;
+        
+}
+table td{
+        border: solid 1px;
+        border-color: #c9c9c9;
+        padding: 5px;
 }
 </style>
 @endsection
@@ -178,10 +193,10 @@ document.getElementById("troop").addEventListener("change", function(e){
                     @if(Auth::user()->admin)
                     <form method="POST" action="/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
                     @csrf
-                        <select name="dayOfWeek" required>
+                        <select name="session" required>
                             <option selected disabled hidden>Choose Session</option>
                             @foreach($changeRequest->program->sessions as $session)
-                                <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
+                                <option value="{{ $session->id }}">{{ $session->start_time->format('l, g:i A') }}</option>
                             @endforeach
                         </select>
                     </form>

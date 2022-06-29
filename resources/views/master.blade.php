@@ -1,100 +1,68 @@
 @extends('layouts.base')
 <style>
     
-    #big table {
+    table {
         border-collapse: collapse;
-        border: solid 1px;
+        border: 0px;
         margin: auto;
-        border-color: white;
         width: 100%;
         
     }
-    #big th{
+    th{
         background-color: #333;
         border: solid 1px;
         color: white;
         
     }
-    #big td{
-        border: solid 1px;
+    td{
+        border: 0px;
         border-color: white;
         
     }
     #small table{
-        border-color: #c9c9c9;  
+        border-color: #c9c9c9;
         
     }
     #small th{
-        border: solid 1px;
-        border-color: #007ec7;
         text-align: left;
-        background-color: #007ec7;
         color: white;
         padding-top: 12px;
         padding-bottom: 12px;
         padding-left: 7px;
     }
-    #small tr:nth-child(even){background-color: #f2f2f2;}
+    .program tr:nth-child(even){
+        background-color: #f2f2f2;}
     #small td{
-        padding: 6px
-    ;
+        padding: 6px;
     }
 </style>
 @section('content')
 
-<table id="big">
-    @foreach($programs as $program)
-    <tr>    
-        @if ($program->name == 'International Target Sports Outpost')
-        <td style="vertical-align: top;font-weight: bold;" >
-        <table id="small">
-                    <tr id="small">
-                        <th id="small">
-                            <b>I.T.S.O.</b>
-                        </th>
-                    </tr>
-                </table>
-        </td>
-        @else
-        <td style="vertical-align: top;font-weight: bold;" >
-        <table id="small">
-                    <tr id="small">
-                        <th id="small">
-                            <b>{{$program->name}}</b>
-                        </th>
-                    </tr>
-                </table>
-        </td>
-        @endif
+@foreach($programs as $program)
+<h2>{{ $program->name }}</h2>
+<table>
+    <tr>
         @foreach($program->sessions->sortBy('start_time') as $session)
             <td style="vertical-align: top;">
                 @if($session->running)
-                <table id="small">
+                <table class="program">
                     <tr id="small">
-                        <th id="small">
-                            <b>{{ $session->start_time->format('l') }}
-                            </b>
-                        </th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th id="small" colspan="5">{{ $session->start_time->format('l') }} ({{ $session->scouts->count() }}/{{ $session->program->max_participants }})</th>
                     </tr>
                     @foreach($session->scouts->sortBy('troop') as $scout)
-                            <tr id="small">
-                                <td id="small"><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a></td>
-                                <td id="small"><a href="/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
-                                <td id="small">{{ $scout->gender }}</td>
-                                <td id="small">{{ $scout->age }}</td>
-                                <td id="small">{{ $scout->subcamp }}</td>
-                            </tr>
+                        <tr id="small">
+                            <td id="small"><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a></td>
+                            <td id="small"><a href="/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
+                            <td id="small">{{ $scout->gender }}</td>
+                            <td id="small">{{ $scout->age }}</td>
+                            <td id="small">{{ $scout->subcamp }}</td>
+                        </tr>
                     @endforeach
                     </table>
                 @else
-                <table id="small">
+                <table class="program">
                     <tr id="small">
-                        <th id="small">
-                            <b>No Session Scheduled</b>
-                        </th>
+                        <th id="small">No Session Scheduled</th>
                     </tr>
                 </table>
                 @endif
@@ -102,21 +70,19 @@
             @if($loop->last){{-- add empty cells for remaining days, if any --}}
                 @for($i = $loop->iteration; $i < 5; $i++)
                     <td style="vertical-align: top;">
-                    <table id="small">
-                    <tr id="small">
-                        <th id="small">
-                            <b>No Session Scheduled</b>
-                        </th>
-                    </tr>
-                </table>
+                    <table class="program">
+                        <tr id="small">
+                            <th id="small">No Session Scheduled</th>
+                        </tr>
+                    </table>
                 </td>
                 @endfor
             @endif
         @endforeach
 
     <tr>
-    @endforeach
 </table>
+@endforeach
 <!-- <table>
     <tr>
         <th></th>{{-- offset --}}
