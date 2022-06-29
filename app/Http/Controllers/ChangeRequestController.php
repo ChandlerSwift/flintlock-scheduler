@@ -110,6 +110,8 @@ class ChangeRequestController extends Controller
     public function approveRequest(Request $request, ChangeRequest $changeRequest){
         $changeRequest->status = "approved";
         if ($changeRequest->session == null) {
+            if ($request['session'] == "")
+                return abort(400);
             $changeRequest->session_id = $request['session'];
         }
         $changeRequest->save();
