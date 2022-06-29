@@ -87,12 +87,10 @@ div.notice{
             @endforeach
         </select>
         <select class="requestform" id="session" name="session">
-            <option value="session" selected disabled hidden>Session</option>  
-            <option value="mon">Monday</option>
-            <option value="tues">Tuesday</option>
-            <option value="wed">Wednesday</option>
-            <option value="thurs">Thursday</option>
-            <option value="fri">Friday</option>
+            <option value="test" selected disabled hidden>Session</option>
+            @foreach($sessions as $session)
+                <option value="{{ $session->id }}" data-program="{{ $session->program_id }}">{{ $session->start_time->format('l, g:i A') }}</option>
+            @endforeach
         </select>
     <input class="notes" id="notes" name="notes"placeholder="Notes">
     <button class="button" onclick="">Submit Request</button>
@@ -106,6 +104,26 @@ if (currentValue == "test") {
     document.getElementById("scout").disabled = false;
     document.querySelectorAll("select#scout > option").forEach(function(o){
         o.hidden = o.dataset['troop'] != currentValue;
+    });
+}
+
+document.getElementById("program").addEventListener("change", function(e){
+    document.getElementById('session').value = "test";
+    if (e.target.value !== "test") {
+        document.getElementById("session").disabled = false;
+        document.querySelectorAll("select#session > option").forEach(function(o){
+            o.hidden = o.dataset['program'] != e.target.value;
+        });
+    } // else it's the "Choose Troop"
+});
+
+let programCurrentValue = document.getElementById("program").value;
+if (programCurrentValue == "test") {
+    document.getElementById("session").disabled = true;
+} else {
+    document.getElementById("session").disabled = false;
+    document.querySelectorAll("select#scout > option").forEach(function(o){
+        o.hidden = o.dataset['program'] != currentValue;
     });
 }
 
@@ -160,7 +178,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                     @if(Auth::user()->admin)
                     <form method="POST" action="/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
                     @csrf
-                        <select id="session" name="session" required>
+                        <select name="dayOfWeek" required>
                             <option selected disabled hidden>Choose Session</option>
                             @foreach($changeRequest->program->sessions as $session)
                                 <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
@@ -170,8 +188,6 @@ document.getElementById("troop").addEventListener("change", function(e){
                     @else
                     Not Selected
                     @endif
-                        
-                    
                 </td>
                 @endif
                 <td>{{ $changeRequest->action }}</td>

@@ -27,6 +27,7 @@ class ChangeRequestController extends Controller
             ->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'))
             ->with('scouts', \App\Models\Scout::all())
             ->with('programs', \App\Models\Program::all())
+            ->with('sessions', \App\Models\Session::all())
             ->with('changeRequests', \App\Models\ChangeRequest::all());
     }
 
@@ -53,47 +54,7 @@ class ChangeRequestController extends Controller
         $cr->program_id = $request['program'];
         $cr->notes = $request['notes'];
         $cr->status = "pending";
-        
-        
-        $day = 5;
-        $sessionCount = 0;
-        $dayProgram = 0;
-        if ($request['session'] == 'mon')
-            $day = 0; 
-        else if ($request['session'] == 'tues')
-            $day = 1;
-        else if ($request['session'] == 'wed')
-            $day = 2;
-        else if ($request['session'] == 'thurs')
-            $day = 3;
-        else if ($request['session'] == 'fri')
-            $day = 4;
-
-        if ($day < 5 ){
-            if ($request['program'] == 1)
-                $sessionCount = 1;
-            else if ($request['program'] == 2)
-                $sessionCount = 5;
-            else if ($request['program'] == 3)
-                $sessionCount = 9;
-            else if ($request['program'] == 4)
-                $sessionCount = 13;
-            else if ($request['program'] == 5)
-                $sessionCount = 18;
-            else if ($request['program'] == 6)
-                $sessionCount = 23;
-            else if ($request['program'] == 7)
-                $sessionCount = 28;
-            else if ($request['program'] == 8)
-                $sessionCount = 33;
-            else if ($request['program'] == 9)
-                $sessionCount = 38;
-            else if ($request['program'] == 10)
-                $sessionCount = 43;
-
-            $dayProgram = $sessionCount + $day;
-            $cr->session_id = $dayProgram;
-        }
+        $cr->session_id = $request['session'];
         $cr->save();
 
         $request->session()->flash('status', 'Request submitted!');
