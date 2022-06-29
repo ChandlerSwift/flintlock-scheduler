@@ -148,15 +148,11 @@ document.getElementById("troop").addEventListener("change", function(e){
         document.querySelectorAll("select#scout > option").forEach(function(o){
             o.hidden = o.dataset['troop'] != e.target.value;
         });
-    } // else it's the "Choose Troop"
+    }
 });
 </script>
-<br><br>
-<div class="notice">
-    <p>Ya'll know the drill. Do the things, do them right, and it'll be okay.</p>
-</div>
 <div class="requestTable">
-    <h3>Active Requests</h3>
+    <h3>Pending Flintlock Approval</h3>
     <table>
         <tr>
             <th>Created At</th>
@@ -169,7 +165,7 @@ document.getElementById("troop").addEventListener("change", function(e){
             <th>Notes</th>
             <th>Status</th>
         </tr>
-        @foreach ($changeRequests->where('status', 'pending') as $changeRequest)
+        @foreach ($changeRequests->sortBy('created_at')->where('status', 'pending') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
                 <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
@@ -239,7 +235,23 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @endif
             </tr>
         @endforeach
-        @foreach ($changeRequests->where('status', 'approved') as $changeRequest)
+    </table>
+</div>
+<div class="requestTable">
+    <h3>Pending Subcamp Confirmation</h3>
+    <table>
+        <tr>
+            <th>Created At</th>
+            <th>Scout</th>
+            <th>Age</th>
+            <th>Troop</th>
+            <th>Program</th>
+            <th>Session</th>
+            <th>Action</th>
+            <th>Notes</th>
+            <th>Status</th>
+        </tr>
+        @foreach ($changeRequests->sortBy('created_at')->where('status', 'approved') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
                 <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
@@ -304,7 +316,7 @@ document.getElementById("troop").addEventListener("change", function(e){
             <th>Notes</th>
             <th>Status</th>
         </tr>
-        @foreach ($changeRequests->where('status', 'waitlist') as $changeRequest)
+        @foreach ($changeRequests->sortBy('created_at')->sortBy('program_id')->where('status', 'waitlist') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
                 <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
@@ -376,7 +388,7 @@ document.getElementById("troop").addEventListener("change", function(e){
             <th>Notes</th>
             <th>Status</th>
         </tr>
-        @foreach ($changeRequests->where('status', 'archived') as $changeRequest)
+        @foreach ($changeRequests->sortBy('changed_at')->where('status', 'archived') as $changeRequest)
             <tr>
                 <td>{{ $changeRequest->updated_at->format('l, g:i A')}}</td>
                 <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
@@ -430,19 +442,5 @@ document.getElementById("troop").addEventListener("change", function(e){
             </tr>
         @endforeach
     </table>
-    <br>
-    <br>
-    <br>
-    <br>
-    If the session date does not matter, leave it blank when requesting and Flintlock will fill in whatever is available.
-    <br>
-    <br>
-    <h4> Status Meanings:</h4>
-    <p> Pending - Waiting on Flintlock Approval (Someone may have to drop to make this request happen)<br>
-        Approved/CONFIRM? - Waiting on Subcamp PD to confirm the scheduled timeslot<br>
-        Confirmed (In the archived table) - Subcamp has confirmed and Scout is scheduled
-        
-        
-    </p>
 </div>
 @endsection
