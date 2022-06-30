@@ -21,4 +21,8 @@ class Program extends Model
         return $this->hasMany(ChangeRequest::class);
     }
 
+    public function participationRequirements()
+    {
+        return $this->belongsToMany(ParticipationRequirement::class);
+    }
 }

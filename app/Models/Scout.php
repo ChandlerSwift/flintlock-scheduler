@@ -22,5 +22,34 @@ class Scout extends Model
     public function changeRequests() {
         return $this->hasMany(ChangeRequest::class);
     }
-    
+
+    public function participationRequirements() {
+        return $this->belongsToMany(ParticipationRequirement::class);
+    }
+
+    public function satisfiedParticipationRequirements() {
+        $prs = $this->participationRequirements;
+
+        // This is jank; there's gotta be a better way to do this
+        $satisfied_prs = [];
+        foreach (ParticipationRequirement::all() as $pr) {
+            array_push($satisfied_prs, [$pr, $prs->contains($pr)]);
+        }
+
+        return $satisfied_prs;
+    }
+
+    public function missingReqsFor(Program $program) {
+        $reqs = [];
+        foreach ($program->participationRequirements as $req) {
+            if (!$this->participationRequirements->contains($req)) {
+                array_push($reqs, $req);
+            }
+        }
+        return collect($reqs);
+    }
+
+    public function meetsReqsFor(Program $program) {
+        return count($this->missingReqsFor($program)) == 0;
+    }
 }

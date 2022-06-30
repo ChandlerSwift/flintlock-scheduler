@@ -163,6 +163,7 @@ document.getElementById("troop").addEventListener("change", function(e){
             <th>Session</th>
             <th>Action</th>
             <th>Notes</th>
+            <th>Reqs</th>
             <th>Status</th>
         </tr>
         @foreach ($changeRequests->sortBy('created_at')->where('status', 'pending') as $changeRequest)
@@ -202,7 +203,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @endif
                 <td>{{ $changeRequest->action }}</td>
                 <td>{{ $changeRequest->notes }}</td>
-
+                <td style="text-align: center;">{!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;">&#10007;</span>' !!}</td>
                 @if(Auth::user()->admin)
                 <td>
                     <!-- for the form defined on the whole row; this includes the session select dropdown -->
@@ -248,6 +249,7 @@ document.getElementById("troop").addEventListener("change", function(e){
             <th>Session</th>
             <th>Action</th>
             <th>Notes</th>
+            <th>Reqs</th>
             <th>Status</th>
         </tr>
         @foreach ($changeRequests->sortBy('created_at')->where('status', 'approved') as $changeRequest)
@@ -280,6 +282,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @endif
                 <td>{{ $changeRequest->action }}</td>
                 <td>{{ $changeRequest->notes }}</td>
+                <td style="text-align: center;">{!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;">&#10007;</span>' !!}</td>
 
                 @if(Auth::user()->admin)
                 <td>
@@ -321,6 +324,7 @@ document.getElementById("troop").addEventListener("change", function(e){
             <th>Session</th>
             <th>Action</th>
             <th>Notes</th>
+            <th>Reqs</th>
             <th>Status</th>
         </tr>
         @foreach ($changeRequests->sortBy('created_at')->sortBy('program_id')->where('status', 'waitlist') as $changeRequest)
@@ -353,6 +357,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @endif
                 <td>{{ $changeRequest->action }}</td>
                 <td>{{ $changeRequest->notes }}</td>
+                <td style="text-align: center;">{!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;">&#10007;</span>' !!}</td>
 
                 @if(Auth::user()->admin)
                      <td>
@@ -394,6 +399,7 @@ document.getElementById("troop").addEventListener("change", function(e){
             <th>Session</th>
             <th>Action</th>
             <th>Notes</th>
+            <th>Reqs</th>
             <th>Status</th>
         </tr>
         @foreach ($changeRequests->sortBy('changed_at')->where('status', 'archived') as $changeRequest)
@@ -420,6 +426,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @endif
                 <td>{{ $changeRequest->action }}</td>
                 <td>{{ $changeRequest->notes }}</td>
+                <td style="text-align: center;">{!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;">&#10007;</span>' !!}</td>
                 <td>Archived</td>
             </tr>
         @endforeach
@@ -448,6 +455,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                 @endif
                 <td>{{ $changeRequest->action }}</td>
                 <td>{{ $changeRequest->notes }}</td>
+                <td style="text-align: center;">{!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;">&#10007;</span>' !!}</td>
                 <td>Archived</td>
             </tr>
         @endforeach

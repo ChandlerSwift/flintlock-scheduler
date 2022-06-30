@@ -51,7 +51,7 @@
                     </tr>
                     @foreach($session->scouts->sortBy('troop') as $scout)
                         <tr id="small">
-                            <td id="small"><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a></td>
+                            <td id="small"><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>@if(!$scout->meetsReqsFor($session->program)) <abbr style="color:red;" title="{{ implode(', ', $scout->missingReqsFor($session->program)->pluck('name')->all()) }}">(reqs)</abbr>@endif</td>
                             <td id="small"><a href="/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
                             <td id="small">{{ $scout->gender }}</td>
                             <td id="small">{{ $scout->age }}</td>

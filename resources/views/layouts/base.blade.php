@@ -8,8 +8,11 @@
     <style>
     * {
         font-family: sans-serif;
-        text-decoration: none;
         color: black;
+    }
+
+    a {
+        text-decoration: none;
     }
     a:hover {
         text-decoration: underline;

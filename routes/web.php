@@ -7,7 +7,7 @@ use App\Http\Controllers\ScoutController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ChangeRequestController;
-
+use App\Http\Controllers\ParticipationRequirementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +69,11 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('pi', function () {
         return view('pi')->with('programs', \App\Models\Program::all());
+    });
+
+    Route::prefix('admin')->middleware(['admin'])->group(function () {
+        Route::get('/participation-requirements', [ParticipationRequirementController::class, 'index']);
+        Route::post('/participation-requirements', [ParticipationRequirementController::class, 'store']);
     });
 
 });
