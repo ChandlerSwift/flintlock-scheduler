@@ -291,7 +291,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                         @csrf
                     </form>
                 </td>
-                @elseif(Auth::user()->name != $changeRequest->scout->subcamp)
+                @elseif(Auth::user()->name == $changeRequest->scout->subcamp)
                 <td>
                     <form method="POST" action="/requests/{{ $changeRequest->id }}/confirm">
                         @csrf
