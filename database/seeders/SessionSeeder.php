@@ -18,13 +18,12 @@ class SessionSeeder extends Seeder
      * @return void
      */
     public function run($week = 27) //week 1 = 27
-    {   
-
+    {
         DB::table('sessions')->delete();
         foreach (Program::all() as $program) {
             $timeSlots = [];
             //Overnights
-            if (in_array($program->id, [1,2,3])) {
+            if (in_array($program->id, [1,2])) {
                 foreach([0,1,2,3] as $dayOfWeek) { // Mon, Tues, Wed, Thurs
                     $date = new Carbon; // same as ::now()
                     $date->week = $week;
@@ -36,6 +35,20 @@ class SessionSeeder extends Seeder
                     $date2->day = (Carbon::SATURDAY + $dayOfWeek) + 1;
                     $date2->setTime(7, 0, 0); // 7AM
                     array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2]);
+                }
+            // Fishing
+            } elseif (in_array($program->id, [3])) {
+                foreach([0,1,2,3,4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
+                    $date = new Carbon; // same as ::now()
+                    $date->week = $week;
+                    $date->day = (Carbon::SATURDAY + $dayOfWeek);
+                    $date->setTime(15, 30, 0);
+
+                    $date2 = new Carbon; // same as ::now()
+                    $date2->week = $week;
+                    $date2->day = (Carbon::SATURDAY + $dayOfWeek);
+                    $date2->setTime(21, 30, 0);
+                    array_push($timeSlots, ['start_time' => $date, 'end_time' => $date2 ,]);
                 }
             //Afternoon
             } elseif (in_array($program->id, [4,5,7,8])) {
