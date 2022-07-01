@@ -75,5 +75,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/participation-requirements', [ParticipationRequirementController::class, 'index']);
         Route::post('/participation-requirements', [ParticipationRequirementController::class, 'store']);
     });
-
+    Route::post('/scouts/{scout}/participation-requirements', [ScoutController::class, 'updateReqs']);
+    Route::get('/participation-requirements/{subcamp}', [ParticipationRequirementController::class, 'required']);
+    Route::post('/participation-requirements/{subcamp}', [ParticipationRequirementController::class, 'updateSubcamp']);
 });

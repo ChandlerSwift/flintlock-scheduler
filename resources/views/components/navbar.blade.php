@@ -48,6 +48,17 @@ div.nav input[type=text] {
     <a href="/requests">Requests</a>
     <a href="/print">Print</a>
     <a href="/programs/">Programs</a>
+
+    @if(Auth::user()->admin or Auth::user()->name == "Buckskin")
+    <a href="/participation-requirements/Buckskin">Buck PRs</a>
+    @endif
+    @if(Auth::user()->admin or Auth::user()->name == "Ten Chiefs")
+    <a href="/participation-requirements/Ten Chiefs">TC PRs</a>
+    @endif
+    @if(Auth::user()->admin or Auth::user()->name == "Voyageur")
+    <a href="/participation-requirements/Voyageur">Voy PRs</a>
+    @endif
+
     @if(Auth::user()->admin)
     <a href="/admin/">Admin</a>
     @endif

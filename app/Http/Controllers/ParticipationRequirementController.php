@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ParticipationRequirement;
+use App\Models\Scout;
 
 class ParticipationRequirementController extends Controller
 {
@@ -75,5 +76,23 @@ class ParticipationRequirementController extends Controller
     public function destroy(ParticipationRequirement $participationRequirement)
     {
         //
+    }
+
+    public function required(Request $request, string $subcamp) {
+        return view('participation_requirements.required')
+            ->with('scouts', Scout::where('subcamp', $subcamp)->get())
+            ->with('reqs', ParticipationRequirement::all())
+            ->with(compact('subcamp'));
+    }
+
+    public function updateSubcamp(Request $request, string $subcamp) {
+        foreach (Scout::where('subcamp', $subcamp)->get() as $scout) {
+            $scout->participationRequirements()->detach();
+        }
+        foreach ($request->except(['_token']) as $input => $no) { // shouldn't excluding _token be automatic?
+            $assoc = explode('-', $input);
+            Scout::find($assoc[0])->participationRequirements()->attach($assoc[1]);
+        }
+        return back();
     }
 }

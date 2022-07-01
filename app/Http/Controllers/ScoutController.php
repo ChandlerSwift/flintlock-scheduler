@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ParticipationRequirement;
 use App\Models\Scout;
 use Illuminate\Http\Request;
 
@@ -77,9 +78,10 @@ class ScoutController extends Controller
      * @param  \App\Models\Scout  $scout
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Scout $scout)
+    public function updateReqs(Request $request, Scout $scout)
     {
-        //
+        $scout->participationRequirements()->sync($request->pr);
+        return back();
     }
 
     /**

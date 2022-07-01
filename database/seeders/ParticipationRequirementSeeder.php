@@ -15,11 +15,6 @@ class ParticipationRequirementSeeder extends Seeder
      */
     public function run()
     {
-        /*
-        - ASI (ATV Safety Institute) waiver - required for ATVs
-        - ATV certification - required for ATVs
-        - Swimmer tag - HF ADC ski
-        */
         $asi = new ParticipationRequirement();
         $asi->name = "ASI waiver";
         $asi->save();
@@ -37,5 +32,11 @@ class ParticipationRequirementSeeder extends Seeder
             $program = Program::where('name', $programName)->first();
             $program->participationRequirements()->attach($swimmer->id);
         }
+
+        $pwc = new ParticipationRequirement();
+        $pwc->name = "";
+        $pwc->save();
+        $waterski = Program::where('name', 'Waterski')->first();
+        $waterski->participationRequirements()->attach($pwc->id);
     }
 }

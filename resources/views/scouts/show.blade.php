@@ -4,12 +4,15 @@
 <h1>{{ $scout->first_name }} {{ $scout->last_name }}, {{ $scout->unit }}, {{ $scout->site }}</h1>
 
 <h3>Participation Requirements</h3>
-@foreach($scout->satisfiedParticipationRequirements() as $pr)
-<label style="display: block;">
-  <input type="checkbox" {{ $pr[1] ? "checked" : "" }}> {{ $pr[0]->name }}
-</label>
-@endforeach
-<button type="button">Save Participation Requirements</button>
+<form action="/scouts/{{ $scout->id }}/participation-requirements" method="post">
+    @csrf
+    @foreach($scout->satisfiedParticipationRequirements() as $pr)
+    <label style="display: block;">
+        <input type="checkbox" name="pr[]" value="{{ $pr[0]->id }}" {{ $pr[1] ? "checked" : "" }}> {{ $pr[0]->name }}
+    </label>
+    @endforeach
+    <button type="submit">Save</button>
+</form>
 
 <h3>Programs</h3>
 <ul>

@@ -36,7 +36,7 @@ class Scout extends Model
             array_push($satisfied_prs, [$pr, $prs->contains($pr)]);
         }
 
-        return $satisfied_prs;
+        return collect($satisfied_prs);
     }
 
     public function missingReqsFor(Program $program) {
@@ -47,6 +47,15 @@ class Scout extends Model
             }
         }
         return collect($reqs);
+    }
+
+    public function needs(ParticipationRequirement $req) {
+        foreach ($this->sessions as $session) {
+            if ($session->program->participationRequirements->contains($req)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function meetsReqsFor(Program $program) {
