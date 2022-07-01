@@ -7,7 +7,7 @@
     @foreach($reqs as $req)
     <h3>{{ $req->name }}</h3>
     @foreach($scouts as $scout)
-    @if($scout->needs($req))
+    @if($scout->needs($req, true))
     <label>
         <input type="checkbox" name="{{ $scout->id }}-{{ $req->id }}" @if($scout->participationRequirements->contains($req))checked @endif>
         {{ $scout->first_name }} {{ $scout->last_name }}, {{ $scout->site }}, {{ $scout->unit }}

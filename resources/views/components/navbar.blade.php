@@ -43,11 +43,12 @@ div.nav input[type=text] {
 
 <div class="nav">
     <!-- <div class="img"> <img src="{{ asset('/mpsclogonegative.png') }}" height= 33px;> </div> -->
-    <div class="title">{{ config('app.name') }}</div>
+    <div class="title">Flintlock Scheduler</div>
     <a href="/">Master</a>
     <a href="/requests">Requests</a>
-    <a href="/print">Print</a>
-    <a href="/programs/">Programs</a>
+    <a href="/print/units">Print by unit</a>
+    <a href="/programs/">Print by program</a>
+    <a href="/print/rosters">Print rosters</a>
 
     @if(Auth::user()->admin or Auth::user()->name == "Buckskin")
     <a href="/participation-requirements/Buckskin">Buck PRs</a>

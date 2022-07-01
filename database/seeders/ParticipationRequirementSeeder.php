@@ -33,10 +33,10 @@ class ParticipationRequirementSeeder extends Seeder
             $program->participationRequirements()->attach($swimmer->id);
         }
 
-        $pwc = new ParticipationRequirement();
-        $pwc->name = "";
-        $pwc->save();
-        $waterski = Program::where('name', 'Waterski')->first();
-        $waterski->participationRequirements()->attach($pwc->id);
+        // $pwc = new ParticipationRequirement();
+        // $pwc->name = "PWC waiver";
+        // $pwc->save();
+        // $wso = Program::where('name', 'Water Sports Outpost')->first();
+        // $wso->participationRequirements()->attach($pwc->id);
     }
 }

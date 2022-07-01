@@ -8,6 +8,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ChangeRequestController;
 use App\Http\Controllers\ParticipationRequirementController;
+use App\Http\Controllers\PrintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,9 +52,9 @@ Route::middleware(['auth'])->group(function(){
     Route::get('troops/{id}', function($id) {
         return view('troops.show')->with('troop', $id)->with('scouts', \App\Models\Scout::where('unit', $id)->get());
     });
-    Route::get('print', function() {
-        return view('print')->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'))->with('scouts', \App\Models\Scout::all());
-    });
+    Route::get('print/units', [PrintController::class, 'units']);
+    Route::get('print/rosters', [PrintController::class, 'chooseRosters']);
+    Route::post('print/rosters', [PrintController::class, 'rosters']);
     Route::get('search', function() {
         return view('search');
     });

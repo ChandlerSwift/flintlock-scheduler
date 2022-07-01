@@ -49,10 +49,17 @@ class Scout extends Model
         return collect($reqs);
     }
 
-    public function needs(ParticipationRequirement $req) {
+    public function needs(ParticipationRequirement $req, bool $withRequests = false) {
         foreach ($this->sessions as $session) {
             if ($session->program->participationRequirements->contains($req)) {
                 return true;
+            }
+        }
+        if ($withRequests) {
+            foreach ($this->changeRequests as $cr) {
+                if ($cr->program->participationRequirements->contains($req)) {
+                    return true;
+                }
             }
         }
         return false;
