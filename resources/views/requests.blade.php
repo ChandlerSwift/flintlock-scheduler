@@ -385,6 +385,7 @@ document.getElementById("troop").addEventListener("change", function(e){
     <h3>Archived Requests</h3>
     <table>
         <tr>
+            <th>Submitted At</th>
             <th>Confirmed At</th>
             <th>Scout</th>
             <th>Age</th>
@@ -397,6 +398,7 @@ document.getElementById("troop").addEventListener("change", function(e){
         </tr>
         @foreach ($changeRequests->sortBy('changed_at')->where('status', 'archived') as $changeRequest)
             <tr>
+                <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
                 <td>{{ $changeRequest->updated_at->format('l, g:i A')}}</td>
                 <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
                 <td>{{ $changeRequest->scout->age }}</td>
@@ -423,7 +425,8 @@ document.getElementById("troop").addEventListener("change", function(e){
         @endforeach
         @foreach ($changeRequests->where('status', 'confirmed') as $changeRequest)
             <tr>
-                <td>{{ $changeRequest->updated_at->format('l')}}</td>
+                <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
+                <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
                 <td>{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</td>
 
                 <td>{{ $changeRequest->scout->age }}</td>
