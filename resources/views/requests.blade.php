@@ -206,30 +206,20 @@ document.getElementById("troop").addEventListener("change", function(e){
                 <td style="text-align: center;">{!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;">&#10007;</span>' !!}</td>
                 @if(Auth::user()->admin)
                 <td>
-                    <!-- for the form defined on the whole row; this includes the session select dropdown -->
-                    <button type="button"
-                    onclick="if (confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('approveRequest{{ $changeRequest->id }}form').submit();" >
-                    APPROVE
-                    </button>
-                    <button type="button"
-                    onclick="if (confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('deleteRequest{{ $changeRequest->id }}form').submit();" >
-                    DELETE
-                    </button>
-                    <button type="button"
-                    onclick="if (confirm('WAITLIST {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('waitlistRequest{{ $changeRequest->id }}form').submit();" >
-                    WAITLIST
-                    </button>
+                    <form method="POST" action="/requests/{{ $changeRequest->id }}/approve">
+                        @csrf
+                        <button type="submit">APPROVE</button>
+                    </form>
+                    <form method="POST" action="/requests/{{ $changeRequest->id }}">
+                        @method('DELETE')
+                        @csrf
+                        <button type="submit">DELETE</button>
+                    </form>
+                    <form method="POST" action="/requests/{{ $changeRequest->id }}/waitlist">
+                        @csrf
+                        <button type="submit">WAITLIST</button>
+                    </form>
                 </td>
-                <form method="POST" action="/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
-                    @csrf
-                </form>
-                <form method="POST" action="/requests/{{ $changeRequest->id }}" id="deleteRequest{{ $changeRequest->id }}form">
-                    @method('DELETE')
-                    @csrf
-                </form>
-                <form method="POST" action="/requests/{{ $changeRequest->id }}/waitlist" id="waitlistRequest{{ $changeRequest->id }}form">
-                    @csrf
-                </form>
                 @else
                     <td>Pending</td>
                 @endif
@@ -286,22 +276,16 @@ document.getElementById("troop").addEventListener("change", function(e){
 
                 @if(Auth::user()->admin)
                 <td>
-                    <button type="button"
-                        onclick="if (confirm('UNAPPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?')) document.getElementById('unapproveRequest{{ $changeRequest->id }}form').submit();" >
-                        Unapprove
-                        </button>
-                    <form method="POST" action="/requests/{{ $changeRequest->id }}/unapprove" id="unapproveRequest{{ $changeRequest->id }}form">
+                    <form method="POST" action="/requests/{{ $changeRequest->id }}/unapprove">
                         @csrf
+                        <button type="submit">Unapprove</button>
                     </form>
                 </td>
                 @elseif(Auth::user()->name == $changeRequest->scout->subcamp)
                 <td>
                     <form method="POST" action="/requests/{{ $changeRequest->id }}/confirm">
                         @csrf
-                        <button type="submit"
-                        onclick="return confirm('CONFIRM {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                        Confirm
-                        </button>
+                        <button type="submit">Confirm</button>
                     </form>
                 </td>
                 @else
@@ -329,57 +313,51 @@ document.getElementById("troop").addEventListener("change", function(e){
         </tr>
         @foreach ($changeRequests->sortBy('created_at')->sortBy('program_id')->where('status', 'waitlist') as $changeRequest)
             <tr>
-                <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
-                <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
-                <td>{{ $changeRequest->scout->age }}</td>
-                <td><a href="/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
-                @if ( $changeRequest->scout->subcamp  == 'Buckskin')
-                    (B)
-                @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
-                    (TC)
-                @elseif (  $changeRequest->scout->subcamp  == 'Voyageur')
-                    (V)
-                @else
+                <form method="POST" action="/requests/{{ $changeRequest->id }}/approve">
+                    @csrf
+                    <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
+                    <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
+                    <td>{{ $changeRequest->scout->age }}</td>
+                    <td><a href="/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+                    @if ( $changeRequest->scout->subcamp  == 'Buckskin')
+                        (B)
+                    @elseif ( $changeRequest->scout->subcamp  == 'Ten Chiefs')
+                        (TC)
+                    @elseif (  $changeRequest->scout->subcamp  == 'Voyageur')
+                        (V)
+                    @else
 
-                @endif</a></td>
-                <td>{{ $changeRequest->program->name }}</td>
-                @if ($changeRequest->session != null)
-                    <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
-                @else
-                <td>
-                        <select id="session" name="session">
-                            <option value="test" selected disabled hidden>Choose Session</option>  
-                            @foreach($changeRequest->program->sessions as $session)
-                                <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                @endif
-                <td>{{ $changeRequest->action }}</td>
-                <td>{{ $changeRequest->notes }}</td>
-                <td style="text-align: center;">{!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;">&#10007;</span>' !!}</td>
+                    @endif</a></td>
+                    <td>{{ $changeRequest->program->name }}</td>
+                    @if ($changeRequest->session != null)
+                        <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
+                    @else
+                    <td>
+                            <select id="session" name="session">
+                                <option value="test" selected disabled hidden>Choose Session</option>
+                                @foreach($changeRequest->program->sessions as $session)
+                                    <option value="{{ $session->id }}">{{ $session->start_time->format('l') }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    @endif
+                    <td>{{ $changeRequest->action }}</td>
+                    <td>{{ $changeRequest->notes }}</td>
+                    <td style="text-align: center;">{!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;">&#10007;</span>' !!}</td>
 
-                @if(Auth::user()->admin)
-                     <td>
-                        <form method="POST" action="/requests/{{ $changeRequest->id }}/approve">
-                            @csrf
-                            <button type="submit"
-                            onclick="return confirm('APPROVE {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                            APPROVE 
-                            </button>
-                        </form>
-                        <form method="POST" action="/requests/{{ $changeRequest->id }}">
-                            @method('DELETE')
-                            @csrf
-                            <button type="submit"
-                            onclick="return confirm('Delete request of {{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }} for {{ $changeRequest->program->name }}?');" >
-                            DELETE
-                            </button>
-                        </form>
-                     </td>
-                 @else
-                 <td>Pending</td>
-                @endif
+                    @if(Auth::user()->admin)
+                        <td>
+                            <button type="submit">APPROVE</button>
+                            <button type="button" onclick="document.getElementById('deleteRequest{{ $changeRequest->id }}form').submit();">DELETE</button>
+                        </td>
+                    @else
+                    <td>Pending</td>
+                    @endif
+                </form>
+                <form method="POST" action="/requests/{{ $changeRequest->id }}" id="deleteRequest{{ $changeRequest->id }}form">
+                    @method('DELETE')
+                    @csrf
+                </form>
             </tr>
         @endforeach
     </table>
