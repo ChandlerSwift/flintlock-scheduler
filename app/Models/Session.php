@@ -36,7 +36,7 @@ class Session extends Model
         return $this->scouts()->count() > 0;
     }
     public function changeRequests() {
-        return $this->belongsToMany(ChangeRequest::class);
+        return $this->hasMany(ChangeRequest::class);
     }
 
     public function overlaps(Session $other) {
