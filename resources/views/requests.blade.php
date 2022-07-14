@@ -206,10 +206,7 @@ document.getElementById("troop").addEventListener("change", function(e){
                 <td style="text-align: center;">{!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;">&#10007;</span>' !!}</td>
                 @if(Auth::user()->admin)
                 <td>
-                    <form method="POST" action="/requests/{{ $changeRequest->id }}/approve">
-                        @csrf
-                        <button type="submit">APPROVE</button>
-                    </form>
+                    <button type="button" onclick="document.getElementById('approveRequest{{ $changeRequest->id }}form').submit();">APPROVE</button>
                     <form method="POST" action="/requests/{{ $changeRequest->id }}">
                         @method('DELETE')
                         @csrf
