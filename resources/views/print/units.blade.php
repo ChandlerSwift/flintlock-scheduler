@@ -31,7 +31,7 @@ div.troopHeader{
             </ul>
             @endif
         @endforeach
-    <div class="pagebreak"> </div>
+    <div class="pagebreak"></div>
     @endif
     @endforeach
 @endsection 

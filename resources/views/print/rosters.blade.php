@@ -1,13 +1,5 @@
 @extends('layouts.base')
-<title>Rosters</title>
 @section('content')
-<style>
-    @media print {
-        div.nobreak {
-            break-inside: avoid;
-        }
-    }
-</style>
 @foreach($sessions as $session)
 <div class="nobreak">
     @if($session->scouts->first() == null)

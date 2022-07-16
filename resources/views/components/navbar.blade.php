@@ -1,75 +1,75 @@
-<style>
-div.nav {
-    overflow: hidden;
-    background-color: #333;
-    margin-bottom:30px;
-    
-}
-div.nav div.title, div.nav a{
-    float: left;
-    display: block;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-div.nav a:hover {
-    color: black;
-    background-color: white;
-}
-div.nav div.title {
-    font-weight: 800;
-}
-div.img {
-    float: left;
-    display: block;
-    padding: 5px 10px;
-}
-div.nav form {
-    padding: 5px 10px;
-    margin: auto;
-}
-div.nav input[type=text] {
-    border: 2px solid white;
-    float:right;
-    padding: 8px 20px;
-    color: white;
-    background-color: #333;
-    box-sizing: border-box;
-    width:15%;
-}
+<header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="{{ asset('/mpsclogo.png') }}" style="filter: brightness(0) invert(100%); max-height: 32px; padding: 0 0.5em;">
+                Flintlock Scheduler
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/requests">Requests</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="print-dropdown" data-bs-toggle="dropdown" aria-expanded="false">Print</a>
+                        <ul class="dropdown-menu" aria-labelledby="print-dropdown">
+                            <li><a class="dropdown-item" href="/print/units">By unit</a></li>
+                            <li><a class="dropdown-item" href="/programs">By program</a></li>
+                            <li><a class="dropdown-item" href="/print/rosters">Rosters</a></li>
+                        </ul>
+                    </li>
+                    @if(Auth::user()->admin)
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="prs-dropdown" data-bs-toggle="dropdown" aria-expanded="false">PRs</a>
+                        <ul class="dropdown-menu" aria-labelledby="prs-dropdown">
+                            <li><a class="dropdown-item" href="/participation-requirements/Buckskin">Buckskin</a></li>
+                            <li><a class="dropdown-item" href="/participation-requirements/Ten Chiefs">Ten Chiefs</a></li>
+                            <li><a class="dropdown-item" href="/participation-requirements/Voyageur">Voyageur</a></li>
+                        </ul>
+                    </li>
+                    @elseif(Auth::user()->name == "Buckskin")
+                    <li class="nav-item">
+                        <a class="nav-link" href="/participation-requirements/Buckskin">Buckskin PRs</a>
+                    </li>
+                    @elseif(Auth::user()->name == "Ten Chiefs")
+                    <li class="nav-item">
+                        <a class="nav-link" href="/participation-requirements/Ten Chiefs">Ten Chiefs PRs</a>
+                    </li>
+                    @elseif(Auth::user()->name == "Voyageur")
+                    <li class="nav-item">
+                        <a class="nav-link" href="/participation-requirements/Voyageur">Voyageur PRs</a>
+                    </li>
+                    @endif
+                    @if(Auth::user()->admin)
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="admin-dropdown" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                        <ul class="dropdown-menu" aria-labelledby="admin-dropdown">
+                            <li><a class="dropdown-item" href="/admin/users">Manage users</a></li>
+                            <li><a class="dropdown-item" href="/admin/add_scout">Add a scout</a></li>
+                            <li><a class="dropdown-item" href="/admin/import_data">Import data</a></li>
+                            <li><a class="dropdown-item" href="/admin/plan_week">Plan week</a></li>
+                            <li><a class="dropdown-item" href="/admin/stats">Statistics</a></li>
+                            <li><a class="dropdown-item" href="/admin/participation-requirements">Edit participation requirements</a></li>
+                            <li><a class="dropdown-item" href="/admin/programs">Edit programs</a></li>
+                        </ul>
+                    </li>
+                    @endif
 
-</style>
-
-<div class="nav">
-    <!-- <div class="img"> <img src="{{ asset('/mpsclogonegative.png') }}" height= 33px;> </div> -->
-    <div class="title">Flintlock Scheduler</div>
-    <a href="/">Master</a>
-    <a href="/requests">Requests</a>
-    <a href="/print/units">Print by unit</a>
-    <a href="/programs/">Print by program</a>
-    <a href="/print/rosters">Print rosters</a>
-
-    @if(Auth::user()->admin or Auth::user()->name == "Buckskin")
-    <a href="/participation-requirements/Buckskin">Buck PRs</a>
-    @endif
-    @if(Auth::user()->admin or Auth::user()->name == "Ten Chiefs")
-    <a href="/participation-requirements/Ten Chiefs">TC PRs</a>
-    @endif
-    @if(Auth::user()->admin or Auth::user()->name == "Voyageur")
-    <a href="/participation-requirements/Voyageur">Voy PRs</a>
-    @endif
-
-    @if(Auth::user()->admin)
-    <a href="/admin/">Admin</a>
-    @endif
-
-
-    <form id="logout-form" style="display:none;" method="POST" action="{{ route('logout') }}">@csrf</form>
-    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
-
-
-    <form action="{{ route('search') }}" method="GET">
-        <input type="text" name="search" placeholder="Search" required/>
-    </form>
-</div>
+                    <li class="nav-item">
+                        <form method="POST" action="{{ route('logout') }}" class="m-0">
+                            @csrf
+                            <button class="btn btn-link nav-link">Log out</button>
+                        </form>
+                    </li>
+                </ul>
+                <form class="d-flex m-0" role="search" action="{{ route('search') }}" method="GET">
+                    <input name="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>

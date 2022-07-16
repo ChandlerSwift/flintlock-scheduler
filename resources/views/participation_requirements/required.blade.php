@@ -17,6 +17,6 @@
     @endforeach
     @endforeach
     <br>
-    <button type="submit">Update requirements</button>
+    <button class="btn btn-outline-primary type="submit">Update requirements</button>
 </form>
 @endsection
