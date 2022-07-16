@@ -9,7 +9,9 @@
 <h3>Add new requirement</h3>
 <form method="post">
     @csrf
-    <input class="form-control" type="text" name="name" placeholder="New requirement name">
-    <button class="btn btn-outline-primary" type="submit">Add new</button>
+    <div class="input-group" style="max-width: 600px;">
+        <input class="form-control" type="text" name="name" placeholder="New requirement name">
+        <button class="btn btn-outline-primary" type="submit">Add</button>
+    </div>
 </form>
 @endsection
