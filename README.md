@@ -1,12 +1,14 @@
 # Flintlock Scheduler
 
-### Creating new users
+### Creating an initial admin user
+Other users can then be created through the user editor.
+Run `php artisan tinker` and:
 ```php
 $u = new User;
 $u->name = "";
 $u->email = "";
 $u->admin = true;
-$u->password = Hash::make('password'); // you may need to import something for this
+$u->password = Hash::make('password');
 $u->save();
 ```
 
