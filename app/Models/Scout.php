@@ -68,4 +68,8 @@ class Scout extends Model
     public function meetsReqsFor(Program $program) {
         return count($this->missingReqsFor($program)) == 0;
     }
+
+    public function week() {
+        return $this->belongsTo(Week::class);
+    }
 }

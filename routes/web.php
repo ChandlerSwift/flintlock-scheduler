@@ -10,6 +10,7 @@ use App\Http\Controllers\ChangeRequestController;
 use App\Http\Controllers\ParticipationRequirementController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WeekController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,25 +25,35 @@ use App\Http\Controllers\UserController;
 
 require __DIR__.'/auth.php';
 
-Route::middleware(['auth'])->group(function(){
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::post('plan_week/{week}', [AdminController::class, 'plan_week']);
+    Route::get('import_data', [AdminController::class, 'show_import_form']);
+    Route::post('import_data', [AdminController::class, 'import_data']);
+    Route::get('stats', [AdminController::class, 'getStats']);
+    Route::get('seed', [AdminController::class, 'seedDatabase']);
+    Route::get('add_scout', [ScoutController::class, 'create']);
+    Route::post('add_scout', [ScoutController::class, 'store']);
+    Route::resource('users', UserController::class);
+    Route::resource('weeks', WeekController::class);
+});
+
+Route::middleware(['auth'])->get('/weeks', [WeekController::class, 'select']);
+Route::middleware(['auth'])->get('/weeks/{week}', [WeekController::class, 'choose']);
+
+Route::get('all_sessions', function() {
+    return \App\Models\Session::all();
+});
+
+Route::middleware(['auth', 'week'])->group(function(){
 
     Route::get('/', function () {
         return view('master')->with('programs', \App\Models\Program::all());
     });
 
-    Route::prefix('admin')->middleware(['admin'])->group(function () {
-        Route::get('plan_week', [AdminController::class, 'plan_week']);
-        Route::get('import_data', [AdminController::class, 'import_data']);
-        Route::get('stats', [AdminController::class, 'getStats']);
-        Route::get('seed', [AdminController::class, 'seedDatabase']);
-        Route::get('add_scout', [ScoutController::class, 'create']);
-        Route::post('add_scout', [ScoutController::class, 'store']);
-        Route::resource('users', UserController::class);
-    });
-
     Route::resource('scouts', ScoutController::class);
     Route::resource('sessions', SessionController::class);
     Route::resource('programs', ProgramController::class);
+    Route::get('/all_programs', [ProgramController::class, 'showAll']);
     Route::resource('requests', ChangeRequestController::class);
 
     Route::get('troops', function() {

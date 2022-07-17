@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChangeRequest;
-use App\Models\Scout;
-use App\Models\Preference;
-use App\Models\Program;
-use App\Models\Session;
+use App\Models\Week;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -24,12 +21,13 @@ class ChangeRequestController extends Controller
      */
     public function index()
     {
+        $selected_week = Week::find(request()->cookie('week_id'));
         return view('requests')
             ->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'))
-            ->with('scouts', \App\Models\Scout::all())
+            ->with('scouts', $selected_week->scouts)
             ->with('programs', \App\Models\Program::all())
-            ->with('sessions', \App\Models\Session::all())
-            ->with('changeRequests', \App\Models\ChangeRequest::all());
+            ->with('sessions', $selected_week->sessions)
+            ->with('changeRequests', $selected_week->changeRequests);
     }
 
     /**

@@ -17,6 +17,11 @@ class ProgramController extends Controller
         return view('programs.index')->with('programs', Program::all());
     }
 
+    public function showAll()
+    {
+        return view('programs.all')->with('programs', Program::all());
+    }
+
     /**
      * Show the form for creating a new resource.
      *

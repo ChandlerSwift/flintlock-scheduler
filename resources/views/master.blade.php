@@ -12,7 +12,7 @@
 @foreach($programs as $program)
 <h3>{{ $program->name }}</h3>
 <div class="row">
-    @foreach($program->sessions->sortBy('start_time') as $session)
+    @foreach($program->sessions->where('week_id', request()->cookie('week_id'))->sortBy('start_time') as $session)
     <div class="col">
         @if($session->running)
         <table class="table table-sm table-striped">

@@ -11,6 +11,14 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="print-dropdown" data-bs-toggle="dropdown" aria-expanded="false">{{ $selected_week ? $selected_week->name : "Select a week" }}</a>
+                        <ul class="dropdown-menu" aria-labelledby="print-dropdown">
+                            @foreach($weeks as $week)
+                            <li><a class="dropdown-item" href="/weeks/{{ $week->id }}">{{ $week->name }}</a></li>
+                            @endforeach
+                        </ul>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/requests">Requests</a>
                     </li>
@@ -48,10 +56,10 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="admin-dropdown" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
                         <ul class="dropdown-menu" aria-labelledby="admin-dropdown">
+                            <li><a class="dropdown-item" href="/admin/weeks">Manage weeks</a></li>
                             <li><a class="dropdown-item" href="/admin/users">Manage users</a></li>
                             <li><a class="dropdown-item" href="/admin/add_scout">Add a scout</a></li>
                             <li><a class="dropdown-item" href="/admin/import_data">Import data</a></li>
-                            <li><a class="dropdown-item" href="/admin/plan_week">Plan week</a></li>
                             <li><a class="dropdown-item" href="/admin/stats">Statistics</a></li>
                             <li><a class="dropdown-item" href="/admin/participation-requirements">Edit participation requirements</a></li>
                             <li><a class="dropdown-item" href="/admin/programs">Edit programs</a></li>

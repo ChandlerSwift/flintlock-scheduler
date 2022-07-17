@@ -101,10 +101,23 @@
 
 <body class="d-flex flex-column h-100">
 
+    @php
+        $selected_week = $weeks->where('id', request()->cookie('week_id'))->first();
+    @endphp
     @include('components.navbar')
 
     <main class="flex-shrink-0">
         <div class="container mw-100 my-4">
+            @if($selected_week && $this_week && $selected_week->id != $this_week->id)
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <strong>Note!</strong>
+                You're currently looking at {{ $selected_week->name }}.
+                You might want to check out
+                <a href="/weeks/{{ $this_week->id}} ">{{ $this_week->name }}</a>
+                instead.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
             @if(session('message'))
             <div class="alert alert-{{ session('message')['type'] }} alert-dismissible fade show" role="alert">
                 <strong>{{ ucwords(session('message')['type']) }}!</strong> {{ session('message')['body'] }}
@@ -117,7 +130,7 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container">
-            <span class="text-muted">&copy; The 2022 Flintlock Staff: Isaac Swift, Abby Loats, Noah Han, Hunter Simard, Erik Maas, Cory Dean, Conrad Gausmann, Jacob Eggert, Harper Hauger, Shelby Whipper?, Melia Lachinski, Claire Turner, Ashley Schober, Lydia Hill, Rowan, Chandler Swift; All rights reserved.</span>
+            <span class="text-muted">&copy; The 2022 Flintlock Staff: Isaac Swift, Abby Loats, Noah Han, Hunter Simard, Erik Maas, Cory Dean, Conrad Gausmann, Jacob Eggert, Harper Hauger, Shelby Whipper?, Melia Lachinski, Claire Turner, Ashley Schober, Lydia Hill, Rowan Croan, Chandler Swift; All rights reserved.</span>
         </div>
     </footer>
 

@@ -20,16 +20,18 @@ div.troopHeader{
     </div>
     <br>
         @foreach($scouts->where('unit', $troop) as $scout)
-            @if($scout->sessions->first() == null)
-                @continue
-            @else
-            <h3>{{ $scout->first_name }} {{ $scout->last_name }}</h3>
-            <ul>
-            @foreach($scout->sessions->sortBy('start_time') as $session)
-                <li>{{ $session->program->name == "Fishing Outpost Overnight" ? "Fishing Outpost" : $session->program->name }} ({{ $session->start_time->format('l') }}, {{ $bus_times[$session->start_time->format('H:i')][$scouts->where('unit' ,$troop)->first()->subcamp]}})</li>
-            @endforeach
-            </ul>
-            @endif
+            <div class="nobreak">
+                @if($scout->sessions->first() == null)
+                    @continue
+                @else
+                <h3>{{ $scout->first_name }} {{ $scout->last_name }}</h3>
+                <ul>
+                @foreach($scout->sessions->sortBy('start_time') as $session)
+                    <li>{{ $session->program->name == "Fishing Outpost Overnight" ? "Fishing Outpost" : $session->program->name }} ({{ $session->start_time->format('l') }}, {{ $bus_times[$session->start_time->format('H:i')][$scouts->where('unit' ,$troop)->first()->subcamp]}})</li>
+                @endforeach
+                </ul>
+                @endif
+            </div>
         @endforeach
     <div class="pagebreak"></div>
     @endif

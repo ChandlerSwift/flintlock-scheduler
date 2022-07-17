@@ -8,16 +8,18 @@ use App\Models\Scout;
 use App\Models\Preference;
 use App\Models\Program;
 use App\Models\Session;
+use App\Models\Week;
 use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
+    public function show_import_form() {
+        return view('admin.import_data')
+            ->with('weeks', Week::all());
+    }
 
-    public function import_data() {
-
-        //Artisan::call('migrate', ['--seed' => true]);
-        $inputFileName = '/home/Isaac/importData.xlsx'; // TODO
-        $spreadsheet = IOFactory::load($inputFileName);
+    public function import_data(Request $request) {
+        $spreadsheet = IOFactory::load($request->spreadsheet->path());
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
         foreach($sheetData as $row){
             if ($row['C'] == null) { // Name should never be empty, so this is an empty row. Skip it.
@@ -27,10 +29,16 @@ class AdminController extends Controller
                 continue;
             }
 
-            if (Scout::where('first_name', $row['C'])->where('last_name', $row['D'])->where('unit', $row['E'])->first()) {
+            $pre_existing_scout = Scout::where('first_name', $row['C'])
+                ->where('last_name', $row['D'])
+                ->where('unit', $row['E'])
+                ->where('week_id', $request->week_id)
+                ->first();
+            if ($pre_existing_scout) {
                 continue;
             }
             $scout = new Scout;
+            $scout->week_id = $request->week_id;
             $scout->first_name = $row['C'];
             $scout->last_name = $row['D'];
             if ($row['G'] != null)
@@ -84,13 +92,13 @@ class AdminController extends Controller
                 }
             }
         }
-        //$request->session()->flash('status', 'Import data was successful!');
-        return back();
+        return back()->with('message',
+            ["type" => "success", "body" => "Data import for week " . Week::find($request->week_id)->name . " was successful."]
+        );
     }
 
-    /* plan_week */
-    public function plan_week() {//Request $request
-        $scouts = Scout::orderByDesc('age', 'rank')->get();
+    public function plan_week(Request $request, Week $week) {
+        $scouts = $week->scouts()->orderByDesc('age', 'rank')->get();
         $still_filling = true;
         echo "Adding scouts to session...";
         $i=0; 
@@ -103,129 +111,9 @@ class AdminController extends Controller
                 }
             }
         }
-
-        /* $testSubcamps = ['Buckskin', 'Ten Chiefs', 'Voyageur'];
-        $afternoonA = 'Blank';
-        $afternoonB = 'Blank';
-        $eveningFirst;
-        $maxa = 0;  
-        $maxb = 0;
-        $maxe = 0;
-        foreach ($testSubcamps as $testSubcamp) {
-            
-            $counta = 0;
-            $counte = 0;
-            $preferences = Preference::whereHas('scout', function($q) use($testSubcamp){
-
-                $q->where('subcamp', '=', $testSubcamp);
-            
-            })->get();
-            
-            foreach ($preferences as $preference){
-                
-                if($preference->satisfied)
-                    continue;
-                if($preference->program->id == 1 || $preference->program->id == 3 || $preference->program->id == 3)
-                    $counte += 1;
-                if($preference->program->id == 4 
-                || $preference->program->id == 5 
-                || $preference->program->id == 6 
-                || $preference->program->id == 7 
-                || $preference->program->id == 8
-                || $preference->program->id == 9){
-                    $counta += 1;
-                }
-            }
-            if($counta > $maxa && $counta > $maxb){
-                $maxb = $maxa;
-                $maxa = $counta;
-                $afternoonB = $afternoonA;
-                $afternoonA = $testSubcamp;
-                echo "Replaced A slot..." . $afternoonA . "...";
-            }elseif($counta > $maxb){
-                $maxb = $counta;
-                $afternoonB = $testSubcamp;
-                echo "Replaced B slot..." . $afternoonB . "...";
-            }
-            if($counte > $maxe){
-                $maxe = $counte;
-                $eveningFirst = $testSubcamp;
-                echo "Replaced E slot..." . $eveningFirst . "...";
-            }
-        }
-        $eSessions = Session::where('subcamp', 'anyE')->get();
-        foreach ($eSessions as $session){
-                $session->subcamp = $eveningFirst;
-                $session->save();
-                echo "E...";
-        }
-        $aSessions = Session::where('subcamp', 'anyA')->get();;
-        foreach ($aSessions as $session){
-            if ($afternoonB == $eveningFirst){
-                $session->subcamp = $afternoonA;
-                $session->save();
-                echo "A...";
-            }else{
-                $session->subcamp = $afternoonB;
-                $session->save();
-                echo "B...";
-            }
-        }
-        $bSessions = Session::where('subcamp', 'anyB')->get();;
-        foreach ($bSessions as $session){
-            if ($afternoonB == $eveningFirst){
-                $session->subcamp = $afternoonB;
-                $session->save();
-                echo "A...";
-            }else{
-                $session->subcamp = $afternoonA;
-                $session->save();
-                echo "B...";
-            }
-        }
-
-        $this->clearSessions();
-
-        $scouts = Scout::orderByDesc('age', 'rank')->get();
-        $still_filling = true;
-        echo "Adding scouts to session...";
-        $i=0;
-        while($still_filling){
-            echo $i++;
-            $still_filling = false;
-            foreach($scouts as $scout) {
-                if ($this->put_scout_in_session($scout)) {
-                    $still_filling = true;
-                }
-            }
-        } */
-
-         /* foreach ($session->where('subcamp', 'any') as $session) {
-            $max_scouts_placed = 0;
-            
-            foreach ($testSubcamps as $testSubcamp) {
-                timeslot->sessions->subcamp = $testSubcamp;
-                $scouts_placed = 0;
-                while($still_filling){
-                    $still_filling = false;
-                    foreach($scouts as $scout) {
-                        if ($this->put_scout_in_session($scout)) {
-                            scouts_placed += 1;
-                            $still_filling = true;
-                        }
-                    }
-                }
-                reset_timeslot(timeslot)
-                if ($scouts_placed > $max_scouts_placed) {
-                    $max_scouts_placed = $scouts_placed;
-                    $bestSubcamp = $testSubcamp;
-                }
-            } 
-            // then set subcamp = best_subcamp and really schedule
-        } */
-        
-        //$request->session()->flash('status', 'Plan week was successful!');
-        return back();
+        return back()->with('message',
+            ["type" => "success", "body" => "Planning for week " . $request->week->name . " was successful."]
+        );
     }
 
     /**

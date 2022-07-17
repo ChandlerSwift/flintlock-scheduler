@@ -1,21 +1,8 @@
 @extends('layouts.base')
-<title>Search</title>
-<style>
-div.search{
-    margin:auto;
-    width: 65%;
-    margin-top:50px;
-}
-table {
-        width:100%;
-}
-
-</style>
 @section('content')
 <div class="search">
-    <h1> Search Results:</h1>
+    <h1>Search Results:</h1>
     @if($searchResults->isNotEmpty())
-        
         <table>
             <tr>
                 <th>Scout</th>
@@ -34,10 +21,8 @@ table {
             </tr>
             @endforeach
         </table>
-            
-        
     @else 
-        <div>  
+        <div>
             <p>No scouts found</p>
         </div>
     @endif

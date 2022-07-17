@@ -49,4 +49,8 @@ class Session extends Model
         }
         return $overlaps;
     }
+
+    public function week() {
+        return $this->belongsTo(Week::class);
+    }
 }
