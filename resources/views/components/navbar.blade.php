@@ -2,10 +2,10 @@
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">
+            <p class="navbar-brand mb-0">
                 <img src="{{ asset('/mpsclogo.png') }}" style="filter: brightness(0) invert(100%); max-height: 32px; padding: 0 0.5em;">
                 Flintlock Scheduler
-            </a>
+            </p>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -20,6 +20,9 @@
                         </ul>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/">Master</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/requests">Requests</a>
                     </li>
                     <li class="nav-item dropdown">
@@ -32,7 +35,7 @@
                     </li>
                     @if(Auth::user()->admin)
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="prs-dropdown" data-bs-toggle="dropdown" aria-expanded="false">PRs</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="prs-dropdown" data-bs-toggle="dropdown" aria-expanded="false">Participation Requirements</a>
                         <ul class="dropdown-menu" aria-labelledby="prs-dropdown">
                             <li><a class="dropdown-item" href="/participation-requirements/Buckskin">Buckskin</a></li>
                             <li><a class="dropdown-item" href="/participation-requirements/Ten Chiefs">Ten Chiefs</a></li>
