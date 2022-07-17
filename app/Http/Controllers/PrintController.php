@@ -32,15 +32,10 @@ class PrintController extends Controller
                 'Ten Chiefs' => '12:40 PM',
                 'Voyageur' => '12:50 PM',
             ],
-            '15:30' => [
-                'Buckskin' => '3:20 PM',
-                'Ten Chiefs' => '3:10 PM',
-                'Voyageur' => '3:00 PM',
-            ],
             '17:30' => [
                 'Buckskin' => '5:30 PM',
-                'Ten Chiefs' => '5:20 PM',
-                'Voyageur' => '5:10 PM',
+                'Ten Chiefs' => '5:40 PM',
+                'Voyageur' => '5:50 PM',
             ],
             '19:00' => [
                 'Buckskin' => '6:40 PM',
