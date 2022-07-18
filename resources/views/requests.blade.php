@@ -184,6 +184,9 @@ document.getElementById("troop").addEventListener("change", function(e){
                 <td>{{ $changeRequest->program->name }}</td>
                 @if ($changeRequest->session != null)
                     <td>{{ $changeRequest->session->start_time->format('l, g:i A') }}</td>
+                    <form method="POST" action="/requests/{{ $changeRequest->id }}/approve" id="approveRequest{{ $changeRequest->id }}form">
+                        @csrf
+                    </form>
                 @else
                 <td>
                     @if(Auth::user()->admin)
