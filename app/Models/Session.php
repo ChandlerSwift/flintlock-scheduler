@@ -10,6 +10,8 @@ class Session extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     /**
      * The attributes that should be cast.
      *

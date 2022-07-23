@@ -16,10 +16,10 @@ class CreateSessionsTable extends Migration
         Schema::create('sessions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('program_id');
-            $table->foreign('program_id')->references('id')->on('programs');
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
             $table->dateTime('start_time');
             $table->dateTime('end_time');
+            $table->foreignId('week_id')->constrained()->onDelete('cascade');
         });
     }
 

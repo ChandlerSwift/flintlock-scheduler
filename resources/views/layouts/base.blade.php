@@ -130,7 +130,25 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container">
-            <span class="text-muted">&copy; The 2022 Flintlock Staff: Isaac Swift, Abby Loats, Noah Han, Hunter Simard, Erik Maas, Cory Dean, Conrad Gausmann, Jacob Eggert, Harper Hauger, Shelby Whipper?, Melia Lachinski, Claire Turner, Ashley Schober, Lydia Hill, Rowan Croan, Chandler Swift; All rights reserved.</span>
+            <span class="text-muted">&copy; The 2022 Flintlock Staff:
+                Isaac Swift,
+                Abby Loats,
+                Noah Han,
+                Hunter Simard,
+                Erik Maas,
+                Cory Dean,
+                Conrad Gausmann,
+                Jacob Eggert,
+                Harper Hauger,
+                Shelby Heacock,
+                Melia Lachinski,
+                Claire Turner,
+                Ashley Schober,
+                Lydia Hill,
+                Rowan Krohn,
+                a bunch of fabulous CITs,
+                Chandler Swift;
+                All rights reserved.</span>
         </div>
     </footer>
 

@@ -16,10 +16,10 @@ Admin: Import Data
         </select>
     </div>
     <div class="mb-3">
-        <input class="form-control" type="file" name="spreadsheet">
+        <input class="form-control" type="file" name="spreadsheet" required>
     </div>
     <div class="mb-3">
-        <button type="submit" class="btn btn-primary">Add Week</button>
+        <button type="submit" class="btn btn-primary">Import</button>
     </div>
 </form>
 @endsection

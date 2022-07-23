@@ -61,11 +61,12 @@
                         <ul class="dropdown-menu" aria-labelledby="admin-dropdown">
                             <li><a class="dropdown-item" href="/admin/weeks">Manage weeks</a></li>
                             <li><a class="dropdown-item" href="/admin/users">Manage users</a></li>
+                            <li><a class="dropdown-item" href="/admin/programs">Manage programs</a></li>
+                            <li><a class="dropdown-item" href="/admin/sessions">Manage default sessions</a></li>
                             <li><a class="dropdown-item" href="/admin/add_scout">Add a scout</a></li>
                             <li><a class="dropdown-item" href="/admin/import_data">Import data</a></li>
                             <li><a class="dropdown-item" href="/admin/stats">Statistics</a></li>
                             <li><a class="dropdown-item" href="/admin/participation-requirements">Edit participation requirements</a></li>
-                            <li><a class="dropdown-item" href="/admin/programs">Edit programs</a></li>
                         </ul>
                     </li>
                     @endif

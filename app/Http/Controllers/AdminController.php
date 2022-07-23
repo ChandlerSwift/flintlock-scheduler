@@ -19,6 +19,11 @@ class AdminController extends Controller
     }
 
     public function import_data(Request $request) {
+        if (!$request->spreadsheet) {
+            return back()->with('message',
+                ["type" => "warning", "body" => "No spreadsheet selected."]
+            );
+        }
         $spreadsheet = IOFactory::load($request->spreadsheet->path());
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
         foreach($sheetData as $row){
@@ -57,7 +62,7 @@ class AdminController extends Controller
                 else if ($row['G'] == 'Eagle')
                     $scout->rank = 6;
                 else
-                    Log::warning("Unknown rank for scout " . $row['C'] . " " . $row['D'] . ", troop " . $row['E'] . " (setting to Scout)");
+                    Log::warning("Unknown rank for scout " . $row['C'] . " " . $row['D'] . ", unit " . $row['E'] . " (setting to Scout)");
             if ($row['H'] != null)
                 $scout->age = $row['H'];
             else   
@@ -76,8 +81,8 @@ class AdminController extends Controller
                 $scout->gender = '0';
             $scout->save();
             
-            $row_indices = ["K", "L", "M", "N", "O", "P", "Q"];
-            for ($i = 0; $i < 7; $i++) {
+            $row_indices = ["K", "L", "M", "N"];
+            for ($i = 0; $i < 4; $i++) {
                 if ($row[$row_indices[$i]] != "") {
                     $program = Program::where('name', $row[$row_indices[$i]])->first();//TODO change program values
                     if ($program == null) {
@@ -106,20 +111,26 @@ class AdminController extends Controller
             echo $i++;
             $still_filling = false;
             foreach($scouts as $scout) {
-                if ($this->put_scout_in_session($scout)) {
+                if ($this->put_scout_in_session($scout, $week)) {
                     $still_filling = true;
                 }
             }
         }
+        $satisfied_preference_count = $week->preferences()->get()->where('satisfied', true)->count();
+        $total_preference_count = $week->preferences()->count();
         return back()->with('message',
-            ["type" => "success", "body" => "Planning for week " . $request->week->name . " was successful."]
+            [
+                "type" => "success",
+                "body" => "Planning for week " . $request->week->name . " was successful " .
+                    "(satisfied $satisfied_preference_count/$total_preference_count preferences).",
+            ]
         );
     }
 
     /**
      *  Place a scout into the highest choice program that works out
      */
-    private function put_scout_in_session(Scout $scout) {
+    private function put_scout_in_session(Scout $scout, Week $week) {
         $scoutAssignedToSession = false;
         foreach($scout->preferences as $preference){
 
@@ -137,6 +148,7 @@ class AdminController extends Controller
 
             $sessions = Session::where('program_id', $preference->program_id)
                 ->withCount('scouts')->orderByDesc('scouts_count') // Starting with the session that's closest to full
+                ->where('week_id', $week->id)
                 ->get()->where('full', false); // Ignore full sessions;
             foreach ($sessions as $session) {
                 

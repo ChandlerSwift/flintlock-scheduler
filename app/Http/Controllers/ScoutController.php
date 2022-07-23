@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ParticipationRequirement;
 use App\Models\Scout;
 use Illuminate\Http\Request;
 
@@ -13,17 +12,10 @@ class ScoutController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $res = "<ul>";
-        foreach(Scout::all() as $scout) {
-            $res .= "<li>" . $scout->first_name . " " . $scout->last_name . "<ul>";
-            foreach ($scout->sessions as $session) {
-                $res .= "<li>" . $session->program->name . "(" . $session->start_time . ")" . "</li>";
-            }
-            $res .= "</ul></li>";
-        }
-        return $res;
+        return view('admin.scouts')
+            ->with('scouts', Scout::where('week_id', $request->cookie('week_id'))->get());
     }
 
     /**

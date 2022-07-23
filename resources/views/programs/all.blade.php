@@ -7,7 +7,7 @@
     <h1>
         <a href="/programs/{{$program->id}}">{{ $program->name }}</a><br>
     </h1>
-    @foreach($program->sessions as $session)
+    @foreach($program->sessions()->where('week_id', request()->cookie('week_id'))->get() as $session)
         @if($session->scouts->first() == null)
             @continue
         @else

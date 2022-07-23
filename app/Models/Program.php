@@ -9,6 +9,8 @@ class Program extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function sessions() {
         return $this->hasMany(Session::class);
     }
@@ -24,5 +26,9 @@ class Program extends Model
     public function participationRequirements()
     {
         return $this->belongsToMany(ParticipationRequirement::class);
+    }
+
+    public function defaultSessions() {
+        return $this->hasMany(DefaultSession::class);
     }
 }

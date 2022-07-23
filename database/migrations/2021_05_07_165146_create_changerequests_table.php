@@ -16,12 +16,9 @@ class CreateChangeRequestsTable extends Migration
         Schema::create('change_requests', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('scout_id');
-            $table->foreign('scout_id')->references('id')->on('scouts');
-            $table->integer('program_id');
-            $table->foreign('program_id')->references('id')->on('programs');
-            $table->integer('session_id')->nullable();
-            $table->foreign('session_id')->references('id')->on('sessions');
+            $table->foreignId('scout_id')->constrained()->onDelete('cascade');
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->foreignId('session_id')->constrained()->onDelete('cascade');
             $table->string('action');
             $table->string('status');
             $table->string('notes')->nullable();

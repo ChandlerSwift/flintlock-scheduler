@@ -7,12 +7,7 @@ use Illuminate\Http\Request;
 
 class ProgramController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function list()
     {
         return view('programs.index')->with('programs', Program::all());
     }
@@ -27,9 +22,9 @@ class ProgramController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function index()
     {
-        //
+        return view('admin.programs')->with('programs', Program::all());
     }
 
     /**
@@ -40,7 +35,11 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $program = Program::create($request->all());
+        $program->save();
+        return back()->with('message',
+            ["type" => "success", "body" => "Program \"" . $program->name . "\" saved successfully."]
+        );
     }
 
     /**
@@ -85,6 +84,9 @@ class ProgramController extends Controller
      */
     public function destroy(Program $program)
     {
-        //
+        $program->delete();
+        return back()->with('message',
+            ["type" => "success", "body" => "Program \"" . $program->name . "\" deleted successfully."]
+        );
     }
 }

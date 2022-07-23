@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Program;
 use App\Models\Session;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SessionController extends Controller
@@ -14,7 +16,6 @@ class SessionController extends Controller
      */
     public function index()
     {
-        
         $res = "<ul>";
         foreach(Session::all() as $session) {
             $res .= "<li>" . $session->program->name . "(" . $session->start_time . ")" . "<ul>";
@@ -89,6 +90,9 @@ class SessionController extends Controller
      */
     public function destroy(Session $session)
     {
-        //
+        $session->delete();
+        return back()->with('message',
+            ["type" => "success", "body" => "Session deleted successfully."]
+        );
     }
 }

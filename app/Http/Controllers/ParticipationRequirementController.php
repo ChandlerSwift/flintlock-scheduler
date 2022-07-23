@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ParticipationRequirement;
+use App\Models\Program;
 use App\Models\Scout;
+use App\Models\Week;
 
 class ParticipationRequirementController extends Controller
 {
@@ -16,7 +18,8 @@ class ParticipationRequirementController extends Controller
     public function index()
     {
         return view('participation_requirements.index')
-            ->with('reqs', ParticipationRequirement::all());
+            ->with('reqs', ParticipationRequirement::all())
+            ->with('programs', Program::all());
     }
 
     /**
@@ -75,23 +78,37 @@ class ParticipationRequirementController extends Controller
      */
     public function destroy(ParticipationRequirement $participationRequirement)
     {
-        //
+        $participationRequirement->delete();
+        return back()->with('message',
+            ["type" => "success", "body" => "Participation Requirement \"" . $participationRequirement->name . "\" was deleted."]
+        );
     }
 
-    public function required(Request $request, string $subcamp) {
+    public function required(Request $request, string $subcamp, Week $week) {
         return view('participation_requirements.required')
-            ->with('scouts', Scout::where('subcamp', $subcamp)->get())
+            ->with('scouts', $week->scouts()->where('subcamp', $subcamp)->get())
             ->with('reqs', ParticipationRequirement::all())
             ->with(compact('subcamp'));
     }
 
-    public function updateSubcamp(Request $request, string $subcamp) {
-        foreach (Scout::where('subcamp', $subcamp)->get() as $scout) {
+    public function updateSubcamp(Request $request, string $subcamp, Week $week) {
+        foreach ($week->scouts()->where('subcamp', $subcamp)->get() as $scout) {
             $scout->participationRequirements()->detach();
         }
         foreach ($request->except(['_token']) as $input => $no) { // shouldn't excluding _token be automatic?
             $assoc = explode('-', $input);
             Scout::find($assoc[0])->participationRequirements()->attach($assoc[1]);
+        }
+        return back();
+    }
+
+    public function updatePrograms(Request $request) {
+        foreach (Program::all() as $program) {
+            $program->participationRequirements()->detach();
+        }
+        foreach ($request->except(['_token']) as $input => $no) { // shouldn't excluding _token be automatic?
+            $assoc = explode('-', $input);
+            Program::find($assoc[0])->participationRequirements()->attach($assoc[1]);
         }
         return back();
     }

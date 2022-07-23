@@ -72,4 +72,16 @@ class Scout extends Model
     public function week() {
         return $this->belongsTo(Week::class);
     }
+
+    public function getSubcampAbbrAttribute() {
+        if ($this->subcamp == 'Buckskin') {
+            return 'B';
+        } elseif ($this->subcamp == 'Ten Chiefs') {
+            return 'TC';
+        } elseif ($this->subcamp == 'Voyageur') {
+            return 'V';
+        } else {
+            throw Exception('Unknown subcamp ' . $this->subcamp);
+        }
+    }
 }

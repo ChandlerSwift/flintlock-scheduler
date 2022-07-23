@@ -16,3 +16,13 @@ $u->save();
 ```sh
 scp local.txt root@isaacswift.com:/var/www/remote.txt
 ```
+
+### Initial setup
+* `php artisan migrate:fresh`
+* create new user as above
+* Create other users in admin panel
+* Create programs in admin, or run ProgramSeeder
+* Create default sessions in admin, or run DefaultSessionSeeder
+* Create weeks in admin
+* Import scouts wk1
+* plan wk1

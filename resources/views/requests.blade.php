@@ -13,15 +13,15 @@
     </div>
 
     <div class="col-12">
-        <select class="form-select" id="troop">
-            <option value="test" selected disabled hidden>Choose Troop</option>
-            @foreach($troops as $troop)
-            <option value="{{ $troop }}">{{ $troop }}
-                @if ( $scouts->where('unit', $troop)->first()->subcamp == 'Buckskin')
+        <select class="form-select" id="unit">
+            <option value="test" selected disabled hidden>Choose Unit</option>
+            @foreach($units as $unit)
+            <option value="{{ $unit }}">{{ $unit }}
+                @if ( $scouts->where('unit', $unit)->first()->subcamp == 'Buckskin')
                 (B)
-                @elseif ( $scouts->where('unit', $troop)->first()->subcamp == 'Ten Chiefs')
+                @elseif ( $scouts->where('unit', $unit)->first()->subcamp == 'Ten Chiefs')
                 (TC)
-                @elseif ( $scouts->where('unit', $troop)->first()->subcamp == 'Voyageur')
+                @elseif ( $scouts->where('unit', $unit)->first()->subcamp == 'Voyageur')
                 (V)
                 @endif
             </option>
@@ -33,12 +33,12 @@
         <select class="form-select" id="scout" name="Scout" disabled>
             <option value="test" selected disabled hidden>Choose Scout</option>
             @foreach($scouts->sortby('last_name') as $scout)
-            <option value="{{ $scout->id }}" data-troop="{{ $scout->unit }}">{{ $scout->first_name }} {{ $scout->last_name }}</option>
+            <option value="{{ $scout->id }}" data-unit="{{ $scout->unit }}">{{ $scout->first_name }} {{ $scout->last_name }}</option>
             @endforeach
         </select>
     </div>
     <div class="col-12">
-        <select class="form-select" id="program">
+        <select class="form-select" id="program" name="program_id">
             <option value="test" selected disabled hidden>Choose Program</option>
             @foreach($programs as $program)
             <option value="{{ $program->id }}">{{ $program->name }}</option>
@@ -64,13 +64,13 @@
 
 </form>
 <script>
-    let currentValue = document.getElementById("troop").value;
+    let currentValue = document.getElementById("unit").value;
     if (currentValue == "test") {
         document.getElementById("scout").disabled = true;
     } else {
         document.getElementById("scout").disabled = false;
         document.querySelectorAll("select#scout > option").forEach(function(o) {
-            o.hidden = o.dataset['troop'] != currentValue;
+            o.hidden = o.dataset['unit'] != currentValue;
         });
     }
 
@@ -81,7 +81,7 @@
             document.querySelectorAll("select#session > option").forEach(function(o) {
                 o.hidden = o.dataset['program'] != e.target.value;
             });
-        } // else it's the "Choose Troop"
+        } // else it's the "Choose Unit"
     });
 
     let programCurrentValue = document.getElementById("program").value;
@@ -94,12 +94,12 @@
         });
     }
 
-    document.getElementById("troop").addEventListener("change", function(e) {
+    document.getElementById("unit").addEventListener("change", function(e) {
         document.getElementById('scout').value = "test";
         if (e.target.value !== "test") {
             document.getElementById("scout").disabled = false;
             document.querySelectorAll("select#scout > option").forEach(function(o) {
-                o.hidden = o.dataset['troop'] != e.target.value;
+                o.hidden = o.dataset['unit'] != e.target.value;
             });
         }
     });
@@ -112,7 +112,7 @@
             <th>Created At</th>
             <th>Scout</th>
             <th>Age</th>
-            <th>Troop</th>
+            <th>Unit</th>
             <th>Program</th>
             <th>Session</th>
             <th>Action</th>
@@ -126,7 +126,7 @@
         <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
         <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
         <td>{{ $changeRequest->scout->age }}</td>
-        <td><a href="/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+        <td><a href="/units/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                 @if ($changeRequest->scout->subcamp == 'Buckskin')
                 (B)
                 @elseif ($changeRequest->scout->subcamp == 'Ten Chiefs')
@@ -187,7 +187,7 @@
             <th>Created At</th>
             <th>Scout</th>
             <th>Age</th>
-            <th>Troop</th>
+            <th>Unit</th>
             <th>Program</th>
             <th>Session</th>
             <th>Action</th>
@@ -201,7 +201,7 @@
         <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
         <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
         <td>{{ $changeRequest->scout->age }}</td>
-        <td><a href="/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+        <td><a href="/units/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp == 'Buckskin')
                 (B)
                 @elseif ( $changeRequest->scout->subcamp == 'Ten Chiefs')
@@ -256,7 +256,7 @@
             <th>Created At</th>
             <th>Scout</th>
             <th>Age</th>
-            <th>Troop</th>
+            <th>Unit</th>
             <th>Program</th>
             <th>Session</th>
             <th>Action</th>
@@ -272,7 +272,7 @@
             <td>{{ $changeRequest->created_at->format('l, g:i A')}}</td>
             <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
             <td>{{ $changeRequest->scout->age }}</td>
-            <td><a href="/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+            <td><a href="/units/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                     @if ( $changeRequest->scout->subcamp == 'Buckskin')
                     (B)
                     @elseif ( $changeRequest->scout->subcamp == 'Ten Chiefs')
@@ -326,7 +326,7 @@
             <th>Confirmed At</th>
             <th>Scout</th>
             <th>Age</th>
-            <th>Troop</th>
+            <th>Unit</th>
             <th>Program</th>
             <th>Session</th>
             <th>Action</th>
@@ -341,7 +341,7 @@
         <td>{{ $changeRequest->updated_at->format('l, g:i A')}}</td>
         <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
         <td>{{ $changeRequest->scout->age }}</td>
-        <td><a href="/troops/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
+        <td><a href="/units/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }}
                 @if ( $changeRequest->scout->subcamp == 'Buckskin')
                 (B)
                 @elseif ( $changeRequest->scout->subcamp == 'Ten Chiefs')

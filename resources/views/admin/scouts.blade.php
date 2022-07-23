@@ -26,29 +26,35 @@ Admin: Week Management
 <table class="table">
     <thead class="table-dark">
         <tr>
-            <th>Name</th>
-            <th>Start date</th>
-            <th>Scouts</th>
+            <th>First name</th>
+            <th>Last Name</th>
+            <th>Rank</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Unit</th>
+            <th>Site</th>
+            <th>Subcamp</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach($weeks as $week)
+        @foreach($scouts as $scout)
         <tr>
-            <td>{{ $week->name }}</td>
-            <td>{{ $week->start_date->format('l, Y-m-d') }}</td>
-            <td>{{ $week->scouts()->count() }}</td>
+            <td>{{ $scout->first_name }}</td>
+            <td>{{ $scout->last_name }}</td>
+            <td>{{ $scout->rank }}</td>
+            <td>{{ $scout->age }}</td>
+            <td>{{ $scout->gender }}</td>
+            <td>{{ $scout->unit }}</td>
+            <td>{{ $scout->site }}</td>
+            <td>{{ $scout->subcamp }}</td>
             <td>
                 <div class="input-group">
-                <button class="btn btn-sm btn-outline-primary" type="submit" form="plan{{$week->id}}form">Plan</button>
-                <form action="/admin/plan_week/{{$week->id}}" method="POST" class="d-none" id="plan{{$week->id}}form">
-                    @csrf
-                </form>
-                <form action="/admin/weeks/{{$week->id}}" method="POST" class="d-none" id="delete{{$week->id}}form">
+                <button class="btn btn-sm btn-outline-danger" type="submit" form="delete{{$scout->id}}form">Delete</button>
+                <form action="/admin/scouts/{{$scout->id}}" method="POST" class="d-none" id="delete{{$scout->id}}form">
                     @csrf
                     @method('DELETE')
                 </form>
-                <button class="btn btn-sm btn-outline-danger" type="submit" form="delete{{$week->id}}form">Delete</button>
                 </div>
             </td>
         </tr>

@@ -20,14 +20,6 @@ class CreateWeeksTable extends Migration
             $table->date('start_date');
             $table->softDeletes();
         });
-
-        Schema::table('scouts', function (Blueprint $table) {
-            $table->integer('week_id');
-        });
-
-        Schema::table('sessions', function (Blueprint $table) {
-            $table->integer('week_id');
-        });
     }
 
     /**

@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ProgramSeeder::class,
             SessionSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            DefaultSessionSeeder::class,
         ]);
         
     }

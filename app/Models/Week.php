@@ -28,4 +28,12 @@ class Week extends Model
     public function changeRequests() {
         return $this->hasManyThrough(ChangeRequest::class, Scout::class);
     }
+
+    public function preferences() {
+        return $this->hasManyThrough(Preference::class, Scout::class);
+    }
+
+    public function units() {
+        return $this->scouts()->select('unit')->distinct()->get()->pluck('unit');
+    }
 }

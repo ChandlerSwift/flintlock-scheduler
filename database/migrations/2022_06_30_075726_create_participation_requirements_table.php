@@ -20,14 +20,14 @@ class CreateParticipationRequirementsTable extends Migration
         });
         Schema::create('participation_requirement_program', function (Blueprint $table) {
             $table->timestamps();
-            $table->integer('participation_requirement_id');
-            $table->integer('program_id');
+            $table->foreignId('participation_requirement_id')->constrained()->onDelete('cascade');
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
         });
         Schema::create('participation_requirement_scout', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('participation_requirement_id');
-            $table->integer('scout_id');
+            $table->foreignId('participation_requirement_id')->constrained()->onDelete('cascade');
+            $table->foreignId('scout_id')->constrained()->onDelete('cascade');
         });
     }
 

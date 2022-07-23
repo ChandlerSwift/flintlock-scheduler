@@ -23,7 +23,7 @@ class ChangeRequestController extends Controller
     {
         $selected_week = Week::find(request()->cookie('week_id'));
         return view('requests')
-            ->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'))
+            ->with('units', $selected_week->units())
             ->with('scouts', $selected_week->scouts)
             ->with('programs', \App\Models\Program::all())
             ->with('sessions', $selected_week->sessions)
@@ -50,7 +50,7 @@ class ChangeRequestController extends Controller
         $cr = new ChangeRequest;
         $cr->action = $request['addDrop'];
         $cr->scout_id = $request['Scout'];
-        $cr->program_id = $request['program'];
+        $cr->program_id = $request['program_id'];
         $cr->notes = $request['notes'];
         $cr->status = "pending";
         $cr->session_id = $request['session'];
