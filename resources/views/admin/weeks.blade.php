@@ -17,7 +17,7 @@ Admin: Week Management
         <input name="name" type="text" class="form-control" placeholder="Name">
     </div>
     <div class="col-12">
-        <input name="start_date" type="date" class="form-control" placeholder="Email">
+        <input name="start_date" type="date" class="form-control">
     </div>
     <div class="col-12">
         <button type="submit" class="btn btn-primary">Add Week</button>

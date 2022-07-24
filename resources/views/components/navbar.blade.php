@@ -63,10 +63,10 @@
                             <li><a class="dropdown-item" href="/admin/users">Manage users</a></li>
                             <li><a class="dropdown-item" href="/admin/programs">Manage programs</a></li>
                             <li><a class="dropdown-item" href="/admin/sessions">Manage default sessions</a></li>
-                            <li><a class="dropdown-item" href="/admin/add_scout">Add a scout</a></li>
+                            <li><a class="dropdown-item" href="/admin/participation-requirements">Manage participation requirements</a></li>
+                            <li><a class="dropdown-item" href="/admin/scouts">Manage scouts</a></li>
                             <li><a class="dropdown-item" href="/admin/import_data">Import data</a></li>
                             <li><a class="dropdown-item" href="/admin/stats">Statistics</a></li>
-                            <li><a class="dropdown-item" href="/admin/participation-requirements">Edit participation requirements</a></li>
                         </ul>
                     </li>
                     @endif

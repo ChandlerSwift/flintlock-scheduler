@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Scout;
+use App\Models\Week;
 use Illuminate\Http\Request;
 
 class ScoutController extends Controller
@@ -37,8 +38,10 @@ class ScoutController extends Controller
     public function store(Request $request)
     {
         $scout = Scout::create($request->all());
-        $scout->save();
-        return back()->with('message', "Scout saved successfully.");
+        return back()->with('message',
+            ["type" => "success", "body" => "Scout \"$scout->first_name $scout->last_name\" saved successfully."]
+        );
+        if (defined)
     }
 
     /**
@@ -47,9 +50,11 @@ class ScoutController extends Controller
      * @param  \App\Models\Scout  $scout
      * @return \Illuminate\Http\Response
      */
-    public function show(Scout $scout)
+    public function show(Scout $scout, Week $week)
     {
-        return view('scouts.show', ['scout' => $scout]);
+        return view('scouts.show')
+            ->with('scout', $scout)
+            ->with('sessions', $week->sessions);
     }
 
     /**

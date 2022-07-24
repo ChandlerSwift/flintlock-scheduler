@@ -18,9 +18,9 @@ class WeekController extends Controller
             ->with('weeks', Week::all());
     }
 
-    public function choose(Week $week)
+    public function choose($id)
     {
-        return redirect('/')->cookie('week_id', $week->id);
+        return redirect('/')->cookie('week_id', $id);
     }
 
     public function addSessions(Week $week) {

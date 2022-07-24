@@ -45,7 +45,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 });
 
 Route::middleware(['auth'])->get('/weeks', [WeekController::class, 'select']);
-Route::middleware(['auth'])->get('/weeks/{week}', [WeekController::class, 'choose']);
+Route::middleware(['auth'])->get('/weeks/{id}', [WeekController::class, 'choose']);
 
 Route::middleware(['auth', 'week'])->group(function(){
 

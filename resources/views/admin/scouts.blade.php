@@ -5,22 +5,62 @@ Admin: Week Management
 @endsection
 
 @section('content')
-<h2 class="mb-5">Weeks</h2>
-<h4>Add new week</h4>
-<p>
-    The starting date is the Sunday that scouts begin arriving. Session slots
-    for the week are created when the week is created.
-</p>
-<form class="mb-5 row row-cols-lg-auto g-3 align-items-center" action="/admin/weeks" method="POST">
+<h2>Scouts</h2>
+<p>This only includes scouts for week "{{ \App\Models\Week::find(request()->cookie('week_id'))->name }}".</p>
+<h4>Add new scout</h4>
+
+<!-- $table->string('first_name');
+$table->string('last_name');
+$table->integer('rank')->default(0);
+$table->integer('age')->default(10);
+$table->string('gender');
+$table->string('unit');
+$table->string('site');
+$table->string('subcamp'); -->
+
+<form class="mb-5 row row-cols-lg-auto g-3 align-items-center" action="/admin/scouts" method="POST">
     @csrf
+    <input type="hidden" name="week_id" value="{{ request()->cookie('week_id') }}">
     <div class="col-12">
-        <input name="name" type="text" class="form-control" placeholder="Name">
+        <input name="first_name" type="text" class="form-control" placeholder="First name">
     </div>
     <div class="col-12">
-        <input name="start_date" type="date" class="form-control" placeholder="Email">
+        <input name="last_name" type="text" class="form-control" placeholder="Last name">
     </div>
     <div class="col-12">
-        <button type="submit" class="btn btn-primary">Add Week</button>
+        <select class="form-select" name="rank">
+            <option selected disabled hidden>Rank</option>
+            <option value="0">Scout</option>
+            <option value="1">Tenderfoot</option>
+            <option value="2">Second class</option>
+            <option value="3">First class</option>
+            <option value="4">Star</option>
+            <option value="5">Life</option>
+            <option value="6">Eagle</option>
+        </select>
+    </div>
+    <div class="col-12">
+        <input name="age" type="number" class="form-control" placeholder="Age">
+    </div>
+    <div class="col-12">
+        <input name="gender" type="text" class="form-control" placeholder="Gender">
+    </div>
+    <div class="col-12">
+        <input name="unit" type="text" class="form-control" placeholder="Unit">
+    </div>
+    <div class="col-12">
+        <input name="site" type="text" class="form-control" placeholder="Site">
+    </div>
+    <div class="col-12">
+        <select class="form-select" name="subcamp">
+            <option selected disabled hidden>Subcamp</option>
+            <option value="Buckskin">Buckskin</option>
+            <option value="Ten Chiefs">Ten Chiefs</option>
+            <option value="Voyageur">Voyageur</option>
+        </select>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Add Scout</button>
     </div>
 </form>
 <table class="table">
