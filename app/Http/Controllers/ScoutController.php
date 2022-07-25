@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Scout;
+use App\Models\Session;
 use App\Models\Week;
 use Illuminate\Http\Request;
 
@@ -41,7 +42,6 @@ class ScoutController extends Controller
         return back()->with('message',
             ["type" => "success", "body" => "Scout \"$scout->first_name $scout->last_name\" saved successfully."]
         );
-        if (defined)
     }
 
     /**
@@ -106,5 +106,19 @@ class ScoutController extends Controller
     
         // Return the search view with the resluts compacted
         return view('search', compact('searchResults'));
+    }
+
+    public function addSession(Request $request, Scout $scout) {
+        $scout->sessions()->attach($request->session_id);
+        return back()->with('message',
+            ["type" => "success", "body" => "Session added successfully."]
+        );
+    }
+
+    public function dropSession(Scout $scout, Session $session) {
+        $scout->sessions()->detach($session->id);
+        return back()->with('message',
+            ["type" => "success", "body" => "Session dropped successfully."]
+        );
     }
 }

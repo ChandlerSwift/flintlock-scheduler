@@ -33,6 +33,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('stats', [AdminController::class, 'getStats']);
     Route::get('seed', [AdminController::class, 'seedDatabase']);
     Route::resource('scouts', ScoutController::class);
+    Route::post('scouts/{scout}/addSession', [ScoutController::class, 'addSession']);
+    Route::post('scouts/{scout}/dropSession/{session}', [ScoutController::class, 'dropSession']);
     Route::get('add_scout', [ScoutController::class, 'create']);
     Route::post('add_scout', [ScoutController::class, 'store']);
     Route::resource('users', UserController::class);
