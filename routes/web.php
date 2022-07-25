@@ -28,7 +28,6 @@ require __DIR__.'/auth.php';
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::post('plan_week/{week}', [AdminController::class, 'plan_week']);
-    Route::get('import_data', [AdminController::class, 'show_import_form']);
     Route::post('import_data', [AdminController::class, 'import_data']);
     Route::get('stats', [AdminController::class, 'getStats']);
     Route::get('seed', [AdminController::class, 'seedDatabase']);

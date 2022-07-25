@@ -65,7 +65,6 @@
                             <li><a class="dropdown-item" href="/admin/sessions">Manage default sessions</a></li>
                             <li><a class="dropdown-item" href="/admin/participation-requirements">Manage participation requirements</a></li>
                             <li><a class="dropdown-item" href="/admin/scouts">Manage scouts</a></li>
-                            <li><a class="dropdown-item" href="/admin/import_data">Import data</a></li>
                             <li><a class="dropdown-item" href="/admin/stats">Statistics</a></li>
                         </ul>
                     </li>

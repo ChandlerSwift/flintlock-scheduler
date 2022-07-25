@@ -40,19 +40,51 @@ Admin: Week Management
             <td>{{ $week->scouts()->count() }}</td>
             <td>
                 <div class="input-group">
-                <button class="btn btn-sm btn-outline-primary" type="submit" form="plan{{$week->id}}form">Plan</button>
-                <form action="/admin/plan_week/{{$week->id}}" method="POST" class="d-none" id="plan{{$week->id}}form">
-                    @csrf
-                </form>
-                <form action="/admin/weeks/{{$week->id}}" method="POST" class="d-none" id="delete{{$week->id}}form">
-                    @csrf
-                    @method('DELETE')
-                </form>
-                <button class="btn btn-sm btn-outline-danger" type="submit" form="delete{{$week->id}}form">Delete</button>
+                    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#importWeek{{ $week->id }}modal">Import data</button>
+                    <button class="btn btn-sm btn-outline-primary" type="submit" form="plan{{$week->id}}form">Plan</button>
+                    <form action="/admin/plan_week/{{$week->id}}" method="POST" class="d-none" id="plan{{$week->id}}form">
+                        @csrf
+                    </form>
+                    <form action="/admin/weeks/{{$week->id}}" method="POST" class="d-none" id="delete{{$week->id}}form">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                    <button class="btn btn-sm btn-outline-danger" type="submit" form="delete{{$week->id}}form">Delete</button>
                 </div>
             </td>
         </tr>
         @endforeach
     </tbody>
 </table>
+@foreach($weeks as $week)
+<div class="modal fade" id="importWeek{{ $week->id }}modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Import data</h5>
+            </div>
+            <div class="modal-body">
+                @if($week->scouts()->count() > 0)
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Warning!</strong>
+                    There are already scouts in this week. If any scout being
+                    imported has the same first/last name and troop, their
+                    import will just be skipped.
+                </div>
+                @endif
+                <form action="/admin/import_data" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="week_id" value="{{ $week->id }}">
+                    <div class="mb-3">
+                        <input class="form-control" type="file" name="spreadsheet" required>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection

@@ -13,11 +13,6 @@ use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
-    public function show_import_form() {
-        return view('admin.import_data')
-            ->with('weeks', Week::all());
-    }
-
     public function import_data(Request $request) {
         if (!$request->spreadsheet) {
             return back()->with('message',
