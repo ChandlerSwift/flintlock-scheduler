@@ -71,7 +71,7 @@ class ProgramSeeder extends Seeder
                 'min_scout_age' => 13,
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now()
-            ], /* [
+            ], [
                 'name'=> 'Mountain Bike Outpost',
                 'max_participants'=> 10,
                 'min_scout_age'=> 13,
@@ -89,7 +89,7 @@ class ProgramSeeder extends Seeder
                 'min_scout_age' => 13,
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now()
-            ], */
+            ],
         ]);
     }
 }
