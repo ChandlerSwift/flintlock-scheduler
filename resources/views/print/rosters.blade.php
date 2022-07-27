@@ -10,7 +10,14 @@
         <ul>
         @foreach($session->scouts as $scout)
             <li style="list-style-type: '\2610'; padding-left: 0.5em;">
-                <a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }} ({{ $scout->gender }}, {{ $scout->age }}), {{ $scout->site }}, {{ $scout->unit }}@if(!$scout->meetsReqsFor($session->program)) (needs {{ implode(', ', $scout->missingReqsFor($session->program)->pluck('name')->all()) }}) @endif</a>
+                <a href="/scouts/{{$scout->id}}">
+                    {{ $scout->first_name }} {{ $scout->last_name }}
+                    ({{ $scout->gender }}, {{ $scout->age }}),
+                    {{ $scout->site }} ({{ $scout->subcampAbbr }}), {{ $scout->unit }}
+                    @if(!$scout->meetsReqsFor($session->program))
+                        (needs {{ implode(', ', $scout->missingReqsFor($session->program)->pluck('name')->all()) }})
+                    @endif
+                </a>
             </li>
         @endforeach
         @foreach($session->changeRequests()->where('status', 'approved')->get()->pluck('scout') as $scout)
@@ -18,7 +25,7 @@
                 <a href="/scouts/{{$scout->id}}">
                     {{ $scout->first_name }} {{ $scout->last_name }}
                     ({{ $scout->gender }}, {{ $scout->age }}),
-                    {{ $scout->site }}, {{ $scout->unit }}
+                    {{ $scout->site }} ({{ $scout->subcampAbbr }}), {{ $scout->unit }}
                     @if(!$scout->meetsReqsFor($session->program))
                         (needs {{ implode(', ', $scout->missingReqsFor($session->program)->pluck('name')->all()) }})
                     @endif
