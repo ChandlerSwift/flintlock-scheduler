@@ -63,7 +63,7 @@ class AdminController extends Controller
             else   
                 $scout->age = '10';
             if ($row['E'] != null)
-            $scout->unit = $row['E'];
+                $scout->unit = $row['E'];
             else
                 $scout->unit = '0000';
             if ($row['A'] != null)
