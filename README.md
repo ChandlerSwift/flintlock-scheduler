@@ -19,10 +19,11 @@ scp local.txt root@isaacswift.com:/var/www/remote.txt
 
 ### Initial setup
 * `php artisan migrate:fresh`
+* `php artisan db:seed --class=ProgramSeeder`
+* `php artisan db:seed --class=DefaultSessionSeeder`
 * create new user as above
 * Create other users in admin panel
-* Create programs in admin, or run ProgramSeeder
-* Create default sessions in admin, or run DefaultSessionSeeder
 * Create weeks in admin
 * Import scouts wk1
+* import Tier 2 wk1
 * plan wk1
