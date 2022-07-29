@@ -146,6 +146,7 @@
                 Ashley Schober,
                 Lydia Hill,
                 Rowan Krohn,
+                Allie Brackett,
                 a bunch of fabulous CITs,
                 Chandler Swift;
                 All rights reserved.</span>
