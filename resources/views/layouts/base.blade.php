@@ -85,7 +85,7 @@
             main > .container {
                 padding: 0;
             }
-            nav, footer {
+            nav, footer, div.alert {
                 display: none !important;
             }
             div.nobreak {
