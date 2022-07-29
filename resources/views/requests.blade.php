@@ -17,13 +17,7 @@
             <option value="test" selected disabled hidden>Choose Unit</option>
             @foreach($units as $unit)
             <option value="{{ $unit }}">{{ $unit }}
-                @if ( $scouts->where('unit', $unit)->first()->subcamp == 'Buckskin')
-                (B)
-                @elseif ( $scouts->where('unit', $unit)->first()->subcamp == 'Ten Chiefs')
-                (TC)
-                @elseif ( $scouts->where('unit', $unit)->first()->subcamp == 'Voyageur')
-                (V)
-                @endif
+                ({{ $scouts->where('unit', $unit)->first()->subcampAbbr }})
             </option>
             @endforeach
         </select>
