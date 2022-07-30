@@ -22,6 +22,7 @@ class CreateScoutsTable extends Migration
             $table->integer('age')->default(10);
             $table->string('gender');
             $table->string('unit');
+            $table->string('council');
             $table->string('site');
             $table->string('subcamp');
             $table->foreignId('week_id')->constrained()->onDelete('cascade');

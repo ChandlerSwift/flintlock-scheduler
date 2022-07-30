@@ -53,6 +53,13 @@ class DefaultSessionSeeder extends Seeder
                     $session->program_id = $program->id;
                     $session->save();
                 }
+            } elseif(in_array($program->name, ['Mountain Bike Outpost', 'Older Scout Adventure Blast', 'Water Sports Outpost'])) {
+                $session = new DefaultSession();
+                $session->start_seconds = 9 * 3600;
+                $session->end_seconds = 11 * 3600;
+                $session->program_id = $program->id;
+                $session->every_day = true;
+                $session->save();
             } else {
                 throw new \Exception("Unknown program $program->name");
             }

@@ -19,6 +19,7 @@ class CreateSessionsTable extends Migration
             $table->foreignId('program_id')->constrained()->onDelete('cascade');
             $table->dateTime('start_time');
             $table->dateTime('end_time');
+            $table->boolean('every_day')->default(false); // Tier 2 programs
             $table->foreignId('week_id')->constrained()->onDelete('cascade');
         });
     }

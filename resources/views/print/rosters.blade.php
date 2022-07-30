@@ -20,7 +20,7 @@
                 </a>
             </li>
         @endforeach
-        @foreach($session->changeRequests()->where('status', 'approved')->get()->pluck('scout') as $scout)
+        @foreach($session->changeRequests()->where('status', 'approved')->where('action', 'add')->get()->pluck('scout') as $scout)
             <li style="list-style-type: '\2610'; padding-left: 0.5em;">
                 <a href="/scouts/{{$scout->id}}">
                     {{ $scout->first_name }} {{ $scout->last_name }}

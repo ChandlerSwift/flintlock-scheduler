@@ -1,6 +1,10 @@
 @extends('layouts.base')
 @section('content')
 <h2>Default Sessions</h2>
+<p>
+    For Tier 2 programs, choose Sunday for the start and end dates, and check
+    the "every day" box.
+</p>
 <form class="row row-cols-lg-auto g-3 align-items-center mt-2" action="/admin/sessions" method="POST">
     @csrf
     <div class="col-12">
@@ -38,6 +42,9 @@
         <input name="end_time" type="time" class="form-control" placeholder="End time">
     </div>
     <div class="col-12">
+        <input name="every_day" type="checkbox" class="form-check-input"> Every day
+    </div>
+    <div class="col-12">
         <button type="submit" class="btn btn-primary">Add session</button>
     </div>
 </form>
@@ -47,6 +54,7 @@
             <th>Program</th>
             <th>Start time</th>
             <th>End time</th>
+            <th>Every day</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -54,8 +62,13 @@
         @foreach($sessions as $session)
         <tr>
             <td>{{ $session->program->name }}</td>
+            @if($session->every_day)
+            <td>Every day, {{ $session->formatted_start_time(false) }}</td>
+            @else
             <td>{{ $session->formatted_start_time() }}</td>
-            <td>{{ $session->formatted_end_time() }}</td>
+            @endif
+            <td>{{ $session->formatted_end_time(false) }}</td>
+            <td>{!! $session->every_day ? "&check;" : "" !!}</td>
             <td>
                 <form class="d-none" action="/admin/sessions/{{$session->id}}" method="POST" id="deleteSession{{$session->id}}Form">
                     @csrf

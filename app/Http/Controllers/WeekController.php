@@ -29,6 +29,7 @@ class WeekController extends Controller
             $session->start_time = $week->start_date->addSeconds($session_prototype->start_seconds);
             $session->end_time = $week->start_date->addSeconds($session_prototype->end_seconds);
             $session->program_id = $session_prototype->program_id;
+            $session->every_day = $session_prototype->every_day;
             $session->week_id = $week->id;
             $session->save();
         }

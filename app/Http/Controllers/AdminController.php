@@ -10,6 +10,7 @@ use App\Models\Program;
 use App\Models\Session;
 use App\Models\Week;
 use Illuminate\Support\Facades\Log;
+use League\Csv\Reader;
 
 class AdminController extends Controller
 {
@@ -94,6 +95,57 @@ class AdminController extends Controller
         }
         return back()->with('message',
             ["type" => "success", "body" => "Data import for week " . Week::find($request->week_id)->name . " was successful."]
+        );
+    }
+
+    public function import_event_data(Request $request) {
+        if (!$request->csv) {
+            return back()->with('message',
+                ["type" => "warning", "body" => "No csv selected."]
+            );
+        }
+
+        $reader = Reader::createFromPath($request->csv->path(), 'r');
+        $reader->setHeaderOffset(0);
+        $records = $reader->getRecords();
+        foreach ($records as $offset => $record) {
+            Log::info($record);
+            if (!str_contains($record['Session 1'], 'Tier 2')) {
+                continue;
+            }
+            $scout = Scout::where('first_name', $record['First Name'])
+                ->where('last_name', $record['Last Name'])
+                ->where('week_id', $request->week_id)
+                ->get()
+                ->first(function($scout, $index) use ($record){
+                    return str_contains($scout->unit, $record['Unit Nbr.']);
+                });
+            if (!$scout) {
+                throw new \Exception("Could not find scout for \"" . $record['First Name'] . '" "' . $record['Last Name'] . '" (Unit ' . $record['Unit Nbr.'] . ')');
+            }
+            if (str_contains($record['Session 1'], 'Watersports Outpost')) {
+                $program_name = "Water Sports Outpost";
+            } elseif (str_contains($record['Session 1'], 'Older Scout Adventure Blast')) {
+                $program_name = "Older Scout Adventure Blast";
+            } elseif (str_contains($record['Session 1'], 'Mountain Bike Outpost')) {
+                $program_name = "Mountain Bike Outpost";
+            } else {
+                throw new \Exception("Unknown program" . $record['Session 1']);
+            }
+
+            $session = Program::where('name', $program_name)->first()
+                ->sessions()->where('week_id', $request->week_id)->first();
+            if (!$session) {
+                throw new \Exception("Could not find session for $program_name");
+            }
+            $scout->sessions()->syncWithoutDetaching($session->id);
+        }
+
+        return back()->with('message',
+            [
+                "type" => "success",
+                "body" => "Import successful.",
+            ]
         );
     }
 
@@ -185,8 +237,6 @@ class AdminController extends Controller
         $session->scouts()->detatch($scout->id);
         //confirmation message
     }
-
-
 
     public function getStats(Request $request) {
         $p = Preference::all();

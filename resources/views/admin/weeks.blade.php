@@ -40,7 +40,8 @@ Admin: Week Management
             <td>{{ $week->scouts()->count() }}</td>
             <td>
                 <div class="input-group">
-                    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#importWeek{{ $week->id }}modal">Import data</button>
+                    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#importWeek{{ $week->id }}modal">Import scout/preference data</button>
+                    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#importEventDataWeek{{ $week->id }}modal">Import Tier 2 data</button>
                     <button class="btn btn-sm btn-outline-primary" type="submit" form="plan{{$week->id}}form">Plan</button>
                     <form action="/admin/plan_week/{{$week->id}}" method="POST" class="d-none" id="plan{{$week->id}}form">
                         @csrf
@@ -77,6 +78,27 @@ Admin: Week Management
                     <input type="hidden" name="week_id" value="{{ $week->id }}">
                     <div class="mb-3">
                         <input class="form-control" type="file" name="spreadsheet" required>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="importEventDataWeek{{ $week->id }}modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Import Tier 2 data</h5>
+            </div>
+            <div class="modal-body">
+                <form action="/admin/import_event_data" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="week_id" value="{{ $week->id }}">
+                    <div class="mb-3">
+                        <input class="form-control" type="file" name="csv" required>
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Import</button>

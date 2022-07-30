@@ -35,7 +35,9 @@
         <select class="form-select" id="program" name="program_id">
             <option value="test" selected disabled hidden>Choose Program</option>
             @foreach($programs as $program)
+            @if($program->sessions->count() > 0)
             <option value="{{ $program->id }}">{{ $program->name }}</option>
+            @endif
             @endforeach
         </select>
     </div>

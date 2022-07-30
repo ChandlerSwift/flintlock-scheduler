@@ -33,7 +33,11 @@
 @foreach($scout->sessions->sortBy('start_time') as $session)
     <li>
         {{ $session->program->name }}
+        @if($session->every_day)
+        (Every day, {{ $session->start_time->format('g:i A') }}&ndash;{{ $session->end_time->format('g:i A') }})
+        @else
         ({{ $session->start_time->format('l, g:i A') }}&ndash;{{ $session->end_time->format('l, g:i A') }})
+        @endif
         @if(Auth::user()->admin)
         <form class="d-none" id="dropSession{{ $session->id }}form" action="/admin/scouts/{{ $scout->id }}/dropSession/{{ $session->id }}" method="post">
             @csrf

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChangeRequest;
+use App\Models\Scout;
 use App\Models\Week;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,8 +26,10 @@ class ChangeRequestController extends Controller
         return view('requests')
             ->with('units', $selected_week->units())
             ->with('scouts', $selected_week->scouts)
-            ->with('programs', \App\Models\Program::all())
-            ->with('sessions', $selected_week->sessions)
+            ->with('programs', \App\Models\Program::all()->filter(function($program, $index) use ($selected_week){
+                return $program->sessions()->where('week_id', $selected_week->id)->where('every_day', false)->count() > 0;
+            }))
+            ->with('sessions', $selected_week->sessions()->where('every_day', false)->get())
             ->with('changeRequests', $selected_week->changeRequests);
     }
 
@@ -47,6 +50,12 @@ class ChangeRequestController extends Controller
      */
     public function store(Request $request)
     {
+        $scout = Scout::find($request['Scout']);
+        if ($request['addDrop'] == "drop" && !$scout->sessions->pluck('id')->contains($request['session'])) {
+            return back()->with('message',
+                ["type" => "danger", "body" => "Scout \"" . $scout->first_name . ' ' . $scout->last_name . "\" not in that session."]
+            );
+        }
         $cr = new ChangeRequest;
         $cr->action = $request['addDrop'];
         $cr->scout_id = $request['Scout'];

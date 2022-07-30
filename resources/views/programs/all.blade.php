@@ -11,7 +11,9 @@
         @if($session->scouts->first() == null)
             @continue
         @else
+            @if(!$session->every_day)
             <h3>{{ $session->start_time->format('l') }}  </h3>
+            @endif
 
             <ul>
             @foreach($session->scouts as $scout)

@@ -19,6 +19,7 @@ class CreateDefaultSessionsTable extends Migration
             $table->foreignId('program_id')->constrained()->onDelete('cascade');
             $table->integer('start_seconds'); // Seconds after midnight on Sunday
             $table->integer('end_seconds'); // Seconds after midnight on Sunday
+            $table->boolean('every_day')->default(false); // Tier 2 programs
         });
     }
 

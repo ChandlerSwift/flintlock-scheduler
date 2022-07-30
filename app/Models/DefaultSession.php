@@ -13,7 +13,7 @@ class DefaultSession extends Model
         return $this->belongsTo(Program::class);
     }
 
-    public static function format_time(int $seconds) {
+    public static function format_time(int $seconds, bool $withDay) {
         $days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         $index = floor((int)$seconds/86400);
         $day = $days[$index];
@@ -24,15 +24,19 @@ class DefaultSession extends Model
             $am_pm = "PM";
         }
         $minute = str_pad(floor(($seconds % 3600) / 60), 2, '0', STR_PAD_LEFT);
-        return "$day, $hour:$minute $am_pm";
+        if ($withDay) {
+            return "$day, $hour:$minute $am_pm";
+        } else {
+            return "$hour:$minute $am_pm";
+        }
     }
 
-    public function formatted_start_time() {
-        return $this->format_time((int)$this->start_seconds);
+    public function formatted_start_time(bool $withDay = true) {
+        return $this->format_time((int)$this->start_seconds, $withDay);
     }
 
-    public function formatted_end_time() {
-        return $this->format_time((int)$this->end_seconds);
+    public function formatted_end_time(bool $withDay = true) {
+        return $this->format_time((int)$this->end_seconds, $withDay);
     }
 
 }
