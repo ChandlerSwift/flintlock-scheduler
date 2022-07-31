@@ -43,7 +43,7 @@
     </div>
     <div class="col-12">
         <select class="form-select" id="session" name="session">
-            <option selected data-enabled="true">Choose Session</option>
+            <option selected data-enabled="true" value="">Choose Session</option>
             @foreach($sessions as $session)
             <option value="{{ $session->id }}" data-program="{{ $session->program_id }}">{{ $session->start_time->format('l, g:i A') }}</option>
             @endforeach
