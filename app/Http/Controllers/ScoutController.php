@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Scout;
 use App\Models\Session;
-use App\Models\Week;
 use Illuminate\Http\Request;
 
 class ScoutController extends Controller

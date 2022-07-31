@@ -192,8 +192,7 @@ class AdminController extends Controller
     /**
      *  Place a scout into the highest choice program that works out
      */
-    private function put_scout_in_session(Scout $scout, $week) {
-        $week = Week::find($week);
+    private function put_scout_in_session(Scout $scout, Week $week) {
         $scoutAssignedToSession = false;
         foreach($scout->preferences as $preference){
 
