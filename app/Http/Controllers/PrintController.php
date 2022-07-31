@@ -4,15 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Scout;
 use App\Models\Session;
+use App\Models\Week;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PrintController extends Controller
 {
     public function chooseRosters(Request $request) {
+        $week = Week::find($request->cookie('week_id'));
         return view('print.select_roster_time')
-            ->with('start_times', Session::select('start_time')->distinct()->orderBy('start_time')->get()->pluck('start_time'));
+            ->with('start_times', $week->sessions()->select('start_time')->distinct()->orderBy('start_time')->get()->pluck('start_time'));
     }
 
     public function rosters(Request $request) {
@@ -20,17 +21,26 @@ class PrintController extends Controller
         foreach($request->input('start_times') as $start_time) {
             array_push($start_times, Carbon::createFromTimestamp($start_time));
         }
-        // dd($start_times);
         return view('print.rosters')
             ->with('sessions', Session::whereIn('start_time', $start_times)->get())
             ->with('scouts', Scout::all());
     }
     public function units(Request $request) {
         $bus_times = [
+            '09:00' => [
+                'Buckskin' => '8:30 AM',
+                'Ten Chiefs' => '8:40 AM',
+                'Voyageur' => '8:50 AM',
+            ],
             '13:00' => [
                 'Buckskin' => '12:30 PM',
                 'Ten Chiefs' => '12:40 PM',
                 'Voyageur' => '12:50 PM',
+            ],
+            '15:30' => [
+                'Buckskin' => '3:20 PM',
+                'Ten Chiefs' => '3:10 PM',
+                'Voyageur' => '3:00 PM',
             ],
             '17:30' => [
                 'Buckskin' => '5:30 PM',
@@ -43,10 +53,10 @@ class PrintController extends Controller
                 'Voyageur' => '6:20 PM',
             ],
         ];
-        $troops = DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit');
+        $week = Week::find($request->cookie('week_id'));
         return view('print.units')
-            ->with('troops', $troops)
-            ->with('scouts', Scout::all())
+            ->with('units', $week->units())
+            ->with('scouts', $week->scouts)
             ->with(compact('bus_times'));
     }
 }

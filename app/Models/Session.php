@@ -10,6 +10,8 @@ class Session extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     /**
      * The attributes that should be cast.
      *
@@ -48,5 +50,9 @@ class Session extends Model
             Log::debug("Overlap found!");
         }
         return $overlaps;
+    }
+
+    public function week() {
+        return $this->belongsTo(Week::class);
     }
 }

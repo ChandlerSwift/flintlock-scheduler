@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateChangeRequestsTable extends Migration
+class CreateDefaultSessionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreateChangeRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('change_requests', function (Blueprint $table) {
+        Schema::create('default_sessions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('scout_id')->constrained()->onDelete('cascade');
             $table->foreignId('program_id')->constrained()->onDelete('cascade');
-            $table->foreignId('session_id')->constrained()->onDelete('cascade');
-            $table->string('action');
-            $table->string('status');
-            $table->string('notes')->nullable();
+            $table->integer('start_seconds'); // Seconds after midnight on Sunday
+            $table->integer('end_seconds'); // Seconds after midnight on Sunday
+            $table->boolean('every_day')->default(false); // Tier 2 programs
         });
     }
 
@@ -32,6 +30,6 @@ class CreateChangeRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('change_requests');
+        Schema::dropIfExists('default_sessions');
     }
 }

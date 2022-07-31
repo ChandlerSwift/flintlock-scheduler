@@ -68,4 +68,22 @@ class Scout extends Model
     public function meetsReqsFor(Program $program) {
         return count($this->missingReqsFor($program)) == 0;
     }
+
+    public function week() {
+        return $this->belongsTo(Week::class);
+    }
+
+    public function getSubcampAbbrAttribute() {
+        if ($this->subcamp == 'Buckskin') {
+            return 'B';
+        } elseif ($this->subcamp == 'Ten Chiefs') {
+            return 'TC';
+        } elseif ($this->subcamp == 'Voyageur') {
+            return 'V';
+        } elseif ($this->subcamp == 'UNKNOWN') {
+            return '?';
+        } else {
+            throw new \Exception('Unknown subcamp ' . $this->subcamp);
+        }
+    }
 }

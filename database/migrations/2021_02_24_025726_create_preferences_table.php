@@ -16,11 +16,8 @@ class CreatePreferencesTable extends Migration
         Schema::create('preferences', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('scout_id');
-            $table->foreign('scout_id')->references('id')->on('scouts');
-
-            $table->integer('program_id');
-            $table->foreign('program_id')->references('id')->on('programs');
+            $table->foreignId('scout_id')->constrained()->onDelete('cascade');
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
 
             $table->integer('rank')->default('10');
         });

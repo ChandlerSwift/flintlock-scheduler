@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Program;
-use App\Models\Session;
-use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
-class SessionController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,15 +15,8 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $res = "<ul>";
-        foreach(Session::all() as $session) {
-            $res .= "<li>" . $session->program->name . "(" . $session->start_time . ")" . "<ul>";
-            foreach ($session->scouts as $scout) {
-                $res .= "<li>" . $scout->first_name . " " . $scout->last_name . "</li>";
-            }
-            $res .= "</ul></li>";
-        }
-        return $res;
+        return view('admin.users')
+            ->with('users', User::all());
     }
 
     /**
@@ -45,16 +37,24 @@ class SessionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = User::create($request->all());
+        $user->password = Hash::make($request->password);
+        if ($request->input('admin')) {
+            $user->admin = true;
+        }
+        $user->save();
+        return back()->with('message',
+            ["type" => "success", "body" => "User \"" . $user->name . "\" saved successfully."]
+        );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Session  $session
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(Session $session)
+    public function show(User $user)
     {
         //
     }
@@ -62,10 +62,10 @@ class SessionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Session  $session
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(Session $session)
+    public function edit(User $user)
     {
         //
     }
@@ -74,10 +74,10 @@ class SessionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Session  $session
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Session $session)
+    public function update(Request $request, User $user)
     {
         //
     }
@@ -85,14 +85,14 @@ class SessionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Session  $session
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Session $session)
+    public function destroy(User $user)
     {
-        $session->delete();
+        $user->delete();
         return back()->with('message',
-            ["type" => "success", "body" => "Session deleted successfully."]
+            ["type" => "success", "body" => "User \"" . $user->name . "\" was deleted."]
         );
     }
 }

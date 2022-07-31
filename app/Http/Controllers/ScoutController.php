@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ParticipationRequirement;
 use App\Models\Scout;
+use App\Models\Session;
+use App\Models\Week;
 use Illuminate\Http\Request;
 
 class ScoutController extends Controller
@@ -13,17 +14,10 @@ class ScoutController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $res = "<ul>";
-        foreach(Scout::all() as $scout) {
-            $res .= "<li>" . $scout->first_name . " " . $scout->last_name . "<ul>";
-            foreach ($scout->sessions as $session) {
-                $res .= "<li>" . $session->program->name . "(" . $session->start_time . ")" . "</li>";
-            }
-            $res .= "</ul></li>";
-        }
-        return $res;
+        return view('admin.scouts')
+            ->with('scouts', Scout::where('week_id', $request->cookie('week_id'))->get());
     }
 
     /**
@@ -45,8 +39,9 @@ class ScoutController extends Controller
     public function store(Request $request)
     {
         $scout = Scout::create($request->all());
-        $scout->save();
-        return back()->with('message', "Scout saved successfully.");
+        return back()->with('message',
+            ["type" => "success", "body" => "Scout \"$scout->first_name $scout->last_name\" saved successfully."]
+        );
     }
 
     /**
@@ -55,9 +50,11 @@ class ScoutController extends Controller
      * @param  \App\Models\Scout  $scout
      * @return \Illuminate\Http\Response
      */
-    public function show(Scout $scout)
+    public function show(Scout $scout, Week $week)
     {
-        return view('scouts.show', ['scout' => $scout]);
+        return view('scouts.show')
+            ->with('scout', $scout)
+            ->with('sessions', $week->sessions);
     }
 
     /**
@@ -109,5 +106,19 @@ class ScoutController extends Controller
     
         // Return the search view with the resluts compacted
         return view('search', compact('searchResults'));
+    }
+
+    public function addSession(Request $request, Scout $scout) {
+        $scout->sessions()->attach($request->session_id);
+        return back()->with('message',
+            ["type" => "success", "body" => "Session added successfully."]
+        );
+    }
+
+    public function dropSession(Scout $scout, Session $session) {
+        $scout->sessions()->detach($session->id);
+        return back()->with('message',
+            ["type" => "success", "body" => "Session dropped successfully."]
+        );
     }
 }

@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChangeRequest;
 use App\Models\Scout;
-use App\Models\Preference;
-use App\Models\Program;
-use App\Models\Session;
+use App\Models\Week;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -24,12 +22,15 @@ class ChangeRequestController extends Controller
      */
     public function index()
     {
+        $selected_week = Week::find(request()->cookie('week_id'));
         return view('requests')
-            ->with('troops', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'))
-            ->with('scouts', \App\Models\Scout::all())
-            ->with('programs', \App\Models\Program::all())
-            ->with('sessions', \App\Models\Session::all())
-            ->with('changeRequests', \App\Models\ChangeRequest::all());
+            ->with('units', $selected_week->units())
+            ->with('scouts', $selected_week->scouts)
+            ->with('programs', \App\Models\Program::all()->filter(function($program, $index) use ($selected_week){
+                return $program->sessions()->where('week_id', $selected_week->id)->where('every_day', false)->count() > 0;
+            }))
+            ->with('sessions', $selected_week->sessions()->where('every_day', false)->get())
+            ->with('changeRequests', $selected_week->changeRequests);
     }
 
     /**
@@ -49,10 +50,16 @@ class ChangeRequestController extends Controller
      */
     public function store(Request $request)
     {
+        $scout = Scout::find($request['Scout']);
+        if ($request['addDrop'] == "drop" && !$scout->sessions->pluck('id')->contains($request['session'])) {
+            return back()->with('message',
+                ["type" => "danger", "body" => "Scout \"" . $scout->first_name . ' ' . $scout->last_name . "\" not in that session."]
+            );
+        }
         $cr = new ChangeRequest;
         $cr->action = $request['addDrop'];
         $cr->scout_id = $request['Scout'];
-        $cr->program_id = $request['program'];
+        $cr->program_id = $request['program_id'];
         $cr->notes = $request['notes'];
         $cr->status = "pending";
         $cr->session_id = $request['session'];

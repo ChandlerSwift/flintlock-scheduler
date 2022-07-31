@@ -22,8 +22,10 @@ class CreateScoutsTable extends Migration
             $table->integer('age')->default(10);
             $table->string('gender');
             $table->string('unit');
+            $table->string('council');
             $table->string('site');
             $table->string('subcamp');
+            $table->foreignId('week_id')->constrained()->onDelete('cascade');
             //Program Session Name,First Name,Last Name,Scout Rank Sort Order,Scout Rank,Age,Grade,Years At Camp,Unit Type Name,Unit Number,Sites
         });
     }
