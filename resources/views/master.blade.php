@@ -22,10 +22,10 @@
                     <th class="dark" colspan="5">Monday&ndash;Friday ({{ $first_session->scouts()->count() }}/{{ $first_session->program->max_participants }})</th>
                 </tr>
             </thead>
-            @foreach($first_session->scouts->sortBy('troop') as $scout)
+            @foreach($first_session->scouts->sortBy('unit') as $scout)
                 <tr>
                     <td><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>@if(!$scout->meetsReqsFor($session->program)) <abbr style="color:red;" title="{{ implode(', ', $scout->missingReqsFor($session->program)->pluck('name')->all()) }}">(reqs)</abbr>@endif</td>
-                    <td><a href="/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
+                    <td><a href="/units/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
                     <td>{{ $scout->gender }}</td>
                     <td>{{ $scout->age }}</td>
                     <td>{{ $scout->subcamp }}</td>
@@ -42,10 +42,10 @@
                         <th class="dark" colspan="5">{{ $session->start_time->format('l') }} ({{ $session->scouts->count() }}/{{ $session->program->max_participants }})</th>
                     </tr>
                 </thead>
-                @foreach($session->scouts->sortBy('troop') as $scout)
+                @foreach($session->scouts->sortBy('unit') as $scout)
                     <tr>
                         <td><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>@if(!$scout->meetsReqsFor($session->program)) <abbr style="color:red;" title="{{ implode(', ', $scout->missingReqsFor($session->program)->pluck('name')->all()) }}">(reqs)</abbr>@endif</td>
-                        <td><a href="/troops/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
+                        <td><a href="/units/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
                         <td>{{ $scout->gender }}</td>
                         <td>{{ $scout->age }}</td>
                         <td>{{ $scout->subcamp }}</td>

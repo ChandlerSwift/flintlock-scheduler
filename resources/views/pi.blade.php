@@ -89,7 +89,7 @@
                         <th></th>
                         <th></th>
                     </tr>
-                    @foreach($session->scouts->sortBy('troop') as $scout)
+                    @foreach($session->scouts->sortBy('unit') as $scout)
                             <tr id="small">
                                 <td id="small">{{ $scout->first_name }} {{ $scout->last_name }}</td>
                                 <td id="small">{{ $scout->unit }}</td>

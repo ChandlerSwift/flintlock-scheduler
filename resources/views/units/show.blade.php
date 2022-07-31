@@ -1,6 +1,6 @@
 @extends('layouts.base')
 @section('content')
-<h1>Troop {{ $troop }} ({{ $scouts->first()->site }}, {{ $scouts->first()->subcamp }})</h1>
+<h1>Unit {{ $unit }} ({{ $scouts->first()->site }}, {{ $scouts->first()->subcamp }})</h1>
 @foreach($scouts as $scout)
     @if($scout->sessions->first() == null)
         @continue

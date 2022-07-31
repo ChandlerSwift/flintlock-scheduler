@@ -69,7 +69,7 @@ Admin: Week Management
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <strong>Warning!</strong>
                     There are already scouts in this week. If any scout being
-                    imported has the same first/last name and troop/council,
+                    imported has the same first/last name and unit/council,
                     their import will just be skipped. This expects the CSV from
                     Black Pug.
                 </div>

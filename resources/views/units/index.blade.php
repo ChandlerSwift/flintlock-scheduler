@@ -1,8 +1,8 @@
 @extends('layouts.base')
 @section('content')
 <div class="list">
-@foreach($troops as $troop)
-<a href="/troops/{{$troop}}">Troop {{ $troop }}</a><br>
+@foreach($units as $unit)
+<a href="/units/{{$unit}}">Unit {{ $unit }}</a><br>
 @endforeach
 </div>
 @endsection

@@ -1,6 +1,6 @@
 @extends('layouts.base')
 @section('content')
-<h2>Assign troops to sites</h2>
+<h2>Assign units to sites</h2>
 <p>
     These can be pulled from scoutingevent.com:
     <ul>
