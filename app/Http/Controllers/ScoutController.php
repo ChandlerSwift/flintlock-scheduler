@@ -50,11 +50,11 @@ class ScoutController extends Controller
      * @param  \App\Models\Scout  $scout
      * @return \Illuminate\Http\Response
      */
-    public function show(Scout $scout, $week)
+    public function show(Scout $scout)
     {
         return view('scouts.show')
             ->with('scout', $scout)
-            ->with('sessions', Week::find($week)->sessions);
+            ->with('sessions', $scout->week->sessions);
     }
 
     /**
