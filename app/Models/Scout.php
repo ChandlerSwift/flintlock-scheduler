@@ -80,8 +80,10 @@ class Scout extends Model
             return 'TC';
         } elseif ($this->subcamp == 'Voyageur') {
             return 'V';
+        } elseif ($this->subcamp == 'UNKNOWN') {
+            return '?';
         } else {
-            throw Exception('Unknown subcamp ' . $this->subcamp);
+            throw new \Exception('Unknown subcamp ' . $this->subcamp);
         }
     }
 }

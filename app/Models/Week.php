@@ -34,6 +34,6 @@ class Week extends Model
     }
 
     public function units() {
-        return $this->scouts()->select('unit')->distinct()->get()->pluck('unit');
+        return $this->scouts()->select('unit', 'council')->distinct()->get();
     }
 }

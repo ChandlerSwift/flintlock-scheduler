@@ -16,8 +16,8 @@
         <select class="form-select" id="unit">
             <option value="test" selected disabled hidden>Choose Unit</option>
             @foreach($units as $unit)
-            <option value="{{ $unit }}">{{ $unit }}
-                ({{ $scouts->where('unit', $unit)->first()->subcampAbbr }})
+            <option value="{{ $unit->unit }}{{ $unit->council }}">{{ $unit->unit }}
+                ({{ $scouts->where('unit', $unit->unit)->where('council', $unit->council)->first()->subcampAbbr }})
             </option>
             @endforeach
         </select>
@@ -27,7 +27,7 @@
         <select class="form-select" id="scout" name="Scout" disabled>
             <option value="test" selected disabled hidden>Choose Scout</option>
             @foreach($scouts->sortby('last_name') as $scout)
-            <option value="{{ $scout->id }}" data-unit="{{ $scout->unit }}">{{ $scout->first_name }} {{ $scout->last_name }}</option>
+            <option value="{{ $scout->id }}" data-unit="{{ $scout->unit }}{{ $scout->council }}">{{ $scout->first_name }} {{ $scout->last_name }}</option>
             @endforeach
         </select>
     </div>

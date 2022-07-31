@@ -3,144 +3,158 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Scout;
 use App\Models\Preference;
 use App\Models\Program;
 use App\Models\Session;
 use App\Models\Week;
 use Illuminate\Support\Facades\Log;
-use League\Csv\Reader;
 
 class AdminController extends Controller
 {
     public function import_data(Request $request) {
-        if (!$request->spreadsheet) {
+        if (!$request->hasfile('csv')) {
             return back()->with('message',
-                ["type" => "warning", "body" => "No spreadsheet selected."]
+                ["type" => "warning", "body" => "No CSV file selected."]
             );
         }
-        $spreadsheet = IOFactory::load($request->spreadsheet->path());
-        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-        foreach($sheetData as $row){
-            if ($row['C'] == null) { // Name should never be empty, so this is an empty row. Skip it.
-                continue;
-            }
-            if ($row['C'] == 'First Name') { // Don't count the first line
-                continue;
-            }
 
-            $pre_existing_scout = Scout::where('first_name', $row['C'])
-                ->where('last_name', $row['D'])
-                ->where('unit', $row['E'])
-                ->where('week_id', $request->week_id)
-                ->first();
-            if ($pre_existing_scout) {
-                continue;
+        $week = Week::find($request->week_id);
+        $scouts_added = 0;
+        $preferences_added = 0;
+        foreach($request->file('csv') as $key => $file) {
+            if (($handle = fopen($file->path(), "r")) === FALSE) {
+                throw new \Exception("Unable to open file");
             }
-            $scout = new Scout;
-            $scout->week_id = $request->week_id;
-            $scout->first_name = $row['C'];
-            $scout->last_name = $row['D'];
-            if ($row['G'] != null)
-                if ($row['G'] == 'Scout')
-                    $scout->rank = 0;
-                else if ($row['G'] == 'Tenderfoot')
-                    $scout->rank = 1;
-                else if ($row['G'] == 'Second Class')
-                    $scout->rank = 2;
-                else if ($row['G'] == 'First Class')
-                    $scout->rank = 3;
-                else if ($row['G'] == 'Star')
-                    $scout->rank = 4;
-                else if ($row['G'] == 'Life')
-                    $scout->rank = 5;
-                else if ($row['G'] == 'Eagle')
-                    $scout->rank = 6;
-                else
-                    Log::warning("Unknown rank for scout " . $row['C'] . " " . $row['D'] . ", unit " . $row['E'] . " (setting to Scout)");
-            if ($row['H'] != null)
-                $scout->age = $row['H'];
-            else   
-                $scout->age = '10';
-            if ($row['E'] != null)
-                $scout->unit = $row['E'];
-            else
-                $scout->unit = '0000';
-            if ($row['A'] != null)
-                $scout->subcamp = $row['A'];
-            if ($row['J'] != null)
-                $scout->site = $row['J'];
-            if ($row['F'] != null)
-                $scout->gender = $row['F'];
-            else
-                $scout->gender = '0';
-            $scout->save();
-            
-            $row_indices = ["K", "L", "M", "N"];
-            for ($i = 0; $i < 4; $i++) {
-                if ($row[$row_indices[$i]] != "") {
-                    $program = Program::where('name', $row[$row_indices[$i]])->first();//TODO change program values
-                    if ($program == null) {
-                        Log::warning("trying to find nonexistent program " . $row[$row_indices[$i]]);
-                    } else {
-                        $preference = new Preference;
-                        $preference->program_id = $program->id;
-                        $preference->rank = $i + 1;
-                        $preference->scout_id = $scout->id;
-                        $preference->save();
-                    }
+            $headers = fgetcsv($handle);
+    
+            $row = 1;
+            while (($data = fgetcsv($handle, null, ",")) !== FALSE) {
+                // Create a dict; that's easier to work with than having to do an
+                // index lookup every time we want to access a field later on!
+                $record = [];
+                for ($i = 0; $i < count($headers); $i++) {
+                    $record[$headers[$i]] = $data[$i];
                 }
+                try {
+                    if ($record['Subtitle'] != $week->name) {
+                        throw new \Exception("Trying to add scout from " . $record['Subtitle'] . ' to week ' . $week->name);
+                    }
+                    $pre_existing_scout = Scout::where('first_name', $record['First Name'])
+                        ->where('last_name', $record['Last Name'])
+                        ->where('unit', $record['Unit Number'])
+                        ->where('council', $record['Council'])
+                        ->where('week_id', $request->week_id)
+                        ->first();
+                    if ($pre_existing_scout) {
+                        Log::info("Found duplicate scout for " . $record['First Name'] . ' ' . $record['Last Name'] . '; skipping.');
+                        continue;
+                    }
+                    $scout = new Scout;
+                    $scout->week_id = $request->week_id;
+                    $scout->first_name = $record['First Name'];
+                    $scout->last_name = $record['Last Name'];
+                    $ranks = ['Scout', 'Tenderfoot', 'Second Class', 'First Class', 'Star', 'Life', 'Eagle'];
+                    $rank = array_search($record['Scouting Rank'], $ranks);
+                    if ($rank === false) { // comparing strictly, as opposed to the falsy rank Scout (0)
+                        $rank = 0;
+                        Log::info("Unknown rank for scout " . $record['First Name'] . ' ' . $record['Last Name'] . ", unit " . $record['Unit Number'] . " (setting to Scout)");
+                    }
+                    $scout->age = $record['Age'] ?: 10;
+                    $scout->council = $record['Council'];
+                    $scout->unit = $record['Unit Number'];
+                    $scout->gender = $record['Gender'];
+                    $scout->site = "UNKNOWN";
+                    $scout->subcamp = explode(": ", $record['Title'])[1];
+                    // if ($row['A'] != null)
+                    //     $scout->subcamp = $row['A'];
+                    // if ($row['J'] != null)
+                    //     $scout->site = $row['J'];
+                    $scout->save();
+                    $scouts_added++;
+    
+                    for ($i = 1; $i <= 4; $i++) {
+                        $program = Program::where('name', $record["Flintlock Tier 1, Preference $i"])->first();
+                        if (!$program) {
+                            Log::warning("trying to find nonexistent program " . $record["Flintlock Tier 1, Preference $i"]);
+                        } else {
+                            $preference = new Preference;
+                            $preference->program_id = $program->id;
+                            $preference->rank = $i;
+                            $preference->scout_id = $scout->id;
+                            $preference->save();
+                            $preferences_added++;
+                        }
+                    }
+                } catch (\Exception $e) {
+                    fclose($handle);
+                    throw new \Exception(
+                        "Error processing row " . $row . ", scout " .
+                        $record['First Name'] . ' ' . $record['Last Name'] . ' (unit ' .
+                        $record['Unit Number'] . '): ' . $e->getMessage()
+                    );
+                }
+                $row++;
             }
+            fclose($handle);
         }
         return back()->with('message',
-            ["type" => "success", "body" => "Data import for week " . Week::find($request->week_id)->name . " was successful."]
+            ["type" => "success", "body" => "Data import for week " . Week::find($request->week_id)->name . " was successful: imported $scouts_added scouts and $preferences_added preferences."]
         );
     }
 
     public function import_event_data(Request $request) {
-        if (!$request->csv) {
+        if (!$request->hasFile('csv')) {
             return back()->with('message',
                 ["type" => "warning", "body" => "No csv selected."]
             );
         }
 
-        $reader = Reader::createFromPath($request->csv->path(), 'r');
-        $reader->setHeaderOffset(0);
-        $records = $reader->getRecords();
-        foreach ($records as $offset => $record) {
-            Log::info($record);
-            if (!str_contains($record['Session 1'], 'Tier 2')) {
-                continue;
+        foreach($request->file('csv') as $key => $file) {
+            if (($handle = fopen($file->path(), "r")) === FALSE) {
+                throw new \Exception("Unable to open file");
             }
-            $scout = Scout::where('first_name', $record['First Name'])
-                ->where('last_name', $record['Last Name'])
-                ->where('week_id', $request->week_id)
-                ->get()
-                ->first(function($scout, $index) use ($record){
-                    return str_contains($scout->unit, $record['Unit Nbr.']);
-                });
-            if (!$scout) {
-                throw new \Exception("Could not find scout for \"" . $record['First Name'] . '" "' . $record['Last Name'] . '" (Unit ' . $record['Unit Nbr.'] . ')');
-            }
-            if (str_contains($record['Session 1'], 'Watersports Outpost')) {
-                $program_name = "Water Sports Outpost";
-            } elseif (str_contains($record['Session 1'], 'Older Scout Adventure Blast')) {
-                $program_name = "Older Scout Adventure Blast";
-            } elseif (str_contains($record['Session 1'], 'Mountain Bike Outpost')) {
-                $program_name = "Mountain Bike Outpost";
-            } else {
-                throw new \Exception("Unknown program" . $record['Session 1']);
-            }
+            $headers = fgetcsv($handle);
 
-            $session = Program::where('name', $program_name)->first()
-                ->sessions()->where('week_id', $request->week_id)->first();
-            if (!$session) {
-                throw new \Exception("Could not find session for $program_name");
+            $row = 1;
+            while (($data = fgetcsv($handle, null, ",")) !== FALSE) {
+                // Create a dict; that's easier to work with than having to do an
+                // index lookup every time we want to access a field later on!
+                $record = [];
+                for ($i = 0; $i < count($headers); $i++) {
+                    $record[$headers[$i]] = $data[$i];
+                }
+                if (!str_contains($record['Session 1'], 'Tier 2')) {
+                    continue;
+                }
+                $scout = Scout::where('first_name', $record['First Name'])
+                    ->where('last_name', $record['Last Name'])
+                    ->where('week_id', $request->week_id)
+                    ->get()
+                    ->first(function($scout, $index) use ($record){
+                        return str_contains($scout->unit, $record['Unit Nbr.']);
+                    });
+                if (!$scout) {
+                    throw new \Exception("Could not find scout for \"" . $record['First Name'] . '" "' . $record['Last Name'] . '" (Unit ' . $record['Unit Nbr.'] . ')');
+                }
+                if (str_contains($record['Session 1'], 'Watersports Outpost')) {
+                    $program_name = "Water Sports Outpost";
+                } elseif (str_contains($record['Session 1'], 'Older Scout Adventure Blast')) {
+                    $program_name = "Older Scout Adventure Blast";
+                } elseif (str_contains($record['Session 1'], 'Mountain Bike Outpost')) {
+                    $program_name = "Mountain Bike Outpost";
+                } else {
+                    throw new \Exception("Unknown program" . $record['Session 1']);
+                }
+
+                $session = Program::where('name', $program_name)->first()
+                    ->sessions()->where('week_id', $request->week_id)->first();
+                if (!$session) {
+                    throw new \Exception("Could not find session for $program_name");
+                }
+                $scout->sessions()->syncWithoutDetaching($session->id);
             }
-            $scout->sessions()->syncWithoutDetaching($session->id);
         }
-
         return back()->with('message',
             [
                 "type" => "success",
@@ -245,6 +259,52 @@ class AdminController extends Controller
                 return $item->scout->subcamp;
             }))
             ;
+    }
+
+    public function assign_sites() {
+        // I think I could do all this nonsense with a single well-written SQL
+        // query, but I don't want to think that hard this morning.
+        // TODO: rewrite?
+        $weeks = [];
+        foreach (\App\Models\Week::all() as $week) {
+            $subcamp_scouts = $week->scouts()->where('site', 'UNKNOWN')->get();
+            if ($subcamp_scouts->count() > 0) {
+                $subcamps = [];
+                foreach($subcamp_scouts->groupBy('subcamp') as $subcamp => $scouts) {
+                    if ($scouts->count() > 0) {
+                        $units = [];
+                        foreach ($scouts as $scout) {
+                            $units[$scout->unit . $scout->council] = [
+                                "unit" => $scout->unit,
+                                "council" => $scout->council,
+                            ];
+                        }
+                        array_push($subcamps, [
+                            'subcamp' => $subcamp,
+                            'units' => array_values($units),
+                        ]);
+                    }
+                }
+                array_push($weeks, [
+                    'week' => $week,
+                    'subcamps' => $subcamps,
+                ]);
+            }
+        }
+        return view('admin.assign_sites')->with('weeks_missing_sites', $weeks);
+    }
+
+    public function save_site_assignments(Request $request) {
+        foreach ($request->except(['_token', 'week']) as $unitCouncil => $site) { // shouldn't excluding _token be automatic?
+            $assoc = explode('-', $unitCouncil, 2);
+            $unit = $assoc[0];
+            $council = str_replace("_", " ", $assoc[1]); // HACK: I don't understand why I have to do this, but otherwise $council is e.g. `Northern_Star_Scouting`
+            foreach (Scout::where('unit', $unit)->where('council', $council)->get() as $scout) {
+                $scout->site = $site;
+                $scout->save();
+            }
+        }
+        return back();
     }
 
 }

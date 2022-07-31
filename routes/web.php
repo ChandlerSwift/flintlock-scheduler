@@ -44,6 +44,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/participation-requirements', [ParticipationRequirementController::class, 'index']);
     Route::post('/participation-requirements', [ParticipationRequirementController::class, 'store']);
     Route::post('/participation-requirements/sync', [ParticipationRequirementController::class, 'updatePrograms']);
+    Route::get('assign_sites', [AdminController::class, 'assign_sites']);
+    Route::post('assign_sites', [AdminController::class, 'save_site_assignments']);
 });
 
 Route::middleware(['auth'])->get('/weeks', [WeekController::class, 'select']);
