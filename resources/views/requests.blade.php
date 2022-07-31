@@ -43,7 +43,7 @@
     </div>
     <div class="col-12">
         <select class="form-select" id="session" name="session">
-            <option value="test" selected disabled hidden>Session</option>
+            <option selected data-enabled="true">Choose Session</option>
             @foreach($sessions as $session)
             <option value="{{ $session->id }}" data-program="{{ $session->program_id }}">{{ $session->start_time->format('l, g:i A') }}</option>
             @endforeach
@@ -75,7 +75,7 @@
         if (e.target.value !== "test") {
             document.getElementById("session").disabled = false;
             document.querySelectorAll("select#session > option").forEach(function(o) {
-                o.hidden = o.dataset['program'] != e.target.value;
+                o.hidden = o.dataset['program'] != e.target.value && o.dataset['enabled'] != "true";
             });
         } // else it's the "Choose Unit"
     });
