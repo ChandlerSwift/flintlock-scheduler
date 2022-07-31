@@ -18,7 +18,7 @@ class CreateChangeRequestsTable extends Migration
             $table->timestamps();
             $table->foreignId('scout_id')->constrained()->onDelete('cascade');
             $table->foreignId('program_id')->constrained()->onDelete('cascade');
-            $table->foreignId('session_id')->constrained()->onDelete('cascade');
+            $table->foreignId('session_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('action');
             $table->string('status');
             $table->string('notes')->nullable();
