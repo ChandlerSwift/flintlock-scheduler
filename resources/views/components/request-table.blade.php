@@ -42,7 +42,13 @@
         </td>
         <td>{{ $changeRequest->action }}</td>
         <td>{{ $changeRequest->notes }}</td>
-        <td style="text-align: center;">{!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;"><abbr title="missing ' . implode(', ', $changeRequest->scout->missingReqsFor($changeRequest->program)->pluck('name')->all()) . '">&#10007;</abbr></span>' !!}</td>
+        <td style="text-align: center;">
+            @if($changeRequest->action == "Add")
+            {!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;"><abbr title="missing ' . implode(', ', $changeRequest->scout->missingReqsFor($changeRequest->program)->pluck('name')->all()) . '">&#10007;</abbr></span>' !!}
+            @else
+            &ndash;
+            @endif
+        </td>
         <td>
             <div class="btn-group">
                 @if(Auth::user()->admin && ($changeRequest->status == "pending" || $changeRequest->status == "waitlist"))
