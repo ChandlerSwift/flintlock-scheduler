@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Scout;
 use App\Models\Session;
+use App\Models\Week;
 use Illuminate\Http\Request;
 
 class ScoutController extends Controller
@@ -91,18 +92,18 @@ class ScoutController extends Controller
         //
     }
 
-    public function search(Request $request){
+    public function search(Request $request, Week $week){
         // Get the search value from the request
         $search = $request->input('search');
-    
+
         // Search in the title and body columns from the posts table
-        $searchResults = Scout::query()
+        $searchResults = Scout::where('week_id', $week->id)
             ->where('first_name', 'LIKE', "%{$search}%")
             ->orWhere('last_name', 'LIKE', "%{$search}%")
             ->orWhere('unit', 'LIKE', "%{$search}%")
             ->orWhere('site', 'LIKE', "%{$search}%")
             ->get();
-    
+
         // Return the search view with the resluts compacted
         return view('search', compact('searchResults'));
     }
