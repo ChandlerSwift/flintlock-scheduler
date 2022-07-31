@@ -19,7 +19,7 @@ class ProgramSeeder extends Seeder
         DB::table('programs')->insert([
             [
                 'name' => 'Huck Finn Overnight',
-                'max_participants' => 8,
+                'max_participants' => 16,
                 'min_scout_age' => 13,
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now()
@@ -31,7 +31,7 @@ class ProgramSeeder extends Seeder
                 'updated_at'    => Carbon::now()
             ],  [
                 'name' => 'Fishing Outpost Overnight',
-                'max_participants' => 10,
+                'max_participants' => 8,
                 'min_scout_age' => 13,
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now()
@@ -49,7 +49,7 @@ class ProgramSeeder extends Seeder
                 'updated_at'    => Carbon::now()
             ], */ [
                 'name' => 'Five Stand',
-                'max_participants' => 6,
+                'max_participants' => 10,
                 'min_scout_age' => 13,
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now()
