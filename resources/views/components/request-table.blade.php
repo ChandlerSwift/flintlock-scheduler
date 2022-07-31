@@ -24,7 +24,7 @@
         @endif
         <td><a href="/scouts/{{ $changeRequest->scout->id}}">{{ $changeRequest->scout->first_name }} {{ $changeRequest->scout->last_name }}</a></td>
         <td>{{ $changeRequest->scout->age }}</td>
-        <td><a href="/units/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }} ({{ $changeRequest->scout->subcampAbbr }})</a></td>
+        <td><a href="/units/{{$changeRequest->scout->council}}/{{$changeRequest->scout->unit}}">{{ $changeRequest->scout->unit }} ({{ $changeRequest->scout->subcampAbbr }})</a></td>
         <td>{{ $changeRequest->program->name }}</td>
         <td>
             @if($changeRequest->session != null)

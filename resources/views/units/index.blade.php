@@ -2,7 +2,7 @@
 @section('content')
 <div class="list">
 @foreach($units as $unit)
-<a href="/units/{{$unit}}">Unit {{ $unit }}</a><br>
+<a href="/units/{{$unit->council}}/{{$unit->unit}}">Unit {{ $unit->unit }}</a><br>
 @endforeach
 </div>
 @endsection

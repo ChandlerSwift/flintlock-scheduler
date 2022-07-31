@@ -7,6 +7,7 @@
             <tr>
                 <th>Scout</th>
                 <th>Unit</th>
+                <th>Council</th>
                 <th>Site</th>
                 <th>Subcamp</th>
                 
@@ -14,10 +15,10 @@
             @foreach ($searchResults as $scout)
             <tr>
                 <td><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a></td>
-                <td><a href="/units/{{$scout->unit}}"> {{ $scout->unit }}</td>
+                <td><a href="/units/{{$scout->council}}/{{$scout->unit}}">{{ $scout->unit }}</td>
+                <td>{{ $scout->council }}</td>
                 <td>{{ $scout->site }}</td>
                 <td>{{ $scout->subcamp }}</td>
-                
             </tr>
             @endforeach
         </table>

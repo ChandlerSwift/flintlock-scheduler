@@ -25,7 +25,7 @@
             @foreach($session->scouts->sortBy('unit') as $scout)
                 <tr>
                     <td><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>@if(!$scout->meetsReqsFor($session->program)) <abbr style="color:red;" title="{{ implode(', ', $scout->missingReqsFor($session->program)->pluck('name')->all()) }}">(reqs)</abbr>@endif</td>
-                    <td><a href="/units/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
+                    <td><a href="/units/{{$scout->council}}/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
                     <td>{{ $scout->gender }}</td>
                     <td>{{ $scout->age }}</td>
                     <td>{{ $scout->subcamp }}</td>
@@ -45,7 +45,7 @@
                 @foreach($session->scouts->sortBy('unit') as $scout)
                     <tr>
                         <td><a href="/scouts/{{$scout->id}}">{{ $scout->first_name }} {{ $scout->last_name }}</a>@if(!$scout->meetsReqsFor($session->program)) <abbr style="color:red;" title="{{ implode(', ', $scout->missingReqsFor($session->program)->pluck('name')->all()) }}">(reqs)</abbr>@endif</td>
-                        <td><a href="/units/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
+                        <td><a href="/units/{{$scout->council}}/{{$scout->unit}}"> {{ $scout->unit }}</a></td>
                         <td>{{ $scout->gender }}</td>
                         <td>{{ $scout->age }}</td>
                         <td>{{ $scout->subcamp }}</td>

@@ -64,11 +64,12 @@ Route::middleware(['auth', 'week'])->group(function(){
     Route::resource('requests', ChangeRequestController::class);
 
     Route::get('units', function() {
-        return view('units.index')->with('units', DB::table('scouts')->select('unit')->distinct()->get()->pluck('unit'));
+        return view('units.index')->with('units', DB::table('scouts')->select('unit', 'council')->distinct()->get());
     });
 
-    Route::get('units/{id}', function($id) {
-        return view('units.show')->with('unit', $id)->with('scouts', \App\Models\Scout::where('unit', $id)->get());
+    Route::get('units/{council}/{id}', function($council, $unit) {
+        $scouts = \App\Models\Scout::where('unit', $unit)->where('council', $council)->get();
+        return view('units.show')->with(compact(['council', 'unit', 'scouts']));
     });
     Route::get('print/units', [PrintController::class, 'units']);
     Route::get('print/rosters', [PrintController::class, 'chooseRosters']);
