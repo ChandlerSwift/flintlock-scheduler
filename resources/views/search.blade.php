@@ -3,7 +3,7 @@
 <div class="search">
     <h1>Search Results:</h1>
     @if($searchResults->isNotEmpty())
-        <table>
+        <table class="table">
             <tr>
                 <th>Scout</th>
                 <th>Unit</th>
