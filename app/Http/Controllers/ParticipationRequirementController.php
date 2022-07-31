@@ -84,15 +84,15 @@ class ParticipationRequirementController extends Controller
         );
     }
 
-    public function required(Request $request, string $subcamp, Week $week) {
+    public function required(Request $request, string $subcamp, $week) {
         return view('participation_requirements.required')
-            ->with('scouts', $week->scouts()->where('subcamp', $subcamp)->get())
+            ->with('scouts', Week::find($week)->scouts()->where('subcamp', $subcamp)->get())
             ->with('reqs', ParticipationRequirement::all())
             ->with(compact('subcamp'));
     }
 
-    public function updateSubcamp(Request $request, string $subcamp, Week $week) {
-        foreach ($week->scouts()->where('subcamp', $subcamp)->get() as $scout) {
+    public function updateSubcamp(Request $request, string $subcamp, $week) {
+        foreach (Week::find($week)->scouts()->where('subcamp', $subcamp)->get() as $scout) {
             $scout->participationRequirements()->detach();
         }
         foreach ($request->except(['_token']) as $input => $no) { // shouldn't excluding _token be automatic?

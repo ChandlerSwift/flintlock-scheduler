@@ -163,7 +163,8 @@ class AdminController extends Controller
         );
     }
 
-    public function plan_week(Request $request, Week $week) {
+    public function plan_week(Request $request, $week) {
+        $week = Week::find($week);
         $scouts = $week->scouts()->orderByDesc('age', 'rank')->get();
         $still_filling = true;
         echo "Adding scouts to session...";
@@ -191,7 +192,8 @@ class AdminController extends Controller
     /**
      *  Place a scout into the highest choice program that works out
      */
-    private function put_scout_in_session(Scout $scout, Week $week) {
+    private function put_scout_in_session(Scout $scout, $week) {
+        $week = Week::find($week);
         $scoutAssignedToSession = false;
         foreach($scout->preferences as $preference){
 
