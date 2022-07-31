@@ -9,15 +9,6 @@ Admin: Week Management
 <p>This only includes scouts for week "{{ \App\Models\Week::find(request()->cookie('week_id'))->name }}".</p>
 <h4>Add new scout</h4>
 
-<!-- $table->string('first_name');
-$table->string('last_name');
-$table->integer('rank')->default(0);
-$table->integer('age')->default(10);
-$table->string('gender');
-$table->string('unit');
-$table->string('site');
-$table->string('subcamp'); -->
-
 <form class="mb-5 row row-cols-lg-auto g-3 align-items-center" action="/admin/scouts" method="POST">
     @csrf
     <input type="hidden" name="week_id" value="{{ request()->cookie('week_id') }}">
@@ -49,6 +40,9 @@ $table->string('subcamp'); -->
         <input name="unit" type="text" class="form-control" placeholder="Unit">
     </div>
     <div class="col-12">
+        <input name="council" type="text" class="form-control" placeholder="Council">
+    </div>
+    <div class="col-12">
         <input name="site" type="text" class="form-control" placeholder="Site">
     </div>
     <div class="col-12">
@@ -72,6 +66,7 @@ $table->string('subcamp'); -->
             <th>Age</th>
             <th>Gender</th>
             <th>Unit</th>
+            <th>Council</th>
             <th>Site</th>
             <th>Subcamp</th>
             <th>Actions</th>
@@ -86,6 +81,7 @@ $table->string('subcamp'); -->
             <td>{{ $scout->age }}</td>
             <td>{{ $scout->gender }}</td>
             <td>{{ $scout->unit }}</td>
+            <td>{{ $scout->council }}</td>
             <td>{{ $scout->site }}</td>
             <td>{{ $scout->subcamp }}</td>
             <td>
