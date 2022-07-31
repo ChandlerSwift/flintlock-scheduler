@@ -69,15 +69,16 @@ Admin: Week Management
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <strong>Warning!</strong>
                     There are already scouts in this week. If any scout being
-                    imported has the same first/last name and troop, their
-                    import will just be skipped.
+                    imported has the same first/last name and troop/council,
+                    their import will just be skipped. This expects the CSV from
+                    Black Pug.
                 </div>
                 @endif
                 <form action="/admin/import_data" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="week_id" value="{{ $week->id }}">
                     <div class="mb-3">
-                        <input class="form-control" type="file" name="spreadsheet" required>
+                        <input class="form-control" type="file" name="csv[]" required multiple>
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Import</button>
@@ -98,7 +99,7 @@ Admin: Week Management
                     @csrf
                     <input type="hidden" name="week_id" value="{{ $week->id }}">
                     <div class="mb-3">
-                        <input class="form-control" type="file" name="csv" required>
+                        <input class="form-control" type="file" name="csv[]" required multiple>
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Import</button>
