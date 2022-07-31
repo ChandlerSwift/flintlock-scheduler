@@ -32,7 +32,7 @@
             @elseif(Auth::user()->admin)
             <select name="session" required form="approveRequest{{ $changeRequest->id }}form">
                 <option selected disabled hidden>Choose Session</option>
-                @foreach($changeRequest->program->sessions as $session)
+                @foreach($changeRequest->program->sessions()->where('week_id', request()->cookie('week_id')) as $session)
                 <option value="{{ $session->id }}">{{ $session->start_time->format('l, g:i A') }}</option>
                 @endforeach
             </select>
