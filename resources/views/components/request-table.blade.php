@@ -43,10 +43,10 @@
         <td>{{ $changeRequest->action }}</td>
         <td>{{ $changeRequest->notes }}</td>
         <td style="text-align: center;">
-            @if($changeRequest->action == "Add")
-            {!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;"><abbr title="missing ' . implode(', ', $changeRequest->scout->missingReqsFor($changeRequest->program)->pluck('name')->all()) . '">&#10007;</abbr></span>' !!}
-            @else
+            @if($changeRequest->action == "Drop")
             &ndash;
+            @else
+            {!! $changeRequest->scout->meetsReqsFor($changeRequest->program) ? '<span style="color:green;">&check;</span>' : '<span style="color:red;"><abbr title="missing ' . implode(', ', $changeRequest->scout->missingReqsFor($changeRequest->program)->pluck('name')->all()) . '">&#10007;</abbr></span>' !!}
             @endif
         </td>
         <td>

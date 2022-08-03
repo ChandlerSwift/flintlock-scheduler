@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChangeRequest;
+use App\Models\Program;
 use App\Models\Scout;
 use App\Models\Week;
 use Illuminate\Http\Request;
@@ -54,6 +55,10 @@ class ChangeRequestController extends Controller
         if ($request['addDrop'] == "drop" && !$scout->sessions->pluck('id')->contains($request['session'])) {
             return back()->with('message',
                 ["type" => "danger", "body" => "Scout \"" . $scout->first_name . ' ' . $scout->last_name . "\" not in that session."]
+            );
+        } elseif ($request['addDrop'] == "Swap" && !$scout->sessions->pluck('program_id')->contains($request['program_id'])) {
+            return back()->with('message',
+                ["type" => "danger", "body" => "Scout \"" . $scout->first_name . ' ' . $scout->last_name . "\" not in another session of " . Program::find($request['program_id'])->name . "."]
             );
         }
         $cr = new ChangeRequest;
@@ -145,7 +150,7 @@ class ChangeRequestController extends Controller
         return back();
     }
 
-    public function confirmRequest($id){
+    public function confirmRequest($id, Week $week){
         $changeRequest = ChangeRequest::where('id', $id)->first();
         if (Auth::user()->name != $changeRequest->scout->subcamp) {
             return abort(403);
@@ -153,11 +158,15 @@ class ChangeRequestController extends Controller
         $changeRequest->status = "confirmed";
         $changeRequest->save();
 
-        if($changeRequest->action == 'Drop')
+        if($changeRequest->action == 'Drop') {
             $this->dropRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
-        elseif($changeRequest->action == 'Add')
+        } elseif($changeRequest->action == 'Add') {
             $this->addRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
-        
+        } elseif($changeRequest->action == 'Swap') {
+            $otherSessions = $week->sessions()->where('program_id', $changeRequest->program_id)->pluck('id');
+            $changeRequest->scout->sessions()->detach($otherSessions);
+            $this->addRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
+        }
         return back();
     }
 

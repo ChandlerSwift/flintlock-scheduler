@@ -6,9 +6,10 @@
     @csrf
     <div class="col-12">
         <select class="form-select" name="addDrop">
-            <option value="addDrop" selected disabled hidden>Add or Drop</option>
+            <option value="" selected disabled hidden>Action</option>
             <option value="Add">Add</option>
             <option value="Drop">Drop</option>
+            <option value="Swap">Swap</option>
         </select>
     </div>
 
