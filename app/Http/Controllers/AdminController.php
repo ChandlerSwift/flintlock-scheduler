@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChangeRequest;
 use Illuminate\Http\Request;
 use App\Models\Scout;
 use App\Models\Preference;
@@ -253,13 +254,13 @@ class AdminController extends Controller
         //confirmation message
     }
 
-    public function getStats(Request $request) {
-        $p = Preference::all();
+    public function getStats() {
         return view('stats')
-            ->with('subcamps', $p->groupBy(function($item, $key) {
-                return $item->scout->subcamp;
+            ->with('programs', Program::all()->filter(function($program, $index) {
+                return $program->sessions()->where('every_day', false)->count() > 0;
             }))
-            ;
+            ->with('preferences', Preference::all())
+            ->with('changeRequests', ChangeRequest::all());
     }
 
     public function assign_sites() {

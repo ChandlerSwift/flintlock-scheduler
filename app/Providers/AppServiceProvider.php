@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
             $this_week = \App\Models\Week::orderBy('start_date', 'asc')
                 ->where('start_date', '>', Carbon::now()->subWeek())->first();
             
-            $view->with('weeks', \App\Models\Week::all())
+            $view->with('weeks', \App\Models\Week::orderBy('start_date', 'asc')->get())
                 ->with('this_week', $this_week);
         });
 
