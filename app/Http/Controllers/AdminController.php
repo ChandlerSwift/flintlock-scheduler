@@ -260,7 +260,8 @@ class AdminController extends Controller
                 return $program->sessions()->where('every_day', false)->count() > 0;
             }))
             ->with('preferences', Preference::all())
-            ->with('changeRequests', ChangeRequest::all());
+            ->with('changeRequests', ChangeRequest::all())
+            ->with('sessions', Session::all());
     }
 
     public function assign_sites() {
