@@ -5,9 +5,7 @@ namespace Database\Seeders;
 use App\Models\DefaultSession;
 use Illuminate\Database\Seeder;
 use App\Models\Program;
-use App\Models\Session;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class DefaultSessionSeeder extends Seeder
 {
@@ -30,9 +28,9 @@ class DefaultSessionSeeder extends Seeder
                     $session->save();
                 }
             } elseif (in_array($program->name, ['Fishing Outpost Overnight'])) {
-                foreach ([1, 2, 3, 4, 5] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
+                foreach ([1, 2, 3, 4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs
                     $session = new DefaultSession();
-                    $session->start_seconds = $dayOfWeek * 86400 + 13 * 3600;
+                    $session->start_seconds = $dayOfWeek * 86400 + 15.5 * 3600;
                     $session->end_seconds = $dayOfWeek * 86400 + 21.5 * 3600;
                     $session->program_id = $program->id;
                     $session->save();
@@ -46,7 +44,7 @@ class DefaultSessionSeeder extends Seeder
                     $session->save();
                 }
             } elseif (in_array($program->name, ['Five Stand', 'Waterski'])) {
-                foreach ([1, 2, 3, 4, 5] as $dayOfWeek) { // Mon, Tues, Wed, Thurs, Fri
+                foreach ([1, 2, 3, 4] as $dayOfWeek) { // Mon, Tues, Wed, Thurs
                     $session = new DefaultSession();
                     $session->start_seconds = $dayOfWeek * 86400 + 19 * 3600;
                     $session->end_seconds = $dayOfWeek * 86400 + 21 * 3600;
