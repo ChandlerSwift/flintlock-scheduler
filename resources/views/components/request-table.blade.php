@@ -33,7 +33,7 @@
             <select name="session" required form="approveRequest{{ $changeRequest->id }}form">
                 <option selected disabled hidden>Choose Session</option>
                 @foreach($changeRequest->program->sessions()->where('week_id', request()->cookie('week_id'))->get()  as $session)
-                <option value="{{ $session->id }}">{{ $session->start_time->format('l, g:i A') }}</option>
+                <option value="{{ $session->id }}">{{ $session->start_time->format('l, g:i A') }} ({{ $session->scouts->count() }}/{{ $session->program->max_participants }})</option>
                 @endforeach
             </select>
             @else
