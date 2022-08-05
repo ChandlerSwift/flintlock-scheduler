@@ -28,7 +28,7 @@ class AdminController extends Controller
                 throw new \Exception("Unable to open file");
             }
             $headers = fgetcsv($handle);
-    
+
             $row = 1;
             while (($data = fgetcsv($handle, null, ",")) !== FALSE) {
                 // Create a dict; that's easier to work with than having to do an
@@ -55,26 +55,35 @@ class AdminController extends Controller
                     $scout->week_id = $request->week_id;
                     $scout->first_name = $record['First Name'];
                     $scout->last_name = $record['Last Name'];
-                    $ranks = ['Scout', 'Tenderfoot', 'Second Class', 'First Class', 'Star', 'Life', 'Eagle'];
-                    $rank = array_search($record['Scouting Rank'], $ranks);
-                    if ($rank === false) { // comparing strictly, as opposed to the falsy rank Scout (0)
+
+                    if (array_key_exists('Scouting Rank', $record)) { // Apparently All Star doesn't have this?
+                        $ranks = ['Scout', 'Tenderfoot', 'Second Class', 'First Class', 'Star', 'Life', 'Eagle'];
+                        $rank = array_search($record['Scouting Rank'], $ranks);
+                        if ($rank === false) { // comparing strictly, as opposed to the falsy rank Scout (0)
+                            $rank = 0;
+                            Log::info("Unknown rank for scout " . $record['First Name'] . ' ' . $record['Last Name'] . ", unit " . $record['Unit Number'] . " (setting to Scout)");
+                        }
+                    } else {
+                        Log::warning("No 'Scouting Rank' column in input data; setting to Scout");
                         $rank = 0;
-                        Log::info("Unknown rank for scout " . $record['First Name'] . ' ' . $record['Last Name'] . ", unit " . $record['Unit Number'] . " (setting to Scout)");
                     }
+                    $scout->rank = $rank;
+
                     $scout->age = $record['Age'] ?: 10;
                     $scout->council = $record['Council'];
-                    $scout->unit = $record['Unit Number'];
                     $scout->gender = $record['Gender'];
-                    $scout->site = "UNKNOWN";
-                    $scout->subcamp = explode(": ", $record['Title'])[1];
-                    if ($scout->subcamp == "All Star") {
+                    if (str_ends_with($record['Title'], "All Star")) {
                         $scout->subcamp = "Buckskin";
                         $scout->unit = "1910";
                         $scout->site = "All Star";
+                    } else {
+                        $scout->subcamp = explode(": ", $record['Title'])[1];
+                        $scout->unit = $record['Unit Number'];
+                        $scout->site = "UNKNOWN";
                     }
                     $scout->save();
                     $scouts_added++;
-    
+
                     for ($i = 1; $i <= 4; $i++) {
                         $program = Program::where('name', $record["Flintlock Tier 1, Preference $i"])->first();
                         if (!$program) {
