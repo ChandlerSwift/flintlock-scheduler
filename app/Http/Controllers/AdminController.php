@@ -38,9 +38,9 @@ class AdminController extends Controller
                     $record[$headers[$i]] = $data[$i];
                 }
                 try {
-                    if ($record['Subtitle'] != $week->name) {
-                        throw new \Exception("Trying to add scout from " . $record['Subtitle'] . ' to week ' . $week->name);
-                    }
+                    // if ($record['Subtitle'] != $week->name ) {
+                    //     throw new \Exception("Trying to add scout from " . $record['Subtitle'] . ' to week ' . $week->name);
+                    // }
                     $pre_existing_scout = Scout::where('first_name', $record['First Name'])
                         ->where('last_name', $record['Last Name'])
                         ->where('unit', $record['Unit Number'])
@@ -67,10 +67,11 @@ class AdminController extends Controller
                     $scout->gender = $record['Gender'];
                     $scout->site = "UNKNOWN";
                     $scout->subcamp = explode(": ", $record['Title'])[1];
-                    // if ($row['A'] != null)
-                    //     $scout->subcamp = $row['A'];
-                    // if ($row['J'] != null)
-                    //     $scout->site = $row['J'];
+                    if ($scout->subcamp == "All Star") {
+                        $scout->subcamp = "Buckskin";
+                        $scout->unit = "1910";
+                        $scout->site = "All Star";
+                    }
                     $scout->save();
                     $scouts_added++;
     
