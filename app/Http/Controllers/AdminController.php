@@ -174,7 +174,7 @@ class AdminController extends Controller
         );
     }
 
-    public function plan_week(Request $request, $week) {
+    public function plan_week($week) {
         $week = Week::find($week);
         $scouts = $week->scouts()->orderByDesc('age', 'rank')->get();
         $still_filling = true;
@@ -194,7 +194,7 @@ class AdminController extends Controller
         return back()->with('message',
             [
                 "type" => "success",
-                "body" => "Planning for week " . $request->week->name . " was successful " .
+                "body" => "Planning for week " . $week->name . " was successful " .
                     "(satisfied $satisfied_preference_count/$total_preference_count preferences).",
             ]
         );
