@@ -7,6 +7,7 @@ use App\Models\Session;
 use App\Models\Week;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PrintController extends Controller
 {
@@ -54,9 +55,13 @@ class PrintController extends Controller
             ],
         ];
         $week = Week::find($request->cookie('week_id'));
+        if (Auth::user()->admin) {
+            $scouts = $week->scouts;
+        } else {
+            $scouts = $week->scouts()->where('subcamp', Auth::user()->name)->get();
+        }
         return view('print.units')
             ->with('units', $week->units())
-            ->with('scouts', $week->scouts)
-            ->with(compact('bus_times'));
+            ->with(compact(['scouts', 'bus_times']));
     }
 }
