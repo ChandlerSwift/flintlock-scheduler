@@ -98,11 +98,12 @@ class ScoutController extends Controller
 
         // Search in the title and body columns from the posts table
         $searchResults = Scout::where('week_id', $week->id)
-            ->where('first_name', 'LIKE', "%{$search}%")
-            ->orWhere('last_name', 'LIKE', "%{$search}%")
-            ->orWhere('unit', 'LIKE', "%{$search}%")
-            ->orWhere('site', 'LIKE', "%{$search}%")
-            ->get();
+            ->where(function($query) use ($search) {
+                $query->where('first_name', 'LIKE', "%{$search}%")
+                    ->orWhere('last_name', 'LIKE', "%{$search}%")
+                    ->orWhere('unit', 'LIKE', "%{$search}%")
+                    ->orWhere('site', 'LIKE', "%{$search}%");
+            })->get();
 
         // Return the search view with the resluts compacted
         return view('search', compact('searchResults'));
