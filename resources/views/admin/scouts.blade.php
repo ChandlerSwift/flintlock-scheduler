@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('title')
-Admin: Week Management
+Admin: Scout Management
 @endsection
 
 @section('content')
