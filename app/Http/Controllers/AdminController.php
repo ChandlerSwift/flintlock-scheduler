@@ -71,7 +71,7 @@ class AdminController extends Controller
 
                     $scout->age = $record['Age'] ?: 10;
                     $scout->council = $record['Council'];
-                    $scout->gender = $record['Gender'];
+                    $scout->gender = $record['BSA Registered Gender'];
                     if (str_ends_with($record['Title'], "All Star")) {
                         $scout->subcamp = "Buckskin";
                         $scout->unit = "1910";
@@ -85,9 +85,9 @@ class AdminController extends Controller
                     $scouts_added++;
 
                     for ($i = 1; $i <= 4; $i++) {
-                        $program = Program::where('name', $record["Flintlock Tier 1, Preference $i"])->first();
+                        $program = Program::where('name', $record["Flintlock Older Scout Tier 1 Preference $i"])->first();
                         if (!$program) {
-                            Log::warning("trying to find nonexistent program " . $record["Flintlock Tier 1, Preference $i"]);
+                            Log::warning("trying to find nonexistent program " . $record["Flintlock Older Scout Tier 1 Preference $i"]);
                         } else {
                             $preference = new Preference;
                             $preference->program_id = $program->id;
