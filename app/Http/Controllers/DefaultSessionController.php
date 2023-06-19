@@ -45,6 +45,7 @@ class DefaultSessionController extends Controller
         $end_time = explode(':', $request->end_time);
         $session->start_seconds = 86400 * $request->start_day + 3600 * $start_time[0] + 60 * $start_time[1];
         $session->end_seconds = 86400 * $request->end_day + 3600 * $end_time[0] + 60 * $end_time[1];
+        $session->every_day = $request->every_day;
         $session->save();
         return back()->with('message',
             ["type" => "success", "body" => "Session saved successfully."]
