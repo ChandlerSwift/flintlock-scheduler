@@ -18,6 +18,7 @@
     <div class="col-12">
         <select class="form-select" name="start_day">
             <option selected disabled hidden>Choose start day</option>
+            <option value="0">Sunday</option>
             <option value="1">Monday</option>
             <option value="2">Tuesday</option>
             <option value="3">Wednesday</option>
@@ -31,6 +32,7 @@
     <div class="col-12">
         <select class="form-select" name="end_day">
             <option selected disabled hidden>Choose end day</option>
+            <option value="0">Sunday</option>
             <option value="1">Monday</option>
             <option value="2">Tuesday</option>
             <option value="3">Wednesday</option>
