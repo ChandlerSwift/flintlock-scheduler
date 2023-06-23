@@ -26,5 +26,5 @@ $u->save();
 ### Local development
 After cloning and running the composer install:
 ```sh
-docker run -it --mount type=bind,source=`pwd`,target=/app -p 8000:8000 php:8.1 sh -c "cd /app && php artisan serve --host=0.0.0.0"
+docker run -it --mount type=bind,source=`pwd`,target=/app -p 8000:8000 php:8.2 sh -c "cd /app && php artisan serve --host=0.0.0.0"
 ```
