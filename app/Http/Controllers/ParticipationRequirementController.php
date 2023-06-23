@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\ParticipationRequirement;
 use App\Models\Program;
 use App\Models\Scout;
 use App\Models\Week;
+use Illuminate\Http\Request;
 
 class ParticipationRequirementController extends Controller
 {
@@ -39,7 +39,6 @@ class ParticipationRequirementController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ParticipationRequirement  $participationRequirement
      * @return \Illuminate\Http\Response
      */
     public function show(ParticipationRequirement $participationRequirement)
@@ -50,7 +49,6 @@ class ParticipationRequirementController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ParticipationRequirement  $participationRequirement
      * @return \Illuminate\Http\Response
      */
     public function edit(ParticipationRequirement $participationRequirement)
@@ -62,7 +60,6 @@ class ParticipationRequirementController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateParticipationRequirementRequest  $request
-     * @param  \App\Models\ParticipationRequirement  $participationRequirement
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, ParticipationRequirement $participationRequirement)
@@ -73,25 +70,27 @@ class ParticipationRequirementController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ParticipationRequirement  $participationRequirement
      * @return \Illuminate\Http\Response
      */
     public function destroy(ParticipationRequirement $participationRequirement)
     {
         $participationRequirement->delete();
+
         return back()->with('message',
-            ["type" => "success", "body" => "Participation Requirement \"" . $participationRequirement->name . "\" was deleted."]
+            ['type' => 'success', 'body' => 'Participation Requirement "'.$participationRequirement->name.'" was deleted.']
         );
     }
 
-    public function required(Request $request, string $subcamp, Week $week) {
+    public function required(Request $request, string $subcamp, Week $week)
+    {
         return view('participation_requirements.required')
             ->with('scouts', $week->scouts()->where('subcamp', $subcamp)->get())
             ->with('reqs', ParticipationRequirement::all())
             ->with(compact('subcamp'));
     }
 
-    public function updateSubcamp(Request $request, string $subcamp, Week $week) {
+    public function updateSubcamp(Request $request, string $subcamp, Week $week)
+    {
         foreach ($week->scouts()->where('subcamp', $subcamp)->get() as $scout) {
             $scout->participationRequirements()->detach();
         }
@@ -99,10 +98,12 @@ class ParticipationRequirementController extends Controller
             $assoc = explode('-', $input);
             Scout::find($assoc[0])->participationRequirements()->attach($assoc[1]);
         }
+
         return back();
     }
 
-    public function updatePrograms(Request $request) {
+    public function updatePrograms(Request $request)
+    {
         foreach (Program::all() as $program) {
             $program->participationRequirements()->detach();
         }
@@ -110,6 +111,7 @@ class ParticipationRequirementController extends Controller
             $assoc = explode('-', $input);
             Program::find($assoc[0])->participationRequirements()->attach($assoc[1]);
         }
+
         return back();
     }
 }

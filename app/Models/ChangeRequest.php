@@ -9,15 +9,18 @@ class ChangeRequest extends Model
 {
     use HasFactory;
 
-    public function scout() {
+    public function scout()
+    {
         return $this->belongsTo(Scout::class);
     }
 
-    public function program() {
+    public function program()
+    {
         return $this->belongsTo(Program::class);
     }
 
-    public function session() {
+    public function session()
+    {
         return $this->belongsTo(Session::class);
     }
 }

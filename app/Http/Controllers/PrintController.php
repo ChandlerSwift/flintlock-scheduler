@@ -11,22 +11,28 @@ use Illuminate\Support\Facades\Auth;
 
 class PrintController extends Controller
 {
-    public function chooseRosters(Request $request) {
+    public function chooseRosters(Request $request)
+    {
         $week = Week::find($request->cookie('week_id'));
+
         return view('print.select_roster_time')
             ->with('start_times', $week->sessions()->select('start_time')->distinct()->orderBy('start_time')->get()->pluck('start_time'));
     }
 
-    public function rosters(Request $request) {
+    public function rosters(Request $request)
+    {
         $start_times = [];
-        foreach($request->input('start_times') as $start_time) {
+        foreach ($request->input('start_times') as $start_time) {
             array_push($start_times, Carbon::createFromTimestamp($start_time));
         }
+
         return view('print.rosters')
             ->with('sessions', Session::whereIn('start_time', $start_times)->get())
             ->with('scouts', Scout::all());
     }
-    public function units(Request $request) {
+
+    public function units(Request $request)
+    {
         $bus_times = [
             '09:00' => [
                 'Buckskin' => '8:30 AM',
@@ -60,6 +66,7 @@ class PrintController extends Controller
         } else {
             $scouts = $week->scouts()->where('subcamp', Auth::user()->name)->get();
         }
+
         return view('print.units')
             ->with('units', $week->units())
             ->with(compact(['scouts', 'bus_times']));

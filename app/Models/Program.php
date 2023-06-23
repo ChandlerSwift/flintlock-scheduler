@@ -11,15 +11,18 @@ class Program extends Model
 
     protected $guarded = [];
 
-    public function sessions() {
+    public function sessions()
+    {
         return $this->hasMany(Session::class);
     }
 
-    public function preference() {
+    public function preference()
+    {
         return $this->hasMany(Preference::class);
     }
 
-    public function changeRequests() {
+    public function changeRequests()
+    {
         return $this->hasMany(ChangeRequest::class);
     }
 
@@ -28,7 +31,8 @@ class Program extends Model
         return $this->belongsToMany(ParticipationRequirement::class);
     }
 
-    public function defaultSessions() {
+    public function defaultSessions()
+    {
         return $this->hasMany(DefaultSession::class);
     }
 }

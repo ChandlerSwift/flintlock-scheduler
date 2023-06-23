@@ -7,12 +7,7 @@ use App\Models\Program;
 use App\Models\Scout;
 use App\Models\Week;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
-
 
 class ChangeRequestController extends Controller
 {
@@ -24,10 +19,11 @@ class ChangeRequestController extends Controller
     public function index()
     {
         $selected_week = Week::find(request()->cookie('week_id'));
+
         return view('requests')
             ->with('units', $selected_week->units())
             ->with('scouts', $selected_week->scouts)
-            ->with('programs', \App\Models\Program::all()->filter(function($program, $index) use ($selected_week){
+            ->with('programs', \App\Models\Program::all()->filter(function ($program, $index) use ($selected_week) {
                 return $program->sessions()->where('week_id', $selected_week->id)->where('every_day', false)->count() > 0;
             }))
             ->with('sessions', $selected_week->sessions()->where('every_day', false)->get())
@@ -46,19 +42,18 @@ class ChangeRequestController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $scout = Scout::find($request['Scout']);
-        if ($request['addDrop'] == "drop" && !$scout->sessions->pluck('id')->contains($request['session'])) {
+        if ($request['addDrop'] == 'drop' && ! $scout->sessions->pluck('id')->contains($request['session'])) {
             return back()->with('message',
-                ["type" => "danger", "body" => "Scout \"" . $scout->first_name . ' ' . $scout->last_name . "\" not in that session."]
+                ['type' => 'danger', 'body' => 'Scout "'.$scout->first_name.' '.$scout->last_name.'" not in that session.']
             );
-        } elseif ($request['addDrop'] == "Swap" && !$scout->sessions->pluck('program_id')->contains($request['program_id'])) {
+        } elseif ($request['addDrop'] == 'Swap' && ! $scout->sessions->pluck('program_id')->contains($request['program_id'])) {
             return back()->with('message',
-                ["type" => "danger", "body" => "Scout \"" . $scout->first_name . ' ' . $scout->last_name . "\" not in another session of " . Program::find($request['program_id'])->name . "."]
+                ['type' => 'danger', 'body' => 'Scout "'.$scout->first_name.' '.$scout->last_name.'" not in another session of '.Program::find($request['program_id'])->name.'.']
             );
         }
         $cr = new ChangeRequest;
@@ -66,18 +61,18 @@ class ChangeRequestController extends Controller
         $cr->scout_id = $request['Scout'];
         $cr->program_id = $request['program_id'];
         $cr->notes = $request['notes'];
-        $cr->status = "pending";
+        $cr->status = 'pending';
         $cr->session_id = $request['session'];
         $cr->save();
 
         $request->session()->flash('status', 'Request submitted!');
+
         return back();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ChangeRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function show(ChangeRequest $request)
@@ -88,7 +83,6 @@ class ChangeRequestController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ChangeRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function edit(ChangeRequest $request)
@@ -99,8 +93,6 @@ class ChangeRequestController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ChangeRequest  $changerequest
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, ChangeRequest $changerequest)
@@ -111,20 +103,22 @@ class ChangeRequestController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ChangeRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function destroy(ChangeRequest $request)
     {
         $request->delete();
+
         return back();
     }
 
-    public function approveRequest(Request $request, ChangeRequest $changeRequest){
-        $changeRequest->status = "approved";
+    public function approveRequest(Request $request, ChangeRequest $changeRequest)
+    {
+        $changeRequest->status = 'approved';
         if ($changeRequest->session == null) {
-            if ($request['session'] == "") {
+            if ($request['session'] == '') {
                 $request->session()->flash('status', 'You must select a session!');
+
                 return back();
             }
             $changeRequest->notes .= "\n\nFlexible on session";
@@ -135,53 +129,58 @@ class ChangeRequestController extends Controller
         return back();
     }
 
-    public function unapproveRequest(Request $request, ChangeRequest $changeRequest) {
-        $changeRequest->status = "pending";
+    public function unapproveRequest(Request $request, ChangeRequest $changeRequest)
+    {
+        $changeRequest->status = 'pending';
         $changeRequest->save();
 
         return back();
     }
 
-    public function waitRequest($id){
+    public function waitRequest($id)
+    {
         $changeRequest = ChangeRequest::where('id', $id)->first();
-        $changeRequest->status = "waitlist";
+        $changeRequest->status = 'waitlist';
         $changeRequest->save();
 
         return back();
     }
 
-    public function confirmRequest($id, Week $week){
+    public function confirmRequest($id, Week $week)
+    {
         $changeRequest = ChangeRequest::where('id', $id)->first();
         if (Auth::user()->name != $changeRequest->scout->subcamp) {
             return abort(403);
         }
-        $changeRequest->status = "confirmed";
+        $changeRequest->status = 'confirmed';
         $changeRequest->save();
 
-        if($changeRequest->action == 'Drop') {
+        if ($changeRequest->action == 'Drop') {
             $this->dropRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
-        } elseif($changeRequest->action == 'Add') {
+        } elseif ($changeRequest->action == 'Add') {
             $this->addRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
-        } elseif($changeRequest->action == 'Swap') {
+        } elseif ($changeRequest->action == 'Swap') {
             $otherSessions = $week->sessions()->where('program_id', $changeRequest->program_id)->pluck('id');
             $changeRequest->scout->sessions()->detach($otherSessions);
             $this->addRequest($changeRequest, $changeRequest->scout, $changeRequest->session);
         }
+
         return back();
     }
 
-    public function dropRequest($changeRequest, $scout, $session){
+    public function dropRequest($changeRequest, $scout, $session)
+    {
         $session->scouts()->detach($scout->id);
         $scout->refresh(); // Invalidate the cache
-        $changeRequest->status = "archived";
-        $changeRequest->save();    
-    }
-
-    public function addRequest($changeRequest, $scout, $session) {
-        $session->scouts()->attach($scout->id);
-        $scout->refresh(); // Invalidate the cache
-        $changeRequest->status = "archived";
+        $changeRequest->status = 'archived';
         $changeRequest->save();
     }
 
+    public function addRequest($changeRequest, $scout, $session)
+    {
+        $session->scouts()->attach($scout->id);
+        $scout->refresh(); // Invalidate the cache
+        $changeRequest->status = 'archived';
+        $changeRequest->save();
+    }
 }

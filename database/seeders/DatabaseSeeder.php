@@ -19,6 +19,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             DefaultSessionSeeder::class,
         ]);
-        
+
     }
 }

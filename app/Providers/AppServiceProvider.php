@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Week;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use Carbon\Carbon;
-use App\Models\Week;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $this_week = \App\Models\Week::orderBy('start_date', 'asc')
                 ->where('start_date', '>', Carbon::now()->subWeek())->first();
-            
+
             $view->with('weeks', \App\Models\Week::orderBy('start_date', 'asc')->get())
                 ->with('this_week', $this_week);
         });

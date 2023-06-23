@@ -30,22 +30,21 @@ class ProgramController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $program = Program::create($request->all());
         $program->save();
+
         return back()->with('message',
-            ["type" => "success", "body" => "Program \"" . $program->name . "\" saved successfully."]
+            ['type' => 'success', 'body' => 'Program "'.$program->name.'" saved successfully.']
         );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
      */
     public function show(Program $program)
@@ -56,7 +55,6 @@ class ProgramController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
      */
     public function edit(Program $program)
@@ -67,8 +65,6 @@ class ProgramController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Program $program)
@@ -79,14 +75,14 @@ class ProgramController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
      */
     public function destroy(Program $program)
     {
         $program->delete();
+
         return back()->with('message',
-            ["type" => "success", "body" => "Program \"" . $program->name . "\" deleted successfully."]
+            ['type' => 'success', 'body' => 'Program "'.$program->name.'" deleted successfully.']
         );
     }
 }

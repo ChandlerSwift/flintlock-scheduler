@@ -3,13 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\DefaultSession;
-use Illuminate\Database\Seeder;
 use App\Models\Program;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class DefaultSessionSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *
@@ -51,7 +50,7 @@ class DefaultSessionSeeder extends Seeder
                     $session->program_id = $program->id;
                     $session->save();
                 }
-            } elseif(in_array($program->name, ['Mountain Bike Outpost', 'Older Scout Adventure Blast', 'Water Sports Outpost'])) {
+            } elseif (in_array($program->name, ['Mountain Bike Outpost', 'Older Scout Adventure Blast', 'Water Sports Outpost'])) {
                 $session = new DefaultSession();
                 $session->start_seconds = 9 * 3600;
                 $session->end_seconds = 11 * 3600;

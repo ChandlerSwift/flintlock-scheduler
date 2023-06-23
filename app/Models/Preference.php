@@ -9,15 +9,18 @@ class Preference extends Model
 {
     use HasFactory;
 
-    public function scout() {
+    public function scout()
+    {
         return $this->belongsTo(Scout::class);
     }
 
-    public function program() { 
+    public function program()
+    {
         return $this->belongsTo(Program::class);
     }
 
-    public function getSatisfiedAttribute() {
+    public function getSatisfiedAttribute()
+    {
         return $this->scout->sessions->where('program_id', $this->program->id)->count() > 0;
     }
 }

@@ -1,17 +1,17 @@
 <?php
-use Illuminate\Support\Facades\DB;
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ScoutController;
-use App\Http\Controllers\SessionController;
-use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ChangeRequestController;
 use App\Http\Controllers\DefaultSessionController;
 use App\Http\Controllers\ParticipationRequirementController;
 use App\Http\Controllers\PrintController;
+use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\ScoutController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WeekController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +51,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 Route::middleware(['auth'])->get('/weeks', [WeekController::class, 'select']);
 Route::middleware(['auth'])->get('/weeks/{id}', [WeekController::class, 'choose']);
 
-Route::middleware(['auth', 'week'])->group(function(){
+Route::middleware(['auth', 'week'])->group(function () {
 
     Route::get('/', function () {
         return view('master')->with('programs', \App\Models\Program::all());
@@ -63,22 +63,23 @@ Route::middleware(['auth', 'week'])->group(function(){
     Route::get('/all_programs', [ProgramController::class, 'showAll']);
     Route::resource('requests', ChangeRequestController::class);
 
-    Route::get('units', function() {
+    Route::get('units', function () {
         return view('units.index')->with('units', DB::table('scouts')->select('unit', 'council')->distinct()->get());
     });
 
-    Route::get('units/{council}/{id}', function($council, $unit) {
+    Route::get('units/{council}/{id}', function ($council, $unit) {
         $scouts = \App\Models\Scout::where('unit', $unit)->where('council', $council)->get();
+
         return view('units.show')->with(compact(['council', 'unit', 'scouts']));
     });
     Route::get('print/units', [PrintController::class, 'units']);
     Route::get('print/rosters', [PrintController::class, 'chooseRosters']);
     Route::post('print/rosters', [PrintController::class, 'rosters']);
-    Route::get('search', function() {
+    Route::get('search', function () {
         return view('search');
     });
 
-    Route::middleware(['admin'])->group(function(){
+    Route::middleware(['admin'])->group(function () {
         Route::post('requests/{changeRequest}/approve', [ChangeRequestController::class, 'approveRequest']);
         Route::post('requests/{changeRequest}/unapprove', [ChangeRequestController::class, 'unapproveRequest']);
     });

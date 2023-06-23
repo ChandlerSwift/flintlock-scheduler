@@ -10,16 +10,16 @@ class ParticipationRequirement extends Model
     use HasFactory;
 
     /**
-    * The scouts that satisfy this participation requirement.
-    */
+     * The scouts that satisfy this participation requirement.
+     */
     public function scouts()
     {
         return $this->belongsToMany(Scout::class);
     }
 
     /**
-    * The programs that require this participation requirement.
-    */
+     * The programs that require this participation requirement.
+     */
     public function programs()
     {
         return $this->belongsToMany(Program::class);

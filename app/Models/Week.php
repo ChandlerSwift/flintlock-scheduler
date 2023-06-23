@@ -17,23 +17,28 @@ class Week extends Model
 
     protected $guarded = [];
 
-    public function scouts() {
+    public function scouts()
+    {
         return $this->hasMany(Scout::class);
     }
 
-    public function sessions() {
+    public function sessions()
+    {
         return $this->hasMany(Session::class);
     }
 
-    public function changeRequests() {
+    public function changeRequests()
+    {
         return $this->hasManyThrough(ChangeRequest::class, Scout::class);
     }
 
-    public function preferences() {
+    public function preferences()
+    {
         return $this->hasManyThrough(Preference::class, Scout::class);
     }
 
-    public function units() {
+    public function units()
+    {
         return $this->scouts()->select('unit', 'council')->distinct()->get();
     }
 }

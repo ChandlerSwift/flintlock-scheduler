@@ -33,21 +33,20 @@ class ScoutController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $scout = Scout::create($request->all());
+
         return back()->with('message',
-            ["type" => "success", "body" => "Scout \"$scout->first_name $scout->last_name\" saved successfully."]
+            ['type' => 'success', 'body' => "Scout \"$scout->first_name $scout->last_name\" saved successfully."]
         );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Scout  $scout
      * @return \Illuminate\Http\Response
      */
     public function show(Scout $scout)
@@ -60,7 +59,6 @@ class ScoutController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Scout  $scout
      * @return \Illuminate\Http\Response
      */
     public function edit(Scout $scout)
@@ -71,20 +69,18 @@ class ScoutController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Scout  $scout
      * @return \Illuminate\Http\Response
      */
     public function updateReqs(Request $request, Scout $scout)
     {
         $scout->participationRequirements()->sync($request->pr);
+
         return back();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Scout  $scout
      * @return \Illuminate\Http\Response
      */
     public function destroy(Scout $scout)
@@ -92,13 +88,14 @@ class ScoutController extends Controller
         //
     }
 
-    public function search(Request $request, Week $week){
+    public function search(Request $request, Week $week)
+    {
         // Get the search value from the request
         $search = $request->input('search');
 
         // Search in the title and body columns from the posts table
         $searchResults = Scout::where('week_id', $week->id)
-            ->where(function($query) use ($search) {
+            ->where(function ($query) use ($search) {
                 $query->where('first_name', 'LIKE', "%{$search}%")
                     ->orWhere('last_name', 'LIKE', "%{$search}%")
                     ->orWhere('unit', 'LIKE', "%{$search}%")
@@ -109,17 +106,21 @@ class ScoutController extends Controller
         return view('search', compact('searchResults'));
     }
 
-    public function addSession(Request $request, Scout $scout) {
+    public function addSession(Request $request, Scout $scout)
+    {
         $scout->sessions()->attach($request->session_id);
+
         return back()->with('message',
-            ["type" => "success", "body" => "Session added successfully."]
+            ['type' => 'success', 'body' => 'Session added successfully.']
         );
     }
 
-    public function dropSession(Scout $scout, Session $session) {
+    public function dropSession(Scout $scout, Session $session)
+    {
         $scout->sessions()->detach($session->id);
+
         return back()->with('message',
-            ["type" => "success", "body" => "Session dropped successfully."]
+            ['type' => 'success', 'body' => 'Session dropped successfully.']
         );
     }
 }

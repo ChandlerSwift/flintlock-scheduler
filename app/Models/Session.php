@@ -22,37 +22,45 @@ class Session extends Model
         'end_time' => 'datetime',
     ];
 
-    public function scouts() {
+    public function scouts()
+    {
         return $this->belongsToMany(Scout::class);
     }
 
-    public function program() {
+    public function program()
+    {
         return $this->belongsTo(Program::class);
     }
 
-    public function getFullAttribute() {
+    public function getFullAttribute()
+    {
         return $this->scouts()->count() >= $this->program->max_participants;
     }
 
-    public function getRunningAttribute() { //$session->running
-        return $this->scouts()->count() > 0;
+    public function getRunningAttribute() //$session->running
+    {return $this->scouts()->count() > 0;
     }
-    public function changeRequests() {
+
+    public function changeRequests()
+    {
         return $this->hasMany(ChangeRequest::class);
     }
 
-    public function overlaps(Session $other) {
-        Log::debug("Checking for overlap...");
+    public function overlaps(Session $other)
+    {
+        Log::debug('Checking for overlap...');
         // equivalently: return ! ($this->end_time < $other->start_time || $this->start_time > $other->end_time);
         $overlaps = $this->end_time >= $other->start_time && $this->start_time <= $other->end_time;
 
         if ($overlaps) {
-            Log::debug("Overlap found!");
+            Log::debug('Overlap found!');
         }
+
         return $overlaps;
     }
 
-    public function week() {
+    public function week()
+    {
         return $this->belongsTo(Week::class);
     }
 }

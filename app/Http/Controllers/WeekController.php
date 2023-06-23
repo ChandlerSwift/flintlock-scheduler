@@ -13,6 +13,7 @@ class WeekController extends Controller
         if (Week::find($request->cookie('week_id'))) {
             return redirect('/');
         }
+
         return view('select_week')
             ->with('weeks', Week::all());
     }
@@ -46,14 +47,13 @@ class WeekController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $week = Week::create($request->all());
         $week->save();
-        foreach(DefaultSession::all() as $session_prototype) {
+        foreach (DefaultSession::all() as $session_prototype) {
             $session = new \App\Models\Session();
             $session->start_time = $week->start_date->addSeconds($session_prototype->start_seconds);
             $session->end_time = $week->start_date->addSeconds($session_prototype->end_seconds);
@@ -62,15 +62,15 @@ class WeekController extends Controller
             $session->week_id = $week->id;
             $session->save();
         }
+
         return back()->with('message',
-            ["type" => "success", "body" => "Week \"" . $week->name . "\" created successfully."]
+            ['type' => 'success', 'body' => 'Week "'.$week->name.'" created successfully.']
         );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Week  $week
      * @return \Illuminate\Http\Response
      */
     public function show(Week $week)
@@ -81,7 +81,6 @@ class WeekController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Week  $week
      * @return \Illuminate\Http\Response
      */
     public function edit(Week $week)
@@ -92,7 +91,6 @@ class WeekController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Week  $week
      * @return \Illuminate\Http\Response
      */
@@ -111,8 +109,9 @@ class WeekController extends Controller
     {
         $week = Week::find($week);
         $week->delete();
+
         return back()->with('message',
-            ["type" => "success", "body" => "Week \"" . $week->name . "\" was deleted."]
+            ['type' => 'success', 'body' => 'Week "'.$week->name.'" was deleted.']
         );
     }
 }

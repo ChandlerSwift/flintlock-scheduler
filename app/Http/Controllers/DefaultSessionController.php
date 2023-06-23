@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\DefaultSession;
 use App\Models\Program;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DefaultSessionController extends Controller
@@ -17,8 +16,8 @@ class DefaultSessionController extends Controller
     public function index()
     {
         return view('admin.sessions')
-        ->with('sessions', DefaultSession::all())
-        ->with('programs', Program::all());
+            ->with('sessions', DefaultSession::all())
+            ->with('programs', Program::all());
     }
 
     /**
@@ -34,7 +33,6 @@ class DefaultSessionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -47,15 +45,15 @@ class DefaultSessionController extends Controller
         $session->end_seconds = 86400 * $request->end_day + 3600 * $end_time[0] + 60 * $end_time[1];
         $session->every_day = $request->every_day ?? false;
         $session->save();
+
         return back()->with('message',
-            ["type" => "success", "body" => "Session saved successfully."]
+            ['type' => 'success', 'body' => 'Session saved successfully.']
         );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\DefaultSession  $defaultSession
      * @return \Illuminate\Http\Response
      */
     public function show(DefaultSession $defaultSession)
@@ -66,7 +64,6 @@ class DefaultSessionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\DefaultSession  $defaultSession
      * @return \Illuminate\Http\Response
      */
     public function edit(DefaultSession $defaultSession)
@@ -77,8 +74,6 @@ class DefaultSessionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\DefaultSession  $defaultSession
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, DefaultSession $defaultSession)
@@ -99,8 +94,9 @@ class DefaultSessionController extends Controller
         // DefaultSession passed in is always null??? Anyway, this seems to work
         // :shrug:
         DefaultSession::find($defaultSession)->delete();
+
         return back()->with('message',
-            ["type" => "success", "body" => "Session deleted successfully."]
+            ['type' => 'success', 'body' => 'Session deleted successfully.']
         );
     }
 }

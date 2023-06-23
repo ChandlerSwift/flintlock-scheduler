@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Program;
 use App\Models\Session;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SessionController extends Controller
@@ -16,14 +14,15 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $res = "<ul>";
-        foreach(Session::all() as $session) {
-            $res .= "<li>" . $session->program->name . "(" . $session->start_time . ")" . "<ul>";
+        $res = '<ul>';
+        foreach (Session::all() as $session) {
+            $res .= '<li>'.$session->program->name.'('.$session->start_time.')'.'<ul>';
             foreach ($session->scouts as $scout) {
-                $res .= "<li>" . $scout->first_name . " " . $scout->last_name . "</li>";
+                $res .= '<li>'.$scout->first_name.' '.$scout->last_name.'</li>';
             }
-            $res .= "</ul></li>";
+            $res .= '</ul></li>';
         }
+
         return $res;
     }
 
@@ -40,7 +39,6 @@ class SessionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -51,7 +49,6 @@ class SessionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
     public function show(Session $session)
@@ -62,7 +59,6 @@ class SessionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
     public function edit(Session $session)
@@ -73,8 +69,6 @@ class SessionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Session $session)
@@ -85,14 +79,14 @@ class SessionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
     public function destroy(Session $session)
     {
         $session->delete();
+
         return back()->with('message',
-            ["type" => "success", "body" => "Session deleted successfully."]
+            ['type' => 'success', 'body' => 'Session deleted successfully.']
         );
     }
 }
