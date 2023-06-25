@@ -79,7 +79,7 @@
                     </li>
                 </ul>
                 <form class="d-flex m-0" role="search" action="{{ route('search') }}" method="GET">
-                    <input name="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+                    <input name="search" class="form-control" type="search" placeholder="Search scouts" aria-label="Search">
                 </form>
             </div>
         </div>

@@ -90,20 +90,18 @@ class ScoutController extends Controller
 
     public function search(Request $request, Week $week)
     {
-        // Get the search value from the request
-        $search = $request->input('search');
+        $q = Scout::where('week_id', $week->id);
 
-        // Search in the title and body columns from the posts table
-        $searchResults = Scout::where('week_id', $week->id)
-            ->where(function ($query) use ($search) {
-                $query->where('first_name', 'LIKE', "%{$search}%")
-                    ->orWhere('last_name', 'LIKE', "%{$search}%")
-                    ->orWhere('unit', 'LIKE', "%{$search}%")
-                    ->orWhere('site', 'LIKE', "%{$search}%");
-            })->get();
+        foreach(explode(' ', $request->input('search')) as $term) {
+            $q->where(function ($q1) use ($term) {
+                $q1->where('first_name', 'LIKE', "%{$term}%")
+                    ->orWhere('last_name', 'LIKE', "%{$term}%")
+                    ->orWhere('unit', 'LIKE', "%{$term}%")
+                    ->orWhere('site', 'LIKE', "%{$term}%");
+            });
+        }
 
-        // Return the search view with the resluts compacted
-        return view('search', compact('searchResults'));
+        return view('search', ['searchResults' => $q->get()]);
     }
 
     public function addSession(Request $request, Scout $scout)
