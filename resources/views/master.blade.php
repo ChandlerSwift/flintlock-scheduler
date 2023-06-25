@@ -38,7 +38,14 @@
             <table class="table table-sm table-striped">
                 <thead class="table-dark">
                     <tr>
-                        <th class="dark" colspan="5">{{ $session->start_time->format('l') }} ({{ $session->scouts->count() }}/{{ $session->program->max_participants }})</th>
+                        <th class="dark" colspan="5">
+                            @if($session->start_time->format('i') == "00")
+                                {{ $session->start_time->format('l gA') }}
+                            @else
+                                {{ $session->start_time->format('l g:i A') }}
+                            @endif
+                            ({{ $session->scouts->count() }}/{{ $session->program->max_participants }})
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
