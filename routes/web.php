@@ -54,7 +54,13 @@ Route::middleware(['auth'])->get('/weeks/{id}', [WeekController::class, 'choose'
 Route::middleware(['auth', 'week'])->group(function () {
 
     Route::get('/', function () {
-        return view('master')->with('programs', \App\Models\Program::all());
+        return view('master')->with('programs', \App\Models\Program::all()->sortBy(function(\App\Models\Program $program) {
+            $first_session = $program->sessions()->where('week_id', request()->cookie('week_id'))->orderBy("start_time")->first();
+            if ($first_session->every_day) { // Put Tier 2 sessions last
+                return 2**32 - 1; // year 2038 problem here :)
+            }
+            return $first_session->start_time->timestamp;
+        }));
     });
     Route::get('/scouts/{scout}', [ScoutController::class, 'show']);
     Route::get('sessions', [SessionController::class, 'index']);
