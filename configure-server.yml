@@ -1,0 +1,71 @@
+---
+# run with `ansible-playbook -i flintlock, configure-server.yml`
+# with this in .ssh/config:
+#
+#     Host flintlock
+#       HostName flintlock.chandlerswift.com
+#       User root
+#
+# When this completes, copy last year's database to /srv/flintlock-scheduler/database/database.sqlite
+- hosts: all
+  tasks:
+  - name: Install packages
+    ansible.builtin.apt:
+      name:
+      - caddy
+      - git
+      - php-fpm
+      - composer
+      - php-xml
+      - php-sqlite3
+      update_cache: true
+  - name: Create flintlock-scheduler directory
+    ansible.builtin.file:
+      path: /srv/flintlock-scheduler
+      owner: www-data
+      group: www-data
+      state: directory
+  - become: true
+    become_user: www-data
+    block:
+    - name: Clone flintlock-scheduler
+      ansible.builtin.git:
+        repo: https://github.com/chandlerswift/flintlock-scheduler
+        dest: /srv/flintlock-scheduler
+    - name: Install PHP packages
+      community.general.composer:
+        command: install
+        working_dir: /srv/flintlock-scheduler
+  - name: Configure Caddy
+    ansible.builtin.copy:
+      content: |
+        flintlock.chandlerswift.com {
+          root * /srv/flintlock-scheduler/public
+          encode gzip
+          file_server
+          php_fastcgi unix//run/php/php-fpm.sock
+          log
+        }
+      dest: /etc/caddy/Caddyfile
+    register: configure_caddy
+  - name: Reload Caddy
+    ansible.builtin.systemd_service:
+      name: caddy
+      state: reloaded
+    when: configure_caddy.changed
+  - name: Disable ssh password auth (why is this still enabled in the year of our lord 2024)
+    ansible.builtin.lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: ^PasswordAuthentication
+      line: PasswordAuthentication no
+      validate: sshd -t -f %s
+    register: configure_sshd
+  - name: Reload sshd
+    ansible.builtin.systemd_service:
+      name: sshd
+      state: reloaded
+    when: configure_sshd.changed
+  - name: Allow through firewall
+    community.general.ufw:
+      rule: allow
+      name: WWW Full # 80,443/TCP
