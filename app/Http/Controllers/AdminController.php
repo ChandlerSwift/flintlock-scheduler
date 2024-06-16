@@ -139,7 +139,7 @@ class AdminController extends Controller
                 for ($i = 0; $i < count($headers); $i++) {
                     $record[$headers[$i]] = $data[$i];
                 }
-                if (! str_contains($record['Session 1'], 'Tier 2')) {
+                if (! str_contains($record['Merit Badge Session 1'], 'Tier 2')) {
                     continue;
                 }
                 $scout = Scout::where('first_name', $record['First Name'])
@@ -152,14 +152,14 @@ class AdminController extends Controller
                 if (! $scout) {
                     throw new \Exception('Could not find scout for "'.$record['First Name'].'" "'.$record['Last Name'].'" (Unit '.$record['Unit Nbr.'].')');
                 }
-                if (str_contains($record['Session 1'], 'Watersports Outpost')) {
+                if (str_contains($record['Merit Badge Session 1'], 'Watersports Outpost')) {
                     $program_name = 'Water Sports Outpost';
-                } elseif (str_contains($record['Session 1'], 'Older Scout Adventure Blast')) {
+                } elseif (str_contains($record['Merit Badge Session 1'], 'Older Scout Adventure Blast')) {
                     $program_name = 'Older Scout Adventure Blast';
-                } elseif (str_contains($record['Session 1'], 'Mountain Bike Outpost')) {
+                } elseif (str_contains($record['Merit Badge Session 1'], 'Mountain Bike Outpost')) {
                     $program_name = 'Mountain Bike Outpost';
                 } else {
-                    throw new \Exception('Unknown program'.$record['Session 1']);
+                    throw new \Exception('Unknown program'.$record['Merit Badge Session 1']);
                 }
 
                 $session = Program::where('name', $program_name)->first()
