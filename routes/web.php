@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WeekController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,10 @@ Route::middleware(['auth', 'week'])->group(function () {
     Route::get('/', function () {
         return view('master')->with('programs', \App\Models\Program::all()->sortBy(function(\App\Models\Program $program) {
             $first_session = $program->sessions()->where('week_id', request()->cookie('week_id'))->orderBy("start_time")->first();
+            if ($first_session == null) {
+                Log::warning("No sessions for program $program->name");
+                return 0;
+            }
             if ($first_session->every_day) { // Put Tier 2 sessions last
                 return 2**32 - 1; // year 2038 problem here :)
             }
