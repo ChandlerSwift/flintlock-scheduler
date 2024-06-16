@@ -73,7 +73,7 @@ class AdminController extends Controller
 
                     $scout->age = $record['Age'] ?: 10;
                     $scout->council = $record['Council'];
-                    $scout->gender = $record['BSA Registered Gender'];
+                    $scout->gender = $record['Gender'];
                     if (str_ends_with($record['Title'], 'All Star')) {
                         $scout->subcamp = 'Buckskin';
                         $scout->unit = '1910';
