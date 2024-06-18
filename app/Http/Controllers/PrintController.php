@@ -56,10 +56,12 @@ class PrintController extends Controller
             ],
         ];
         $week = Week::find($request->cookie('week_id'));
-        if (Auth::user()->admin) {
-            $scouts = $week->scouts;
+
+        $username = Auth::user()->name;
+        if (in_array($username, ["Buckskin", "Ten Chiefs", "Voyageur"])) { // Subcamps only need to print their own scouts
+            $scouts = $week->scouts()->where('subcamp', $username)->get();
         } else {
-            $scouts = $week->scouts()->where('subcamp', Auth::user()->name)->get();
+            $scouts = $week->scouts;
         }
 
         return view('print.units')
