@@ -162,7 +162,11 @@ class AdminController extends Controller
                     ->where('week_id', $request->week_id)
                     ->get()
                     ->first(function ($scout, $index) use ($record) {
-                        return str_contains($scout->unit, $record['Unit Nbr.']);
+                        if (str_ends_with($record['Title'], 'All Star'))
+                            $unit = "1910";
+                        else
+                            $unit = $record['Unit Nbr.'];
+                        return str_contains($scout->unit, $unit);
                     });
                 if (! $scout) {
                     throw new \Exception('Could not find scout for "'.$record['First Name'].'" "'.$record['Last Name'].'" (Unit '.$record['Unit Nbr.'].')');
