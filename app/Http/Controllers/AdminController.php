@@ -87,9 +87,24 @@ class AdminController extends Controller
                     $scouts_added++;
 
                     for ($i = 1; $i <= 4; $i++) {
-                        $program = Program::where('name', $record["Flintlock Older Scout Tier 1 Preference $i"])->first();
+                        $program_name = null;
+                        $column_names = ["Flintlock Older Scout Tier 1 Preference $i", "Flintlock Tier 1, Preference $i"];
+                        foreach($column_names as $column_name) {
+                            if (array_key_exists($column_name, $record)) {
+                                $program_name = $record[$column_name];
+                                break;
+                            }
+                        }
+                        if ($program_name == null) { // No column names matched
+                            Log::error("Could not find program column");
+                            continue;
+                        }
+                        if ($program_name == "") { // Column name matched, but empty preference
+                            continue;
+                        }
+                        $program = Program::where('name', $program_name)->first();
                         if (! $program) {
-                            Log::warning('trying to find nonexistent program '.$record["Flintlock Older Scout Tier 1 Preference $i"]);
+                            Log::warning("trying to find nonexistent program $program_name");
                         } else {
                             $preference = new Preference;
                             $preference->program_id = $program->id;
