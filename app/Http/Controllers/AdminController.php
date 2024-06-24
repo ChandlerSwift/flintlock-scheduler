@@ -158,6 +158,8 @@ class AdminController extends Controller
                     $program_name = 'Older Scout Adventure Blast';
                 } elseif (str_contains($record['Merit Badge Session 1'], 'Mountain Bike Outpost')) {
                     $program_name = 'Mountain Bike Outpost';
+                } elseif (str_contains($record['Merit Badge Session 1'], 'SCUBA')) {
+                    continue; // Not managed through Flintlock
                 } else {
                     throw new \Exception('Unknown program'.$record['Merit Badge Session 1']);
                 }
