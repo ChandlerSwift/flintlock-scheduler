@@ -179,6 +179,8 @@ class AdminController extends Controller
                     $program_name = 'Mountain Bike Outpost';
                 } elseif (str_contains($record['Merit Badge Session 1'], 'SCUBA')) {
                     continue; // Not managed through Flintlock
+		} elseif (str_contains($record['Merit Badge Session 1'], 'All Things Aquatics')) {
+		    continue; // Run by Admin one week a year, says Isaac
                 } else {
                     throw new \Exception('Unknown program'.$record['Merit Badge Session 1']);
                 }
